@@ -1,11 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth scroll-pt-32">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Connect Web Local - Sites Web Performants</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN for immediate rendering -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
     <script>
       tailwind.config = {
         theme: {
@@ -16,6 +20,7 @@
                 dark: '#0B0F19', // Dark Navy
                 light: '#F8FAFC', // Very light gray/blue
                 yellow: '#FFD600', // Accent
+                lightBlue: '#A3C2FF', // Light text on dark bg
               }
             },
             fontFamily: {
@@ -53,49 +58,26 @@
                 '100%': { opacity: '1', transform: 'translateY(0)' },
               }
             },
-          }
-        }
+          },
+        },
       }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-      body { font-family: 'Inter', sans-serif; background-color: #ffffff; color: #0B0F19; }
-      h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
-      
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: #f1f1f1; }
-      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-      /* Reveal on Scroll */
-      .reveal {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://aistudiocdn.com/react@^19.2.0",
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+        "react/": "https://aistudiocdn.com/react@^19.2.0/",
+        "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+        "vite": "https://aistudiocdn.com/vite@^7.2.2",
+        "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
       }
-      .reveal.active {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      
-      .stagger-1 { transition-delay: 100ms; }
-      .stagger-2 { transition-delay: 200ms; }
-      .stagger-3 { transition-delay: 300ms; }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
-  }
-}
-</script>
-</head>
+    }
+    </script>
+  </head>
   <body class="antialiased text-slate-900 overflow-x-hidden">
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
