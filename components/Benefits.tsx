@@ -73,14 +73,14 @@ const Benefits: React.FC = () => {
             <p className="text-slate-500 text-sm">{FEATURES[3].description}</p>
           </div>
 
-           {/* Feature 5 - Wide */}
+           {/* Feature 5 - Wide (Uses FEATURES[4]) */}
           <div className="reveal md:col-span-3 lg:col-span-2 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6 hover:border-brand-blue/30 transition-colors">
              <div className="flex-shrink-0 w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-green-600">
-                {React.createElement(FEATURES[5].icon, { size: 32 })}
+                {React.createElement(FEATURES[4].icon, { size: 32 })}
              </div>
              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">{FEATURES[5].title}</h3>
-                <p className="text-slate-500 text-sm">{FEATURES[5].description}</p>
+                <h3 className="text-xl font-bold text-slate-900 mb-1">{FEATURES[4].title}</h3>
+                <p className="text-slate-500 text-sm">{FEATURES[4].description}</p>
              </div>
           </div>
 

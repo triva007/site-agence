@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import Problem from './components/Problem';
+import Stats from './components/Stats';
 import Benefits from './components/Benefits';
 import Process from './components/Process';
-import Portfolio from './components/Portfolio';
-import Testimonials from './components/Testimonials';
 import Pricing from './components/Pricing';
+import Testimonials from './components/Testimonials';
 import Comparison from './components/Comparison';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
@@ -32,14 +33,14 @@ const App: React.FC = () => {
       <Header />
       <main>
         <Hero />
+        <Stats />
+        <Problem />
         <Benefits />
         <Process />
-        <Portfolio />
-        <Testimonials />
-        <Pricing />
         <Comparison />
+        <Pricing />
+        <Testimonials />
         <FAQ />
-        {/* Note: Contact form is removed in favor of footer CTAs as per 'Stam' design vibe */}
       </main>
       <Footer />
     </div>

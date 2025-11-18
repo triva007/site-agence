@@ -5,74 +5,94 @@ import {
   Zap,
   Search,
   Layout,
-  MousePointerClick,
-  ShieldCheck,
-  Users,
   PhoneCall,
-  Clock
+  Clock,
+  ArrowUpRight,
+  XCircle,
+  CheckCircle,
+  ShieldCheck
 } from 'lucide-react';
 import { Feature, ProcessStep, Project, Testimonial, FaqItem, NavigationItem, PricingPlan, ComparisonPoint, TeamMember } from './types';
 
+// Suppression de l'équipe, focus sur le résultat.
 export const NAV_ITEMS: NavigationItem[] = [
+  { label: 'Pourquoi nous ?', href: '#problem' },
+  { label: 'Résultats', href: '#results' },
   { label: 'Comment ça marche', href: '#process' },
-  { label: 'Exemples', href: '#portfolio' },
   { label: 'Tarifs', href: '#pricing' },
-  { label: 'Questions', href: '#faq' },
+];
+
+export const STATS = [
+  { value: "+300%", label: "De visibilité locale" },
+  { value: "x5", label: "Appels clients / mois" },
+  { value: "1er", label: "Sur Google Maps" },
+  { value: "24/7", label: "Votre commercial digital" },
+];
+
+export const PROBLEM_CARDS = [
+  {
+    icon: XCircle,
+    title: "L'Invisible",
+    description: "Vos voisins cherchent vos services sur Google. S'ils ne vous voient pas dans les 3 premiers résultats, vous n'existez pas.",
+    color: "bg-red-50 text-red-600"
+  },
+  {
+    icon: Smartphone,
+    title: "Le Site Moche",
+    description: "53% des utilisateurs quittent un site qui met plus de 3 secondes à charger ou qui s'affiche mal sur mobile. C'est autant de clients perdus.",
+    color: "bg-orange-50 text-orange-600"
+  },
+  {
+    icon: Clock,
+    title: "La Perte de Temps",
+    description: "Essayer de faire son site soi-même ou gérer ses réseaux sociaux, c'est des heures perdues que vous ne passez pas à faire votre vrai métier.",
+    color: "bg-slate-100 text-slate-600"
+  }
 ];
 
 export const FEATURES: Feature[] = [
   {
-    icon: Users,
-    title: "Attirez les voisins",
-    description: "Quand quelqu'un cherche votre service dans le quartier, c'est vous qu'il doit voir en premier, pas votre concurrent."
+    icon: TrendingUp,
+    title: "Domination Locale",
+    description: "Nous optimisons tout pour que lorsque quelqu'un tape votre métier + votre ville, c'est VOUS qui sortez en premier."
   },
   {
-    icon: PhoneCall,
-    title: "Faites sonner le téléphone",
-    description: "Nous ne faisons pas juste 'un site'. Nous mettons en place des boutons d'appels et de réservation partout où c'est utile."
+    icon: MapPin,
+    title: "Fiche Google N°1",
+    description: "Votre fiche établissement optimisée pour apparaître dans le 'Pack Local' (les 3 premiers résultats de la carte)."
   },
   {
     icon: Layout,
-    title: "L'image d'un pro",
-    description: "Un site moche ou cassé fait fuir les clients. Nous vous donnons une image haut de gamme qui inspire immédiatement confiance."
-  },
-  {
-    icon: Smartphone,
-    title: "Parfait sur mobile",
-    description: "80% de vos clients vous cherchent sur leur téléphone dans la rue ou le canapé. Votre site sera ultra-rapide pour eux."
-  },
-  {
-    icon: Search,
-    title: "Passez devant les autres",
-    description: "Nous analysons ce que font vos concurrents locaux pour vous permettre de récupérer leurs clients déçus."
+    title: "Design Convertisseur",
+    description: "Un site beau, oui. Mais surtout un site psychologiquement conçu pour transformer le visiteur en client."
   },
   {
     icon: Clock,
-    title: "On s'occupe de tout",
-    description: "Vous avez un métier à gérer. Nous gérons la technique, les mises à jour et la sécurité. Vous ne levez pas le petit doigt."
+    title: "Zéro Maintenance",
+    description: "Mises à jour, sécurité, modifications... On gère tout. Vous, vous gérez juste l'afflux de clients."
+  },
+  {
+    icon: ShieldCheck,
+    title: "Fiabilité Totale",
+    description: "Hébergement sécurisé, certificats SSL et sauvegardes automatiques. Votre business est en sécurité."
   }
 ];
 
 export const PROCESS_STEPS: ProcessStep[] = [
   {
     number: "1",
-    title: "On discute (30 min)",
-    description: "Pas de jargon. Vous nous parlez de votre activité, de vos clients idéaux et de ce que vous voulez vendre le plus."
+    title: "L'Audit (Gratuit)",
+    description: "On regarde ensemble votre présence actuelle et combien de clients vous perdez chaque mois au profit de vos concurrents."
   },
   {
     number: "2",
-    title: "On construit tout",
-    description: "Nous créons votre site, écrivons les textes pour convaincre vos clients et paramétrons votre fiche Google Maps."
+    title: "La Construction",
+    description: "En 14 jours, nous créons votre site haute performance et optimisons votre fiche Google. Vous validez, on lance."
   },
   {
     number: "3",
-    title: "On valide ensemble",
-    description: "On vous montre le résultat. On ajuste si besoin. Une fois que vous êtes ravi, on appuie sur le bouton 'Mettre en ligne'."
-  },
-  {
-    number: "4",
-    title: "Vous recevez les clients",
-    description: "C'est tout. Votre site travaille pour vous 24h/24. Nous restons disponibles sur WhatsApp si vous avez une question."
+    title: "L'Avalanche",
+    description: "Votre site est en ligne. Votre fiche Google remonte. Votre téléphone commence à sonner plus souvent."
   }
 ];
 
@@ -104,116 +124,110 @@ export const TESTIMONIALS: Testimonial[] = [
   {
     id: 1,
     name: "Marc",
-    role: "Gérant",
-    company: "Garage Vauthier",
+    role: "Gérant Garage",
+    company: "AutoFix",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    quote: "Je n'y connais rien en informatique. Triva-Media a tout géré. Aujourd'hui, quand on tape 'garage' dans ma ville, je sors en premier. C'est rentabilisé x10."
+    quote: "Avant, on ne me trouvait pas sur Google. Depuis que Triva-Media a repris ma fiche et mon site, j'ai dû embaucher un mécano de plus pour suivre la cadence."
   },
   {
     id: 2,
-    name: "Sarah",
-    role: "Fleuriste",
-    company: "Fleur de Coton",
+    name: "Sophie",
+    role: "Ostéopathe",
+    company: "Cabinet Bien-être",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    quote: "J'avais peur que ça me prenne du temps. Au final, j'ai juste validé les photos. Le site est magnifique et mes clientes m'en parlent tout le temps."
+    quote: "Simple, rapide et super efficace. Je ne m'occupe de rien, et mon agenda Doctolib se remplit tout seul grâce au référencement."
   }
 ];
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
-    title: "Pack Visibilité",
-    price: "1'980 €",
-    description: "Tout ce qu'il faut pour exister localement et rassurer vos clients.",
+    title: "Pack Essentiel",
+    price: "1'490 €",
+    description: "L'arme absolue pour démarrer et prendre des parts de marché.",
     features: [
-      "Site vitrine complet (Design Pro)",
-      "On écrit les textes pour vous",
-      "Optimisation Fiche Google (Maps)",
-      "Boutons 'Appeler' & 'Venir'",
-      "Nom de domaine offert (monsite.fr)",
-      "Support direct WhatsApp"
+      "Site Web Ultra-Rapide (5 pages)",
+      "Optimisation Google Maps (GMB)",
+      "Rédaction des textes de vente",
+      "Hébergement & Nom de domaine inclus",
+      "Support WhatsApp Réactif"
     ],
-    isPopular: true,
-    buttonText: "Je veux être visible",
+    isPopular: false,
+    buttonText: "Je lance mon site",
     buttonVariant: "primary"
   },
   {
-    title: "Pack Croissance",
-    price: "Sur Devis",
-    description: "Pour ceux qui veulent écraser la concurrence et automatiser.",
+    title: "Pack Domination",
+    price: "2'490 €",
+    description: "Pour ceux qui veulent être N°1 incontesté sur leur ville.",
     features: [
-      "Site multi-pages illimité",
-      "Système de réservation en ligne",
-      "Shooting Photo Pro inclus",
-      "Gestion des avis clients",
-      "Campagne de pub locale",
-      "Suivi mensuel des résultats"
+      "Site Web Illimité & Blog",
+      "Système de Réservation / Commande",
+      "Campagne d'Avis Clients Automatisée",
+      "Shooting Photo Pro Inclus",
+      "Audit Mensuel des résultats",
+      "Priorité Support 7j/7"
     ],
-    isPopular: false,
-    buttonText: "On en discute",
+    isPopular: true,
+    buttonText: "Je veux dominer ma ville",
     buttonVariant: "secondary"
   }
 ];
 
 export const COMPARISON_DATA: ComparisonPoint[] = [
   {
-    label: "Votre implication",
-    bad: "Vous devez écrire les textes",
-    good: "On fait tout pour vous"
+    label: "Temps nécessaire",
+    bad: "Des semaines de réunions",
+    good: "30 min de votre temps (on gère le reste)"
   },
   {
-    label: "Résultats",
-    bad: "Un site joli mais inutile",
-    good: "Un site qui fait sonner le tél"
+    label: "Référencement",
+    bad: "Site invisible sur Google",
+    good: "Optimisé pour être en 1ère page"
   },
   {
-    label: "Google Maps",
-    bad: "Souvent oublié ou mal fait",
-    good: "Optimisé pour être N°1"
+    label: "Coût",
+    bad: "Abonnements mensuels cachés",
+    good: "Paiement unique & transparent"
   },
   {
-    label: "Support",
-    bad: "Emails sans réponse",
-    good: "WhatsApp direct avec l'équipe"
-  },
-  {
-    label: "Propriété",
-    bad: "Location (Le site n'est pas à vous)",
-    good: "100% à vous après paiement"
+    label: "Design",
+    bad: "Template générique",
+    good: "Design sur-mesure haute conversion"
   }
 ];
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "Je n'ai pas le temps de m'en occuper, c'est grave ?",
-    answer: "C'est justement pour ça qu'on est là. Notre méthode est conçue pour les patrons débordés. On récupère vos infos en 30 minutes, et on s'occupe de tout le reste (textes, design, mise en ligne)."
+    question: "Combien de temps avant d'avoir des résultats ?",
+    answer: "Dès la mise en ligne, votre image change instantanément. Pour le référencement Google, les premiers effets se font sentir sous 2 à 4 semaines, avec une montée en puissance constante."
   },
   {
-    question: "Est-ce que je serai visible sur Google ?",
-    answer: "Oui, c'est notre priorité. On ne fait pas juste un site, on configure votre fiche Google Maps pour que les gens du quartier vous trouvent quand ils cherchent vos services."
+    question: "Je suis nul en informatique, comment je gère mon site ?",
+    answer: "Vous ne gérez rien. C'est notre promesse. Si vous avez une modification à faire (changer un prix, une photo), vous nous envoyez un WhatsApp et on le fait pour vous dans la journée."
   },
   {
-    question: "Y a-t-il des frais cachés chaque mois ?",
-    answer: "Non. Le prix du site est unique. Ensuite, vous payez juste l'hébergement (environ 10€/mois) pour que le site reste en ligne. Pas d'abonnement surprise à l'agence."
+    question: "Pourquoi c'est plus cher qu'un site Wix ?",
+    answer: "Un site Wix est un outil que vous devez bricoler vous-même. Nous, nous vous vendons un résultat commercial clé en main, optimisé par des experts pour transformer les visiteurs en clients."
   }
 ];
 
 export const TEAM: TeamMember[] = [
   {
     id: 1,
-    name: "Alex",
-    role: "Expert Stratégie",
-    image: "https://randomuser.me/api/portraits/men/32.jpg"
+    name: "Alexandre",
+    role: "Fondateur & Stratégie",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80"
   },
   {
     id: 2,
-    name: "Julie",
-    role: "Design & Image",
-    image: "https://randomuser.me/api/portraits/women/44.jpg"
+    name: "Sarah",
+    role: "Directrice Artistique",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80"
   },
   {
     id: 3,
-    name: "Thomas",
-    role: "Référencement Google",
-    image: "https://randomuser.me/api/portraits/men/86.jpg"
+    name: "David",
+    role: "Lead Développeur",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80"
   }
 ];
