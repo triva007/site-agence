@@ -1,79 +1,86 @@
-
 import React from 'react';
-import { Search, TrendingUp, Smartphone, Layout, Zap, ShieldCheck } from 'lucide-react';
+import { FEATURES } from '../constants';
+import { MapPin } from 'lucide-react';
 
 const Benefits: React.FC = () => {
   return (
     <section className="py-24 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="mb-16 reveal">
-          <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-6 tracking-tight">
-            Tout ce dont vous avez besoin <br/>
-            <span className="text-brand-blue">pour réussir en ligne.</span>
+        <div className="mb-16 reveal text-center md:text-left">
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mb-6 tracking-tight leading-tight">
+            Un investissement <br/>
+            <span className="text-brand-blue">qui rapporte de l'argent.</span>
           </h2>
+          <p className="text-slate-500 text-lg max-w-2xl">Votre site web n'est pas une dépense, c'est un employé qui travaille 24h/24 pour vous amener des clients.</p>
         </div>
 
         {/* Bento Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 grid-rows-[auto_auto_auto]">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-auto">
           
-          {/* Card 1 - Large Focus */}
-          <div className="reveal md:col-span-2 lg:col-span-2 row-span-2 bg-slate-50 rounded-3xl p-8 border border-slate-100 hover:border-brand-blue/30 transition-colors group relative overflow-hidden">
+          {/* Feature 1 mapped from constants (Identity -> Commercial 24/24) */}
+          <div className="reveal md:col-span-2 lg:col-span-2 row-span-2 bg-slate-50 rounded-3xl p-6 sm:p-8 border border-slate-100 hover:border-brand-blue/30 transition-colors group relative overflow-hidden flex flex-col">
              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-brand-blue/10 transition-colors"></div>
-             <div className="relative z-10 h-full flex flex-col justify-between">
-                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-6 text-brand-blue">
-                  <Layout size={28} strokeWidth={2} />
+             <div className="relative z-10 flex-1">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-6 text-brand-blue">
+                  {React.createElement(FEATURES[0].icon, { size: 28, strokeWidth: 2 })}
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-3">Design Premium & Sur-mesure</h3>
-                  <p className="text-slate-500 leading-relaxed">Pas de templates génériques. Nous créons une identité visuelle unique qui reflète l'excellence de votre savoir-faire local. Chaque pixel est pensé pour la conversion.</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3">{FEATURES[0].title}</h3>
+                  <p className="text-slate-500 leading-relaxed text-sm sm:text-base">{FEATURES[0].description}</p>
                 </div>
-                <div className="mt-8 w-full h-48 bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                   <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=600&q=80" className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" alt="Design" />
-                </div>
+             </div>
+             <div className="mt-8 w-full h-40 sm:h-48 bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden relative">
+                 <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-transparent z-10"></div>
+                 <img src="https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=600&q=80" className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" alt="Clients" />
              </div>
           </div>
 
-          {/* Card 2 - Dark Contrast */}
-          <div className="reveal md:col-span-1 lg:col-span-2 bg-brand-dark text-white rounded-3xl p-8 border border-slate-800 group overflow-hidden relative">
-            <div className="absolute right-0 top-0 p-8 opacity-20">
-               <TrendingUp size={120} />
+          {/* Feature 2 - GMB / Map (Specific Design kept) */}
+          <div className="reveal md:col-span-1 lg:col-span-2 bg-brand-dark text-white rounded-3xl p-6 sm:p-8 border border-slate-800 group overflow-hidden relative flex flex-col justify-between min-h-[280px]">
+            <div className="absolute right-0 top-0 p-8 opacity-10 text-brand-blue">
+               <MapPin size={140} />
             </div>
             <div className="relative z-10">
-              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-md mb-4">
-                <Search size={24} />
+              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-md mb-4 text-brand-yellow">
+                {React.createElement(FEATURES[1].icon, { size: 24 })}
               </div>
-              <h3 className="text-xl font-bold mb-2">SEO Local Optimisé</h3>
-              <p className="text-slate-400 text-sm">Apparaissez avant vos concurrents sur Google Maps et les recherches locales.</p>
+              <h3 className="text-xl font-bold mb-2 text-white">{FEATURES[1].title}</h3>
+              <p className="text-slate-400 text-sm sm:text-base">{FEATURES[1].description}</p>
+            </div>
+            <div className="mt-4 flex gap-2">
+                <span className="px-2 py-1 rounded bg-white/10 text-xs font-bold">Visites magasin</span>
+                <span className="px-2 py-1 rounded bg-white/10 text-xs font-bold">Appels</span>
+                <span className="px-2 py-1 rounded bg-white/10 text-xs font-bold">Avis 5★</span>
             </div>
           </div>
 
-          {/* Card 3 - Simple */}
-          <div className="reveal md:col-span-1 bg-blue-50 rounded-3xl p-8 border border-blue-100 group hover:shadow-lg hover:shadow-blue-100/50 transition-all">
+          {/* Feature 3 */}
+          <div className="reveal md:col-span-1 bg-blue-50 rounded-3xl p-6 sm:p-8 border border-blue-100 group hover:shadow-lg hover:shadow-blue-100/50 transition-all min-h-[200px]">
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-4 text-brand-blue">
-              <Smartphone size={24} />
+               {React.createElement(FEATURES[2].icon, { size: 24 })}
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">100% Responsive</h3>
-            <p className="text-slate-500 text-sm">Une expérience fluide sur mobile, tablette et ordinateur.</p>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">{FEATURES[2].title}</h3>
+            <p className="text-slate-600 text-sm">{FEATURES[2].description}</p>
           </div>
 
-          {/* Card 4 - Simple */}
-          <div className="reveal md:col-span-1 bg-white rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-md transition-all">
-            <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mb-4 text-slate-900">
-              <Zap size={24} />
+          {/* Feature 4 */}
+          <div className="reveal md:col-span-1 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm hover:shadow-md transition-all min-h-[200px]">
+            <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mb-4 text-brand-dark">
+               {React.createElement(FEATURES[3].icon, { size: 24 })}
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Ultra Rapide</h3>
-            <p className="text-slate-500 text-sm">Chargement instantané pour ne perdre aucun client impatient.</p>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">{FEATURES[3].title}</h3>
+            <p className="text-slate-500 text-sm">{FEATURES[3].description}</p>
           </div>
 
-           {/* Card 5 - Wide */}
-          <div className="reveal md:col-span-3 lg:col-span-2 bg-white rounded-3xl p-8 border border-slate-100 shadow-sm flex items-center gap-6 hover:border-brand-blue/30 transition-colors">
+           {/* Feature 5 - Wide */}
+          <div className="reveal md:col-span-3 lg:col-span-2 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6 hover:border-brand-blue/30 transition-colors">
              <div className="flex-shrink-0 w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-green-600">
-                <ShieldCheck size={32} />
+                {React.createElement(FEATURES[5].icon, { size: 32 })}
              </div>
              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Hébergement & Sécurité Inclus</h3>
-                <p className="text-slate-500 text-sm">On s'occupe de la technique. Certificat SSL, sauvegardes, mises à jour.</p>
+                <h3 className="text-xl font-bold text-slate-900 mb-1">{FEATURES[5].title}</h3>
+                <p className="text-slate-500 text-sm">{FEATURES[5].description}</p>
              </div>
           </div>
 
