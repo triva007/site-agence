@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import { Menu, X, ArrowRight, Zap } from 'lucide-react';
 import { NAV_ITEMS } from '../constants';
 
 const Header: React.FC = () => {
@@ -12,12 +12,21 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement> | React.MouseEvent<HTMLButtonElement>, href: string) => {
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
       setIsOpen(false);
-      // Petite astuce pour attendre la fermeture du menu avant de scroller sur mobile
       setTimeout(() => {
         element.scrollIntoView({ behavior: 'smooth' });
       }, 100);
@@ -35,14 +44,23 @@ const Header: React.FC = () => {
       >
         <div className="flex justify-between items-center">
           
-          {/* Logo */}
-          <div className="flex items-center gap-2 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center shadow-lg shadow-brand-blue/20 group-hover:rotate-6 transition-transform">
-              <span className="text-white font-black text-xl">T</span>
+          {/* Logo Amélioré */}
+          <div className="flex items-center gap-2.5 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            {/* Icone Logo */}
+            <div className="relative w-10 h-10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue to-blue-600 rounded-xl shadow-lg shadow-brand-blue/30 rotate-3 group-hover:rotate-6 transition-transform"></div>
+              <div className="absolute inset-0 bg-brand-dark rounded-xl rotate-0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              {/* Abstract T shape or Bolt */}
+              <Zap size={24} className="relative z-10 text-white fill-white" strokeWidth={0} />
             </div>
-            <div className="flex flex-col">
+            
+            {/* Texte Logo */}
+            <div className="flex flex-col justify-center">
               <span className={`text-xl font-black tracking-tight leading-none ${scrolled ? 'text-slate-900' : 'text-slate-900'}`}>
-                Triva<span className="text-brand-blue">-</span>Media
+                Triva<span className="text-brand-blue">.</span>Media
+              </span>
+              <span className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400 leading-none mt-1 group-hover:text-brand-blue transition-colors">
+                Agence Locale
               </span>
             </div>
           </div>
@@ -65,7 +83,7 @@ const Header: React.FC = () => {
           <div className="hidden md:block">
             <button 
               onClick={(e) => handleNavClick(e, '#pricing')}
-              className={`group relative px-6 py-2.5 rounded-full font-bold text-sm transition-all overflow-hidden shadow-lg shadow-brand-blue/20 hover:shadow-brand-blue/40 ${
+              className={`group relative px-6 py-2.5 rounded-full font-bold text-sm transition-all overflow-hidden shadow-lg shadow-brand-blue/20 hover:shadow-brand-blue/40 active:scale-95 ${
                 scrolled ? 'bg-brand-dark text-white' : 'bg-brand-blue text-white'
               }`}
             >
@@ -89,6 +107,16 @@ const Header: React.FC = () => {
 
       {/* Mobile Nav Overlay */}
       <div className={`fixed inset-0 bg-white/95 backdrop-blur-xl z-40 flex flex-col justify-center items-center space-y-8 transition-all duration-500 pointer-events-auto ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
+        
+        {/* Bouton Croix Explicite à l'intérieur du menu */}
+        <button 
+          onClick={() => setIsOpen(false)}
+          className="absolute top-8 right-8 p-3 bg-slate-100 text-slate-500 rounded-full hover:bg-red-50 hover:text-red-500 transition-colors md:hidden"
+          aria-label="Fermer le menu"
+        >
+          <X size={24} />
+        </button>
+
         {NAV_ITEMS.map((item) => (
           <a
             key={item.label}

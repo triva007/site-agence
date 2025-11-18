@@ -1,7 +1,10 @@
-import React from 'react';
-import { ArrowRight, CheckCircle2, Phone, Star } from 'lucide-react';
+
+import React, { useState } from 'react';
+import { ArrowRight, Phone, Star } from 'lucide-react';
 
 const Hero: React.FC = () => {
+  const [showBadge, setShowBadge] = useState(true);
+
   return (
     <section className="relative pt-32 pb-12 lg:pt-48 lg:pb-32 overflow-hidden bg-white">
       
@@ -15,13 +18,15 @@ const Hero: React.FC = () => {
           {/* Text Content */}
           <div className="lg:w-1/2 text-center lg:text-left reveal">
             
-            <div className="inline-flex items-center gap-2 bg-brand-blue/10 border border-brand-blue/20 rounded-full px-4 py-1.5 mb-8 animate-fade-in-up mx-auto lg:mx-0">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue"></span>
-              </span>
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-blue">Nouveau : Audit de visibilité offert</span>
-            </div>
+            {showBadge && (
+              <div className="inline-flex items-center gap-2 bg-brand-blue/10 border border-brand-blue/20 rounded-full pl-4 pr-4 py-1.5 mb-8 animate-fade-in-up mx-auto lg:mx-0 group transition-all">
+                <span className="flex h-2 w-2 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue"></span>
+                </span>
+                <span className="text-xs font-bold uppercase tracking-wider text-brand-blue">Nouveau : Audit de visibilité offert</span>
+              </div>
+            )}
 
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-slate-900 leading-[1.1] mb-6 tracking-tight">
               Votre entreprise mérite d'être <br className="hidden lg:block"/>
