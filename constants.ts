@@ -135,7 +135,7 @@ export const TESTIMONIALS: Testimonial[] = [
     role: "Gérant Garage",
     company: "AutoFix",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    quote: "J'ai pris l'abonnement à 149€ pour ne pas toucher à ma trésorerie. C'est parfait, tout est inclus et je n'ai rien à gérer."
+    quote: "Avant, on était invisibles sur Google. Maintenant, on a une image pro et les clients du coin nous trouvent facilement. C'est rassurant d'avoir un partenaire qui gère toute la technique pour nous."
   },
   {
     id: 2,
@@ -143,7 +143,7 @@ export const TESTIMONIALS: Testimonial[] = [
     role: "Restauratrice",
     company: "Le Petit Coin",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    quote: "Je voulais que le site soit à moi tout de suite. J'ai pris le Pack Visibilité. C'est clair, net et le site m'appartient vraiment."
+    quote: "Je voulais surtout protéger ma réputation. Le filtre d'avis fonctionne parfaitement : je gère les petits soucis en privé et ma note Google reste propre. C'est un vrai poids en moins au quotidien."
   }
 ];
 
@@ -170,7 +170,7 @@ export const PRICING_PLANS: PricingPlan[] = [
          value: "290 €"
       },
       {
-         title: "Hébergement & Maintenance (1 an offert)",
+         title: "Hébergement & Maintenance (3 mois offerts)",
          desc: "Serveur, mises à jour et technique offerts pour démarrer sereinement.",
          value: "180 €"
       }
@@ -181,11 +181,11 @@ export const PRICING_PLANS: PricingPlan[] = [
   },
   {
     title: "PACK SÉRÉNITÉ (ABONNEMENT)",
-    price: "149 € /mois",
-    originalPrice: "250 € /mois",
+    price: "197 € /mois",
+    originalPrice: "297 € /mois",
     discountLabel: "Idéal Trésorerie",
-    priceNote: "Sans engagement",
-    description: "Préservez votre trésorerie. Service tout inclus sans gestion. Vous arrêtez quand vous voulez.",
+    priceNote: "Engagement 3 mois",
+    description: "Préservez votre trésorerie. Service tout inclus sans gestion.",
     features: [
       "Création du site Internet Pro",
       "Hébergement & Nom de domaine INCLUS",
@@ -195,11 +195,11 @@ export const PRICING_PLANS: PricingPlan[] = [
       "Support Prioritaire 7j/7"
     ],
     bonuses: [
-      { title: "Formation : Maîtriser Google", desc: "Gérez votre image comme un pro.", value: "290 €" },
-      { title: "Frais de mise en service", desc: "(Payables une seule fois)", value: "500 €" }
+      { title: "Formation : Maîtriser Google", desc: "Gérez votre image comme un pro.", value: "OFFERTE" },
+      { title: "Frais de mise en service", desc: "Au lieu de 500€", value: "OFFERTS" }
     ],
     isPopular: false,
-    buttonText: "Choisir la formule sans engagement",
+    buttonText: "Choisir la formule flexible",
     buttonVariant: "outline"
   }
 ];
@@ -208,7 +208,7 @@ export const COMPARISON_DATA: ComparisonPoint[] = [
   {
     label: "Paiement",
     bad: "Souvent rigide (tout ou rien)",
-    good: "Flexible : Comptant (990€) ou Mensuel (149€)"
+    good: "Flexible : Comptant (990€) ou Mensuel (197€)"
   },
   {
     label: "Propriété du site",
@@ -230,15 +230,15 @@ export const COMPARISON_DATA: ComparisonPoint[] = [
 export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Quelle offre dois-je choisir ?",
-    answer: "Si vous avez la trésorerie et que vous voulez être propriétaire immédiat sans frais récurrents (hors hébergement après 1 an), le 'Pack Domination' à 990€ (tarif promo) est l'investissement le plus rentable. Si vous préférez lisser la dépense, le 'Pack Sérénité' à 149€/mois est idéal."
+    answer: "Si vous avez la trésorerie et que vous voulez être propriétaire immédiat sans frais récurrents (hors hébergement après 1 an), le 'Pack Domination' à 990€ (tarif promo) est l'investissement le plus rentable. Si vous préférez lisser la dépense, le 'Pack Sérénité' à 197€/mois est idéal."
   },
   {
-    question: "Pourquoi y a-t-il des frais de 500€ sur l'abonnement ?",
-    answer: "Comme l'offre est sans engagement, ces frais couvrent la création initiale du site par nos experts (Design, Intégration, Rédaction). C'est un paiement unique au démarrage."
+    question: "Pourquoi y a-t-il des frais de mise en service ?",
+    answer: "Bonne nouvelle : avec l'offre actuelle, les frais de mise en service (normalement 500€) sont OFFERTS."
   },
   {
-    question: "Pour le Pack Domination, que se passe-t-il après 1 an ?",
-    answer: "La première année, nous vous offrons l'hébergement et la sécurité. Ensuite, le site vous appartient, vous payez simplement l'hébergement (environ 70€/an) directement au fournisseur. Vous êtes libre."
+    question: "Pour le Pack Domination, que se passe-t-il après ?",
+    answer: "Les 3 premiers mois d'hébergement sont offerts. Ensuite, le site vous appartient, vous payez simplement l'hébergement (environ 70€/an) directement au fournisseur. Vous êtes libre."
   },
   {
     question: "Le délai de 7 jours est-il réel ?",

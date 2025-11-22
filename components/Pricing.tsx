@@ -21,6 +21,7 @@ const Pricing: React.FC = () => {
         "Rédaction Commerciale (On vend votre expertise)",
         "✅ 100% À VOUS (Propriétaire à vie)"
       ],
+      // BONUS MIS À JOUR : 3 mois hébergement, Suppression pack avis
       bonuses: [
         {
            title: "Formation : Maîtriser Google",
@@ -28,7 +29,7 @@ const Pricing: React.FC = () => {
            value: "290 €"
         },
         {
-           title: "Hébergement & Maintenance (1 an offert)",
+           title: "Hébergement & Maintenance (3 mois offerts)",
            desc: "Serveur, mises à jour et technique offerts pour démarrer sereinement.",
            value: "180 €"
         }
@@ -38,10 +39,10 @@ const Pricing: React.FC = () => {
     },
     {
       title: "PACK SÉRÉNITÉ (ABONNEMENT)",
-      price: "149 € /mois",
-      originalPrice: "250 € /mois",
-      priceNote: "Sans engagement",
-      description: "Préservez votre trésorerie. Service tout inclus sans gestion. Vous arrêtez quand vous voulez.",
+      price: "197 € /mois",
+      originalPrice: "297 € /mois",
+      priceNote: "Engagement 3 mois", 
+      description: "La solution flexible. Tout est inclus (Maintenance, Hébergement, Modifications), vous ne gérez rien.",
       features: [
         "Création du site Internet Pro",
         "Hébergement & Nom de domaine INCLUS",
@@ -50,20 +51,21 @@ const Pricing: React.FC = () => {
         "Zéro apport de départ",
         "Support Prioritaire 7j/7"
       ],
+      // BONUS MIS À JOUR : OFFERTS
       bonuses: [
         { 
-           title: "Formation : Maîtriser Google", 
-           desc: "Gérez votre image comme un pro.",
-           value: "290 €" 
+            title: "Formation : Maîtriser Google", 
+            desc: "Gérez votre image comme un pro.",
+            value: "OFFERTE" 
         },
         { 
-           title: "Frais de mise en service", 
-           desc: "(Payables une seule fois normalement)",
-           value: "500 €" 
+            title: "Frais de mise en service", 
+            desc: "Au lieu de 500€",
+            value: "OFFERTS" 
         }
       ],
       isDomination: false,
-      buttonText: "Choisir la formule sans engagement"
+      buttonText: "Choisir la formule flexible"
     }
   ];
 
@@ -87,7 +89,7 @@ const Pricing: React.FC = () => {
             Choisissez votre <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-cyan-400">liberté.</span>
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
-            Pas de devis à tiroirs. Pas de coûts cachés.
+            Pas de devis à tiroirs. Pas de coûts cachés. Juste deux options claires pour propulser votre activité.
           </p>
         </div>
 
@@ -175,24 +177,33 @@ const Pricing: React.FC = () => {
                     <div className={`mt-auto mb-8 rounded-2xl p-1 ${isDomination ? 'bg-gradient-to-b from-brand-yellow to-yellow-600' : 'bg-slate-100'}`}>
                       <div className={`rounded-xl p-5 h-full ${isDomination ? 'bg-[#0B1121]' : 'bg-white'}`}>
                         <div className={`flex items-center gap-2 font-black uppercase text-xs tracking-wider mb-4 ${isDomination ? 'text-brand-yellow' : 'text-slate-500'}`}>
-                          <Gift size={16} /> {isDomination ? "Bonus Offerts (Durée Limitée)" : "Cadeaux de bienvenue"}
+                          <Gift size={16} /> {isDomination ? "Bonus Offerts (Durée Limitée)" : "Frais de démarrage"}
                         </div>
                         
                         <ul className="space-y-4">
                           {plan.bonuses.map((bonus, i) => (
                             <li key={i} className={`relative pl-0 ${isDomination ? 'border-b border-slate-800 last:border-0 pb-4 last:pb-0' : ''}`}>
                               
-                              <div className="flex justify-between items-start mb-1">
-                                <span className={`font-bold text-sm ${isDomination ? 'text-white' : 'text-slate-700'}`}>{bonus.title}</span>
-                                <div className="text-right shrink-0 ml-2">
-                                    <div className="text-[10px] text-slate-400 line-through decoration-red-500">Valeur {bonus.value}</div>
-                                    <div className={`text-[10px] font-black uppercase ${isDomination ? 'text-brand-yellow' : 'text-brand-blue'}`}>OFFERT</div>
+                              {isDomination ? (
+                                <>
+                                  <div className="flex justify-between items-start mb-1">
+                                    <span className="font-bold text-white text-sm">{bonus.title}</span>
+                                    <div className="text-right shrink-0 ml-2">
+                                        <div className="text-[10px] text-slate-500 line-through decoration-red-500">Valeur {bonus.value}</div>
+                                        <div className="text-[10px] font-black text-brand-yellow uppercase">OFFERT</div>
+                                    </div>
+                                  </div>
+                                  <p className="text-xs text-slate-400 leading-snug pr-10">
+                                    {bonus.desc}
+                                  </p>
+                                </>
+                              ) : (
+                                <div className="flex justify-between items-center text-sm">
+                                  <span className="font-bold text-slate-700">{bonus.title}</span>
+                                  <span className={`px-2 py-0.5 rounded text-xs font-bold ${bonus.value.includes('OFFERT') ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'}`}>
+                                    {bonus.value}
+                                  </span>
                                 </div>
-                              </div>
-                              {bonus.desc && (
-                                <p className="text-xs text-slate-400 leading-snug pr-10">
-                                  {bonus.desc}
-                                </p>
                               )}
 
                             </li>
@@ -216,7 +227,7 @@ const Pricing: React.FC = () => {
                   </Button>
                   
                   <p className={`text-center text-[10px] mt-4 font-medium uppercase tracking-wide ${isDomination ? 'text-slate-500' : 'text-slate-400'}`}>
-                     ⚡ Limité à 1 activité par ville pour éviter la concurrence
+                    {isDomination ? '⚡ Limité à 1 activité par ville pour éviter la concurrence' : 'Engagement 3 mois minimum'}
                   </p>
 
                 </div>

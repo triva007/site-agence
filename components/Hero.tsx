@@ -24,7 +24,7 @@ const Hero: React.FC = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue"></span>
                 </span>
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-blue">Nouveau : Audit de visibilité offert</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-brand-blue">Spécialement pour les entreprises locales</span>
               </div>
             )}
 
@@ -47,7 +47,7 @@ const Hero: React.FC = () => {
                     <img src="https://randomuser.me/api/portraits/women/44.jpg" className="w-8 h-8 rounded-full border-2 border-white" alt=""/>
                     <img src="https://randomuser.me/api/portraits/men/86.jpg" className="w-8 h-8 rounded-full border-2 border-white" alt=""/>
                  </div>
-                 <p>Déjà 100+ artisans aidés</p>
+                 <p>Rejoignez les pros qui réussissent</p>
               </div>
             </div>
           </div>

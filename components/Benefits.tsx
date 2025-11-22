@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TrendingUp, ShieldCheck, RefreshCcw, Lock, Zap, Star, MapPin } from 'lucide-react';
+import { TrendingUp, ShieldCheck, RefreshCcw, Lock, Zap, Star, CheckCircle2, Ban } from 'lucide-react';
 
 const Benefits: React.FC = () => {
   const features = [
@@ -11,8 +11,8 @@ const Benefits: React.FC = () => {
     },
     {
       icon: ShieldCheck,
-      title: "Le Bouclier d'Avis",
-      description: "Notre système intelligent filtre les avis : les clients contents sont dirigés vers Google, les mécontents vers un formulaire privé."
+      title: "Le Filtre Anti-Mauvais Foi",
+      description: "Protection active de votre réputation."
     },
     {
       icon: RefreshCcw,
@@ -64,25 +64,55 @@ const Benefits: React.FC = () => {
              </div>
           </div>
 
-          {/* Feature 2: Le Bouclier d'Avis (Dark Card) */}
-          <div className="reveal md:col-span-1 lg:col-span-2 bg-brand-dark text-white rounded-3xl p-6 sm:p-8 border border-slate-800 group overflow-hidden relative flex flex-col justify-between min-h-[280px]">
-            <div className="absolute right-0 top-0 p-8 opacity-10 text-brand-blue">
-               <ShieldCheck size={140} />
+          {/* Feature 2: Le Filtre Anti-Mauvais Foi (Dark Card) */}
+          <div className="reveal md:col-span-1 lg:col-span-2 bg-[#0B1121] text-white rounded-3xl p-6 sm:p-8 border border-slate-800 group overflow-hidden relative flex flex-col justify-between min-h-[320px] shadow-xl">
+            <div className="absolute right-0 top-0 p-8 opacity-5 text-brand-blue">
+               <ShieldCheck size={180} />
             </div>
+            
             <div className="relative z-10">
-              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-md mb-4 text-brand-yellow">
-                {React.createElement(features[1].icon, { size: 24 })}
+              <div className="w-12 h-12 bg-slate-800/50 rounded-xl flex items-center justify-center backdrop-blur-md mb-5 border border-slate-700 shadow-inner text-brand-yellow">
+                <ShieldCheck size={24} />
               </div>
-              <h3 className="text-xl font-bold mb-2 text-white">{features[1].title}</h3>
-              <p className="text-slate-400 text-sm sm:text-base">{features[1].description}</p>
+              
+              <h3 className="text-2xl font-black mb-3 text-white">Le Filtre Anti-Mauvais Foi</h3>
+              <p className="text-slate-400 text-sm leading-relaxed font-medium mb-6">
+                Le client est content ? Son avis va sur Google.<br/> 
+                Le client râle ? Son avis est bloqué et arrive direct dans votre boîte mail pour régler ça en privé. <br/>
+                <span className="text-white font-bold">Votre note reste impeccable.</span>
+              </p>
             </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold border border-green-500/30 flex items-center gap-1">
-                  <Star size={10} fill="currentColor"/> 5★ Public
-                </span>
-                <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold border border-red-500/30 flex items-center gap-1">
-                   1★ Privé (Filtré)
-                </span>
+
+            {/* Visualization Box */}
+            <div className="mt-auto bg-[#020617] rounded-xl p-4 border border-slate-800/50 shadow-inner relative z-10">
+                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                    <span>Note du Client</span>
+                    <span>Résultat</span>
+                </div>
+                
+                {/* 5 Stars - Public */}
+                <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-800/50">
+                    <div className="flex text-brand-yellow gap-0.5">
+                        {[...Array(5)].map((_,i) => <Star key={i} size={12} fill="currentColor" />)}
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded text-[10px] font-bold">
+                        <CheckCircle2 size={12} /> Public (Visible)
+                    </div>
+                </div>
+
+                {/* 1 Star - Blocked */}
+                <div className="flex items-center justify-between">
+                    <div className="flex gap-0.5">
+                        <Star size={12} fill="currentColor" className="text-red-500" />
+                        <Star size={12} fill="currentColor" className="text-slate-800" />
+                        <Star size={12} fill="currentColor" className="text-slate-800" />
+                        <Star size={12} fill="currentColor" className="text-slate-800" />
+                        <Star size={12} fill="currentColor" className="text-slate-800" />
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded text-[10px] font-bold">
+                        <Ban size={12} /> Bloqué (Privé)
+                    </div>
+                </div>
             </div>
           </div>
 
