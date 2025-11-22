@@ -164,16 +164,9 @@ export const PRICING_PLANS: PricingPlan[] = [
       "✅ 100% À VOUS (Propriétaire à vie)"
     ],
     bonuses: [
-      {
-         title: "Formation : Maîtriser Google",
-         desc: "Tuto vidéo simple pour gérer votre fiche et poster vos photos comme un pro.",
-         value: "290 €"
-      },
-      {
-         title: "Hébergement & Maintenance (1 an offert)",
-         desc: "Serveur, mises à jour et technique offerts pour démarrer sereinement.",
-         value: "180 €"
-      }
+      "Formation : Maîtriser Google (Valeur 290€)",
+      "Hébergement & Maintenance (3 mois offerts) (Valeur 180€)",
+      "Pack 'Réponses aux Avis' (Valeur 150€)"
     ],
     isPopular: true, 
     buttonText: "Bloquer ce tarif maintenant",
@@ -184,22 +177,21 @@ export const PRICING_PLANS: PricingPlan[] = [
     price: "149 € /mois",
     originalPrice: "250 € /mois",
     discountLabel: "Idéal Trésorerie",
-    priceNote: "Sans engagement",
-    description: "Préservez votre trésorerie. Service tout inclus sans gestion. Vous arrêtez quand vous voulez.",
+    priceNote: "Prix bloqué à vie",
+    description: "La solution sans risque pour démarrer fort sans toucher à votre trésorerie.",
     features: [
-      "Création du site Internet Pro",
-      "Hébergement & Nom de domaine INCLUS",
-      "Maintenance technique 24/7 INCLUSE",
+      "Création Site Internet Pro",
+      "Hébergement & Nom de domaine",
+      "Maintenance technique 24/7",
       "Modifications illimitées",
       "Zéro apport de départ",
-      "Support Prioritaire 7j/7"
+      "Support Prioritaire"
     ],
     bonuses: [
-      { title: "Formation : Maîtriser Google", desc: "Gérez votre image comme un pro.", value: "290 €" },
-      { title: "Frais de mise en service", desc: "(Payables une seule fois)", value: "500 €" }
+      "Frais de mise en service OFFERTS",
     ],
     isPopular: false,
-    buttonText: "Choisir la formule sans engagement",
+    buttonText: "Je choisis la mensualisation",
     buttonVariant: "outline"
   }
 ];
@@ -233,12 +225,12 @@ export const FAQ_ITEMS: FaqItem[] = [
     answer: "Si vous avez la trésorerie et que vous voulez être propriétaire immédiat sans frais récurrents (hors hébergement après 1 an), le 'Pack Domination' à 990€ (tarif promo) est l'investissement le plus rentable. Si vous préférez lisser la dépense, le 'Pack Sérénité' à 149€/mois est idéal."
   },
   {
-    question: "Pourquoi y a-t-il des frais de 500€ sur l'abonnement ?",
-    answer: "Comme l'offre est sans engagement, ces frais couvrent la création initiale du site par nos experts (Design, Intégration, Rédaction). C'est un paiement unique au démarrage."
-  },
-  {
     question: "Pour le Pack Domination, que se passe-t-il après 1 an ?",
     answer: "La première année, nous vous offrons l'hébergement et la sécurité. Ensuite, le site vous appartient, vous payez simplement l'hébergement (environ 70€/an) directement au fournisseur. Vous êtes libre."
+  },
+  {
+    question: "Y a-t-il un engagement sur l'abonnement ?",
+    answer: "Oui, l'abonnement Sérénité comprend un engagement de 12 mois pour couvrir les frais de création initiale. Au-delà, vous êtes libre de continuer pour bénéficier de la maintenance ou d'arrêter."
   },
   {
     question: "Le délai de 7 jours est-il réel ?",

@@ -48,7 +48,7 @@ export interface PricingPlan {
   priceNote?: string; // Message d'urgence
   description: string;
   features: string[];
-  bonuses?: { title: string; value: string; desc: string }[]; // Cadeaux inclus avec description
+  bonuses?: string[]; // Cadeaux inclus
   isPopular?: boolean;
   buttonText: string;
   buttonVariant: 'primary' | 'secondary' | 'outline';

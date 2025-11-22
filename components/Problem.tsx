@@ -1,7 +1,29 @@
+
 import React from 'react';
-import { PROBLEM_CARDS } from '../constants';
+import { XCircle, ImageOff, Star } from 'lucide-react';
 
 const Problem: React.FC = () => {
+  const cards = [
+    {
+      icon: XCircle,
+      title: "L'Invisibilité Numérique",
+      description: "97% de vos prospects cherchent un pro sur Google avant d'appeler. Si vous n'êtes pas dans le Top 3, vous offrez littéralement votre chiffre d'affaires à vos concurrents.",
+      color: "bg-red-50 text-red-600"
+    },
+    {
+      icon: ImageOff,
+      title: "L'Image Amateur",
+      description: "Un site lent, moche ou non sécurisé fait fuir 80% des visiteurs instantanément. Votre site doit inspirer confiance dès la première seconde, sinon vous perdez des appels.",
+      color: "bg-orange-50 text-orange-600"
+    },
+    {
+      icon: Star,
+      title: "La Hantise des Mauvais Avis",
+      description: "Une seule mauvaise note injustifiée peut ruiner votre réputation. Notre système 'Bouclier' intercepte les mécontents en privé et propulse les clients ravis sur Google.",
+      color: "bg-slate-100 text-slate-600"
+    }
+  ];
+
   return (
     <section id="problem" className="py-24 bg-slate-900 text-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,7 +39,7 @@ const Problem: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {PROBLEM_CARDS.map((card, index) => (
+          {cards.map((card, index) => (
             <div key={index} className="reveal stagger-1 bg-slate-800/50 border border-slate-700 p-8 rounded-3xl hover:bg-slate-800 transition-colors group">
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${card.color} shadow-lg`}>
                 {React.createElement(card.icon, { size: 28 })}

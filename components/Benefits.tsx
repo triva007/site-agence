@@ -1,8 +1,36 @@
+
 import React from 'react';
-import { FEATURES } from '../constants';
-import { MapPin, Star, ShieldCheck } from 'lucide-react';
+import { TrendingUp, ShieldCheck, RefreshCcw, Lock, Zap, Star, MapPin } from 'lucide-react';
 
 const Benefits: React.FC = () => {
+  const features = [
+    {
+      icon: TrendingUp,
+      title: "Domination Locale",
+      description: "Nous optimisons tout pour que lorsque quelqu'un tape votre métier + votre ville, c'est VOUS qui sortez en premier."
+    },
+    {
+      icon: ShieldCheck,
+      title: "Le Bouclier d'Avis",
+      description: "Notre système intelligent filtre les avis : les clients contents sont dirigés vers Google, les mécontents vers un formulaire privé."
+    },
+    {
+      icon: RefreshCcw,
+      title: "Création ou Refonte",
+      description: "Site existant ou page blanche : nous livrons un site moderne, rapide et vendeur en seulement 7 jours."
+    },
+    {
+      icon: Lock,
+      title: "Liberté Totale",
+      description: "Choisissez votre modèle : Pack Visibilité (Achat unique) ou Pack Sérénité (Abonnement). Pas de frais cachés."
+    },
+    {
+      icon: Zap,
+      title: "Livraison Express",
+      description: "Votre outil de travail est prêt à générer du chiffre d'affaires en une semaine chrono (7 jours)."
+    }
+  ];
+
   return (
     <section className="py-24 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,11 +51,11 @@ const Benefits: React.FC = () => {
              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-brand-blue/10 transition-colors"></div>
              <div className="relative z-10 flex-1">
                 <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm mb-6 text-brand-blue">
-                  {React.createElement(FEATURES[0].icon, { size: 28, strokeWidth: 2 })}
+                  {React.createElement(features[0].icon, { size: 28, strokeWidth: 2 })}
                 </div>
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3">{FEATURES[0].title}</h3>
-                  <p className="text-slate-500 leading-relaxed text-sm sm:text-base">{FEATURES[0].description}</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3">{features[0].title}</h3>
+                  <p className="text-slate-500 leading-relaxed text-sm sm:text-base">{features[0].description}</p>
                 </div>
              </div>
              <div className="mt-8 w-full h-40 sm:h-48 bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden relative">
@@ -43,10 +71,10 @@ const Benefits: React.FC = () => {
             </div>
             <div className="relative z-10">
               <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-md mb-4 text-brand-yellow">
-                {React.createElement(FEATURES[1].icon, { size: 24 })}
+                {React.createElement(features[1].icon, { size: 24 })}
               </div>
-              <h3 className="text-xl font-bold mb-2 text-white">{FEATURES[1].title}</h3>
-              <p className="text-slate-400 text-sm sm:text-base">{FEATURES[1].description}</p>
+              <h3 className="text-xl font-bold mb-2 text-white">{features[1].title}</h3>
+              <p className="text-slate-400 text-sm sm:text-base">{features[1].description}</p>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
                 <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold border border-green-500/30 flex items-center gap-1">
@@ -61,29 +89,29 @@ const Benefits: React.FC = () => {
           {/* Feature 3: Création ou Refonte */}
           <div className="reveal md:col-span-1 bg-blue-50 rounded-3xl p-6 sm:p-8 border border-blue-100 group hover:shadow-lg hover:shadow-blue-100/50 transition-all min-h-[200px]">
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-4 text-brand-blue">
-               {React.createElement(FEATURES[2].icon, { size: 24 })}
+               {React.createElement(features[2].icon, { size: 24 })}
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">{FEATURES[2].title}</h3>
-            <p className="text-slate-600 text-sm">{FEATURES[2].description}</p>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">{features[2].title}</h3>
+            <p className="text-slate-600 text-sm">{features[2].description}</p>
           </div>
 
           {/* Feature 4: Propriété 100% */}
           <div className="reveal md:col-span-1 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm hover:shadow-md transition-all min-h-[200px]">
             <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mb-4 text-brand-dark">
-               {React.createElement(FEATURES[3].icon, { size: 24 })}
+               {React.createElement(features[3].icon, { size: 24 })}
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">{FEATURES[3].title}</h3>
-            <p className="text-slate-500 text-sm">{FEATURES[3].description}</p>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">{features[3].title}</h3>
+            <p className="text-slate-500 text-sm">{features[3].description}</p>
           </div>
 
            {/* Feature 5: Hébergement Offert */}
           <div className="reveal md:col-span-3 lg:col-span-2 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6 hover:border-brand-blue/30 transition-colors">
              <div className="flex-shrink-0 w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-green-600">
-                {React.createElement(FEATURES[4].icon, { size: 32 })}
+                {React.createElement(features[4].icon, { size: 32 })}
              </div>
              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">{FEATURES[4].title}</h3>
-                <p className="text-slate-500 text-sm">{FEATURES[4].description}</p>
+                <h3 className="text-xl font-bold text-slate-900 mb-1">{features[4].title}</h3>
+                <p className="text-slate-500 text-sm">{features[4].description}</p>
              </div>
           </div>
 
