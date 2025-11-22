@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Instagram, Linkedin, ArrowRight, MessageCircle } from 'lucide-react';
 
@@ -15,12 +16,15 @@ const Footer: React.FC = () => {
              <p className="text-blue-100 text-lg mb-10 max-w-2xl mx-auto">Discutons de votre projet. Audit gratuit de votre présence en ligne actuelle.</p>
              <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <button 
-                  onClick={() => window.location.href = 'mailto:contact@triva-media.com'}
+                  onClick={() => window.location.href = 'mailto:aaron@triva-media.com'}
                   className="bg-white text-brand-blue hover:bg-blue-50 px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-xl"
                 >
                   Nous contacter par mail <ArrowRight size={20} />
                 </button>
-                <button className="bg-brand-dark hover:bg-slate-900 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all border border-white/10">
+                <button 
+                  onClick={() => window.open('https://wa.me/33767056066', '_blank')}
+                  className="bg-brand-dark hover:bg-slate-900 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all border border-white/10"
+                >
                   <MessageCircle size={20} /> Sur Whatsapp
                 </button>
              </div>
