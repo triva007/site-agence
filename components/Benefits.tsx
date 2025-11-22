@@ -1,6 +1,6 @@
 import React from 'react';
 import { FEATURES } from '../constants';
-import { MapPin } from 'lucide-react';
+import { MapPin, Star, ShieldCheck } from 'lucide-react';
 
 const Benefits: React.FC = () => {
   return (
@@ -12,13 +12,13 @@ const Benefits: React.FC = () => {
             Un investissement <br/>
             <span className="text-brand-blue">qui rapporte de l'argent.</span>
           </h2>
-          <p className="text-slate-500 text-lg max-w-2xl">Votre site web n'est pas une dépense, c'est un employé qui travaille 24h/24 pour vous amener des clients.</p>
+          <p className="text-slate-500 text-lg max-w-2xl">Votre site web n'est pas une dépense, c'est un actif commercial qui vous appartient à 100%.</p>
         </div>
 
         {/* Bento Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-auto">
           
-          {/* Feature 1 mapped from constants (Identity -> Commercial 24/24) */}
+          {/* Feature 1: Domination Locale */}
           <div className="reveal md:col-span-2 lg:col-span-2 row-span-2 bg-slate-50 rounded-3xl p-6 sm:p-8 border border-slate-100 hover:border-brand-blue/30 transition-colors group relative overflow-hidden flex flex-col">
              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-brand-blue/10 transition-colors"></div>
              <div className="relative z-10 flex-1">
@@ -36,10 +36,10 @@ const Benefits: React.FC = () => {
              </div>
           </div>
 
-          {/* Feature 2 - GMB / Map (Specific Design kept) */}
+          {/* Feature 2: Le Bouclier d'Avis (Dark Card) */}
           <div className="reveal md:col-span-1 lg:col-span-2 bg-brand-dark text-white rounded-3xl p-6 sm:p-8 border border-slate-800 group overflow-hidden relative flex flex-col justify-between min-h-[280px]">
             <div className="absolute right-0 top-0 p-8 opacity-10 text-brand-blue">
-               <MapPin size={140} />
+               <ShieldCheck size={140} />
             </div>
             <div className="relative z-10">
               <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-md mb-4 text-brand-yellow">
@@ -48,14 +48,17 @@ const Benefits: React.FC = () => {
               <h3 className="text-xl font-bold mb-2 text-white">{FEATURES[1].title}</h3>
               <p className="text-slate-400 text-sm sm:text-base">{FEATURES[1].description}</p>
             </div>
-            <div className="mt-4 flex gap-2">
-                <span className="px-2 py-1 rounded bg-white/10 text-xs font-bold">Visites magasin</span>
-                <span className="px-2 py-1 rounded bg-white/10 text-xs font-bold">Appels</span>
-                <span className="px-2 py-1 rounded bg-white/10 text-xs font-bold">Avis 5★</span>
+            <div className="mt-4 flex flex-wrap gap-2">
+                <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold border border-green-500/30 flex items-center gap-1">
+                  <Star size={10} fill="currentColor"/> 5★ Public
+                </span>
+                <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold border border-red-500/30 flex items-center gap-1">
+                   1★ Privé (Filtré)
+                </span>
             </div>
           </div>
 
-          {/* Feature 3 */}
+          {/* Feature 3: Création ou Refonte */}
           <div className="reveal md:col-span-1 bg-blue-50 rounded-3xl p-6 sm:p-8 border border-blue-100 group hover:shadow-lg hover:shadow-blue-100/50 transition-all min-h-[200px]">
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-4 text-brand-blue">
                {React.createElement(FEATURES[2].icon, { size: 24 })}
@@ -64,7 +67,7 @@ const Benefits: React.FC = () => {
             <p className="text-slate-600 text-sm">{FEATURES[2].description}</p>
           </div>
 
-          {/* Feature 4 */}
+          {/* Feature 4: Propriété 100% */}
           <div className="reveal md:col-span-1 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm hover:shadow-md transition-all min-h-[200px]">
             <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mb-4 text-brand-dark">
                {React.createElement(FEATURES[3].icon, { size: 24 })}
@@ -73,7 +76,7 @@ const Benefits: React.FC = () => {
             <p className="text-slate-500 text-sm">{FEATURES[3].description}</p>
           </div>
 
-           {/* Feature 5 - Wide (Uses FEATURES[4]) */}
+           {/* Feature 5: Hébergement Offert */}
           <div className="reveal md:col-span-3 lg:col-span-2 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6 hover:border-brand-blue/30 transition-colors">
              <div className="flex-shrink-0 w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-green-600">
                 {React.createElement(FEATURES[4].icon, { size: 32 })}

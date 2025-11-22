@@ -10,7 +10,10 @@ import {
   ArrowUpRight,
   XCircle,
   CheckCircle,
-  ShieldCheck
+  ShieldCheck,
+  Lock,
+  RefreshCcw,
+  Star
 } from 'lucide-react';
 import { Feature, ProcessStep, Project, Testimonial, FaqItem, NavigationItem, PricingPlan, ComparisonPoint, TeamMember } from './types';
 
@@ -25,8 +28,8 @@ export const NAV_ITEMS: NavigationItem[] = [
 export const STATS = [
   { value: "+300%", label: "De visibilité locale" },
   { value: "x5", label: "Appels clients / mois" },
-  { value: "1er", label: "Sur Google Maps" },
-  { value: "24/7", label: "Votre commercial digital" },
+  { value: "100%", label: "Propriétaire du site" },
+  { value: "4.9/5", label: "Note moyenne clients" },
 ];
 
 export const PROBLEM_CARDS = [
@@ -37,15 +40,15 @@ export const PROBLEM_CARDS = [
     color: "bg-red-50 text-red-600"
   },
   {
-    icon: Smartphone,
-    title: "Le Site Moche",
-    description: "53% des utilisateurs quittent un site qui met plus de 3 secondes à charger ou qui s'affiche mal sur mobile. C'est autant de clients perdus.",
+    icon: Lock,
+    title: "Le Piège de la Location",
+    description: "Beaucoup d'agences vous 'louent' votre site. Si vous arrêtez de payer, vous perdez tout. Avec nous, le site est à VOUS.",
     color: "bg-orange-50 text-orange-600"
   },
   {
-    icon: Clock,
-    title: "La Perte de Temps",
-    description: "Essayer de faire son site soi-même ou gérer ses réseaux sociaux, c'est des heures perdues que vous ne passez pas à faire votre vrai métier.",
+    icon: Star,
+    title: "La Peur des Avis",
+    description: "Un seul mauvais avis peut ruiner votre réputation. Vous ne savez pas comment inciter les clients heureux à poster et calmer les mécontents.",
     color: "bg-slate-100 text-slate-600"
   }
 ];
@@ -57,42 +60,42 @@ export const FEATURES: Feature[] = [
     description: "Nous optimisons tout pour que lorsque quelqu'un tape votre métier + votre ville, c'est VOUS qui sortez en premier."
   },
   {
-    icon: MapPin,
-    title: "Fiche Google N°1",
-    description: "Votre fiche établissement optimisée pour apparaître dans le 'Pack Local' (les 3 premiers résultats de la carte)."
-  },
-  {
-    icon: Layout,
-    title: "Design Convertisseur",
-    description: "Un site beau, oui. Mais surtout un site psychologiquement conçu pour transformer le visiteur en client."
-  },
-  {
-    icon: Clock,
-    title: "Zéro Maintenance",
-    description: "Mises à jour, sécurité, modifications... On gère tout. Vous, vous gérez juste l'afflux de clients."
-  },
-  {
     icon: ShieldCheck,
-    title: "Fiabilité Totale",
-    description: "Hébergement sécurisé, certificats SSL et sauvegardes automatiques. Votre business est en sécurité."
+    title: "Le Bouclier d'Avis",
+    description: "Notre système intelligent filtre les avis : les clients contents sont dirigés vers Google, les mécontents vers un formulaire privé pour vous."
+  },
+  {
+    icon: RefreshCcw,
+    title: "Création ou Refonte",
+    description: "Vous avez déjà un site vieux et moche ? On garde votre nom de domaine et on refait tout à neuf pour convertir."
+  },
+  {
+    icon: Lock,
+    title: "Propriété à 100%",
+    description: "Contrairement aux autres, vous êtes propriétaire de votre site. Pas d'abonnement à vie pour garder votre outil."
+  },
+  {
+    icon: Zap,
+    title: "Hébergement Offert",
+    description: "La première année, nous vous offrons l'hébergement haute performance, la sécurité SSL et la maintenance."
   }
 ];
 
 export const PROCESS_STEPS: ProcessStep[] = [
   {
     number: "1",
-    title: "L'Audit (Gratuit)",
-    description: "On regarde ensemble votre présence actuelle et combien de clients vous perdez chaque mois au profit de vos concurrents."
+    title: "L'Audit & Stratégie",
+    description: "On analyse votre situation (site existant ou création). On définit comment vous faire passer devant vos concurrents."
   },
   {
     number: "2",
     title: "La Construction",
-    description: "En 14 jours, nous créons votre site haute performance et optimisons votre fiche Google. Vous validez, on lance."
+    description: "En 14 jours, nous créons (ou refaisons) votre site haute performance et installons le système de filtrage d'avis."
   },
   {
     number: "3",
-    title: "L'Avalanche",
-    description: "Votre site est en ligne. Votre fiche Google remonte. Votre téléphone commence à sonner plus souvent."
+    title: "La Livraison & Propriété",
+    description: "On vous remet les clés. Le site est à vous. On lance l'indexation Google pour faire sonner le téléphone."
   }
 ];
 
@@ -102,21 +105,21 @@ export const PORTFOLIO: Project[] = [
     title: "Bistrot 12",
     category: "Restauration",
     image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Réservations complètes tous les weekends depuis la mise en ligne."
+    description: "Refonte complète : +40% de réservations le premier mois."
   },
   {
     id: 2,
     title: "Garage Vauthier",
     category: "Automobile",
     image: "https://images.unsplash.com/photo-1486006920555-c77dcf18193c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "+15 appels par semaine grâce à la fiche Google optimisée."
+    description: "Note Google passée de 3.8 à 4.7 grâce au filtre d'avis."
   },
   {
     id: 3,
     title: "L'Atelier Coiffure",
     category: "Beauté",
     image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Attire une nouvelle clientèle jeune grâce au design moderne."
+    description: "Création de site : 1ère position Google sur sa ville."
   }
 ];
 
@@ -127,44 +130,44 @@ export const TESTIMONIALS: Testimonial[] = [
     role: "Gérant Garage",
     company: "AutoFix",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    quote: "Avant, on ne me trouvait pas sur Google. Depuis que Triva-Media a repris ma fiche et mon site, j'ai dû embaucher un mécano de plus pour suivre la cadence."
+    quote: "J'avais un site Wix que je payais tous les mois pour rien. Triva-Media m'a fait un vrai site qui m'appartient et qui m'amène du monde."
   },
   {
     id: 2,
     name: "Sophie",
-    role: "Ostéopathe",
-    company: "Cabinet Bien-être",
+    role: "Restauratrice",
+    company: "Le Petit Coin",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    quote: "Simple, rapide et super efficace. Je ne m'occupe de rien, et mon agenda Doctolib se remplit tout seul grâce au référencement."
+    quote: "Le système de filtre d'avis est génial. J'ai évité deux mauvaises notes injustifiées et j'ai plein de 5 étoiles sur Google maintenant."
   }
 ];
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
-    title: "Pack Essentiel",
+    title: "Pack Visibilité",
     price: "1'490 €",
-    description: "L'arme absolue pour démarrer et prendre des parts de marché.",
+    description: "Idéal pour une création ou une refonte efficace.",
     features: [
-      "Site Web Ultra-Rapide (5 pages)",
+      "Création ou Refonte complète du site",
+      "Propriété à 100% (Pas de location)",
       "Optimisation Google Maps (GMB)",
-      "Rédaction des textes de vente",
-      "Hébergement & Nom de domaine inclus",
-      "Support WhatsApp Réactif"
+      "Hébergement & Sécurité inclus (1 an)",
+      "Rédaction des textes de vente"
     ],
     isPopular: false,
-    buttonText: "Je lance mon site",
+    buttonText: "Je lance mon projet",
     buttonVariant: "primary"
   },
   {
     title: "Pack Domination",
     price: "2'490 €",
-    description: "Pour ceux qui veulent être N°1 incontesté sur leur ville.",
+    description: "Pour blinder votre réputation et écraser la concurrence.",
     features: [
-      "Site Web Illimité & Blog",
-      "Système de Réservation / Commande",
+      "Tout du Pack Visibilité",
+      "Système 'Bouclier d'Avis' (Filtrage)",
       "Campagne d'Avis Clients Automatisée",
+      "Site Illimité (Pages & Blog)",
       "Shooting Photo Pro Inclus",
-      "Audit Mensuel des résultats",
       "Priorité Support 7j/7"
     ],
     isPopular: true,
@@ -175,39 +178,43 @@ export const PRICING_PLANS: PricingPlan[] = [
 
 export const COMPARISON_DATA: ComparisonPoint[] = [
   {
-    label: "Temps nécessaire",
-    bad: "Des semaines de réunions",
-    good: "30 min de votre temps (on gère le reste)"
+    label: "Propriété du site",
+    bad: "Location (Le site ne vous appartient pas)",
+    good: "100% Propriétaire (Le site est à vous)"
   },
   {
-    label: "Référencement",
-    bad: "Site invisible sur Google",
-    good: "Optimisé pour être en 1ère page"
+    label: "Réputation",
+    bad: "Vous subissez les mauvais avis",
+    good: "Filtrage : Seuls les bons vont sur Google"
   },
   {
     label: "Coût",
-    bad: "Abonnements mensuels cachés",
+    bad: "Abonnements mensuels à vie",
     good: "Paiement unique & transparent"
   },
   {
-    label: "Design",
-    bad: "Template générique",
-    good: "Design sur-mesure haute conversion"
+    label: "Type de prestation",
+    bad: "Outil à bricoler soi-même",
+    good: "Clé en main (Création ou Refonte)"
   }
 ];
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "Combien de temps avant d'avoir des résultats ?",
-    answer: "Dès la mise en ligne, votre image change instantanément. Pour le référencement Google, les premiers effets se font sentir sous 2 à 4 semaines, avec une montée en puissance constante."
+    question: "J'ai déjà un site web, pouvez-vous le modifier ?",
+    answer: "Oui ! Nous faisons de la refonte. On garde votre nom de domaine, on récupère ce qui est bon, et on refait tout le design et la technique pour qu'il convertisse enfin les visiteurs en clients."
   },
   {
-    question: "Je suis nul en informatique, comment je gère mon site ?",
-    answer: "Vous ne gérez rien. C'est notre promesse. Si vous avez une modification à faire (changer un prix, une photo), vous nous envoyez un WhatsApp et on le fait pour vous dans la journée."
+    question: "Le site m'appartient-il vraiment ?",
+    answer: "Absolument. Contrairement à beaucoup d'agences qui fonctionnent par abonnement (leasing), chez Triva-Media, une fois le site payé, il est à vous à 100%. Vous êtes libre."
   },
   {
-    question: "Pourquoi c'est plus cher qu'un site Wix ?",
-    answer: "Un site Wix est un outil que vous devez bricoler vous-même. Nous, nous vous vendons un résultat commercial clé en main, optimisé par des experts pour transformer les visiteurs en clients."
+    question: "C'est quoi le 'Filtre d'Avis' ?",
+    answer: "C'est un système intelligent qu'on installe. Quand un client veut laisser un avis : s'il met 4 ou 5 étoiles, on l'envoie sur Google. S'il met 1, 2 ou 3 étoiles, on l'envoie vers un formulaire privé que seul vous recevez. Ça protège votre note publique."
+  },
+  {
+    question: "Combien coûte l'hébergement après la 1ère année ?",
+    answer: "La première année est offerte. Ensuite, c'est un petit coût annuel (environ 100-150€/an) pour le serveur et le nom de domaine. Vous pouvez payer via nous ou directement à l'hébergeur, c'est transparent."
   }
 ];
 
