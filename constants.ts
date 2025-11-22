@@ -90,7 +90,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
   {
     number: "2",
     title: "La Construction",
-    description: "En 14 jours, nous créons (ou refaisons) votre site haute performance et installons le système de filtrage d'avis."
+    description: "En 7 jours, nous créons (ou refaisons) votre site haute performance et installons le système de filtrage d'avis."
   },
   {
     number: "3",
@@ -149,6 +149,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     description: "Idéal pour une création ou une refonte efficace.",
     features: [
       "Création ou Refonte complète du site",
+      "Livraison clé en main sous 7 jours",
       "Propriété à 100% (Pas de location)",
       "Optimisation Google Maps (GMB)",
       "Hébergement & Sécurité inclus (1 an)",
@@ -164,6 +165,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     description: "Pour blinder votre réputation et écraser la concurrence.",
     features: [
       "Tout du Pack Visibilité",
+      "Livraison express sous 7 jours",
       "Système 'Bouclier d'Avis' (Filtrage)",
       "Campagne d'Avis Clients Automatisée",
       "Site Illimité (Pages & Blog)",
