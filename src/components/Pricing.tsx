@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CheckCircle2, Gift, TrendingUp, ShieldCheck, Sparkles, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, Gift, TrendingUp, ShieldCheck, Sparkles, AlertTriangle, Infinity } from 'lucide-react';
 import Button from './Button';
 
 const Pricing: React.FC = () => {
@@ -8,7 +8,7 @@ const Pricing: React.FC = () => {
   const PLANS = [
     {
       title: "PACK INTÉGRAL : DOMINATION LOCALE",
-      price: "1'297 €",
+      price: "1 297 €",
       originalPrice: "2'200 €",
       priceNote: "LE PRIX AUGMENTE TRÈS BIENTÔT",
       description: "Tout le système (Site + Google + Réputation). Attention, vu la demande, ce tarif de lancement va bientôt augmenter.",
@@ -21,7 +21,7 @@ const Pricing: React.FC = () => {
         "Rédaction Commerciale (On vend votre expertise)",
         "✅ 100% À VOUS (Propriétaire à vie)"
       ],
-      // NOUVEAUX BONUS EXACTS
+      // BONUS
       bonuses: [
         {
            title: "Formation : Maîtriser Google",
@@ -40,23 +40,32 @@ const Pricing: React.FC = () => {
     {
       title: "PACK SÉRÉNITÉ (ABONNEMENT)",
       price: "197 € /mois",
-      originalPrice: "250 € /mois",
-      priceNote: "Tarif fixe garanti", // Changé de "Bloqué à vie"
-      description: "Préservez votre trésorerie. Service tout inclus sans gestion.",
+      originalPrice: "297 € /mois",
+      priceNote: "Engagement 3 mois", 
+      description: "La solution flexible. Tout est inclus (Maintenance, Hébergement, Modifications), vous ne gérez rien.",
       features: [
         "Création du site Internet Pro",
         "Hébergement & Nom de domaine INCLUS",
-        "Maintenance technique INCLUSE",
+        "Maintenance technique 24/7 INCLUSE",
         "Modifications illimitées",
         "Zéro apport de départ",
         "Support Prioritaire 7j/7"
       ],
+      // BONUS
       bonuses: [
-        { title: "Formation : Maîtriser Google", desc: "Gérez votre image comme un pro.", value: "OFFERTE" },
-        { title: "Frais de mise en service", desc: "Au lieu de 500€", value: "OFFERTS" }
+        { 
+            title: "Formation : Maîtriser Google", 
+            desc: "Gérez votre image comme un pro.",
+            value: "OFFERTE" 
+        },
+        { 
+            title: "Frais de mise en service", 
+            desc: "Au lieu de 500€",
+            value: "OFFERTS" 
+        }
       ],
       isDomination: false,
-      buttonText: "Choisir la mensualisation"
+      buttonText: "Choisir la formule flexible"
     }
   ];
 
@@ -88,6 +97,10 @@ const Pricing: React.FC = () => {
           {PLANS.map((plan, index) => {
             const isDomination = plan.isDomination;
             
+            // Logic to separate numeric value from currency/period for better styling
+            const priceValue = plan.price.replace('€', '').replace('/mois', '').trim();
+            const isMonthly = plan.price.includes('/mois');
+
             return (
               <div 
                 key={index} 
@@ -120,13 +133,16 @@ const Pricing: React.FC = () => {
                       <span className={`text-xl line-through font-bold decoration-2 mb-1 ${isDomination ? 'text-slate-500 decoration-red-500' : 'text-slate-400 decoration-red-500'}`}>
                           {plan.originalPrice}
                       </span>
-                      <div className="flex items-baseline gap-2">
-                        <span className={`text-6xl sm:text-7xl font-black tracking-tighter ${isDomination ? 'text-white' : 'text-slate-900'}`}>
-                          {plan.price.split(' ')[0]}
+                      
+                      {/* New Price Rendering Logic */}
+                      <div className="flex items-baseline justify-center gap-1">
+                        <span className={`text-5xl sm:text-7xl font-black tracking-tighter ${isDomination ? 'text-white' : 'text-slate-900'}`}>
+                          {priceValue}
                         </span>
-                        <span className={`text-2xl font-bold ${isDomination ? 'text-slate-400' : 'text-slate-500'}`}>
-                          {plan.price.split(' ').slice(1).join(' ')}
-                        </span>
+                        <div className="flex flex-col items-start leading-none">
+                           <span className={`text-2xl font-bold ${isDomination ? 'text-slate-400' : 'text-slate-500'}`}>€</span>
+                           {isMonthly && <span className={`text-xs font-bold uppercase ${isDomination ? 'text-slate-500' : 'text-slate-400'}`}>/mois</span>}
+                        </div>
                       </div>
                     </div>
                     
@@ -137,7 +153,7 @@ const Pricing: React.FC = () => {
                     )}
                     {!isDomination && (
                        <div className="inline-flex items-center gap-1 mt-4 text-brand-blue font-bold text-sm bg-blue-50 px-3 py-1 rounded-lg">
-                          <ShieldCheck size={14} /> {plan.priceNote}
+                          <Infinity size={14} /> {plan.priceNote}
                        </div>
                     )}
 
@@ -163,7 +179,7 @@ const Pricing: React.FC = () => {
                     </ul>
                   </div>
 
-                  {/* BONUS SECTION (Yellow Box for Domination) */}
+                  {/* BONUS SECTION */}
                   {plan.bonuses && plan.bonuses.length > 0 && (
                     <div className={`mt-auto mb-8 rounded-2xl p-1 ${isDomination ? 'bg-gradient-to-b from-brand-yellow to-yellow-600' : 'bg-slate-100'}`}>
                       <div className={`rounded-xl p-5 h-full ${isDomination ? 'bg-[#0B1121]' : 'bg-white'}`}>
@@ -179,7 +195,7 @@ const Pricing: React.FC = () => {
                                 <>
                                   <div className="flex justify-between items-start mb-1">
                                     <span className="font-bold text-white text-sm">{bonus.title}</span>
-                                    <div className="text-right">
+                                    <div className="text-right shrink-0 ml-2">
                                         <div className="text-[10px] text-slate-500 line-through decoration-red-500">Valeur {bonus.value}</div>
                                         <div className="text-[10px] font-black text-brand-yellow uppercase">OFFERT</div>
                                     </div>
@@ -191,7 +207,9 @@ const Pricing: React.FC = () => {
                               ) : (
                                 <div className="flex justify-between items-center text-sm">
                                   <span className="font-bold text-slate-700">{bonus.title}</span>
-                                  <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-xs font-bold">{bonus.value}</span>
+                                  <span className={`px-2 py-0.5 rounded text-xs font-bold ${bonus.value.includes('OFFERT') ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'}`}>
+                                    {bonus.value}
+                                  </span>
                                 </div>
                               )}
 

@@ -8,8 +8,8 @@ const Pricing: React.FC = () => {
   const PLANS = [
     {
       title: "PACK INTÉGRAL : DOMINATION LOCALE",
-      price: "1'297 €",
-      originalPrice: "2'200 €",
+      price: "1 297 €",
+      originalPrice: "2 200 €",
       priceNote: "LE PRIX AUGMENTE TRÈS BIENTÔT",
       description: "Tout le système (Site + Google + Réputation). Attention, vu la demande, ce tarif de lancement va bientôt augmenter.",
       features: [
@@ -21,7 +21,7 @@ const Pricing: React.FC = () => {
         "Rédaction Commerciale (On vend votre expertise)",
         "✅ 100% À VOUS (Propriétaire à vie)"
       ],
-      // BONUS MIS À JOUR : 3 mois hébergement, Suppression pack avis
+      // BONUS
       bonuses: [
         {
            title: "Formation : Maîtriser Google",
@@ -51,7 +51,7 @@ const Pricing: React.FC = () => {
         "Zéro apport de départ",
         "Support Prioritaire 7j/7"
       ],
-      // BONUS MIS À JOUR : OFFERTS
+      // BONUS
       bonuses: [
         { 
             title: "Formation : Maîtriser Google", 
@@ -97,6 +97,10 @@ const Pricing: React.FC = () => {
           {PLANS.map((plan, index) => {
             const isDomination = plan.isDomination;
             
+            // Logic to separate numeric value from currency/period for better styling
+            const priceValue = plan.price.replace('€', '').replace('/mois', '').trim();
+            const isMonthly = plan.price.includes('/mois');
+
             return (
               <div 
                 key={index} 
@@ -129,13 +133,16 @@ const Pricing: React.FC = () => {
                       <span className={`text-xl line-through font-bold decoration-2 mb-1 ${isDomination ? 'text-slate-500 decoration-red-500' : 'text-slate-400 decoration-red-500'}`}>
                           {plan.originalPrice}
                       </span>
-                      <div className="flex items-baseline gap-2">
-                        <span className={`text-6xl sm:text-7xl font-black tracking-tighter ${isDomination ? 'text-white' : 'text-slate-900'}`}>
-                          {plan.price.split(' ')[0]}
+                      
+                      {/* New Price Rendering Logic */}
+                      <div className="flex items-baseline justify-center gap-1">
+                        <span className={`text-5xl sm:text-7xl font-black tracking-tighter ${isDomination ? 'text-white' : 'text-slate-900'}`}>
+                          {priceValue}
                         </span>
-                        <span className={`text-2xl font-bold ${isDomination ? 'text-slate-400' : 'text-slate-500'}`}>
-                          {plan.price.split(' ').slice(1).join(' ')}
-                        </span>
+                        <div className="flex flex-col items-start leading-none">
+                           <span className={`text-2xl font-bold ${isDomination ? 'text-slate-400' : 'text-slate-500'}`}>€</span>
+                           {isMonthly && <span className={`text-xs font-bold uppercase ${isDomination ? 'text-slate-500' : 'text-slate-400'}`}>/mois</span>}
+                        </div>
                       </div>
                     </div>
                     
