@@ -8,7 +8,7 @@ const Pricing: React.FC = () => {
   const PLANS = [
     {
       title: "PACK INTÉGRAL : DOMINATION LOCALE",
-      price: "990 €",
+      price: "1'297 €",
       originalPrice: "2'200 €",
       priceNote: "LE PRIX AUGMENTE TRÈS BIENTÔT",
       description: "Tout le système (Site + Google + Réputation). Attention, vu la demande, ce tarif de lancement va bientôt augmenter.",

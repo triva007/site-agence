@@ -8,7 +8,7 @@ const Pricing: React.FC = () => {
   const PLANS = [
     {
       title: "PACK INTÉGRAL : DOMINATION LOCALE",
-      price: "990 €",
+      price: "1'297 €",
       originalPrice: "2'200 €",
       priceNote: "LE PRIX AUGMENTE TRÈS BIENTÔT",
       description: "Tout le système (Site + Google + Réputation). Attention, vu la demande, ce tarif de lancement va bientôt augmenter.",
@@ -32,11 +32,6 @@ const Pricing: React.FC = () => {
            title: "Hébergement & Maintenance (3 mois offerts)",
            desc: "Serveur, mises à jour et technique offerts pour démarrer sereinement.",
            value: "180 €"
-        },
-        {
-           title: "Pack 'Réponses aux Avis'",
-           desc: "Des modèles de textes professionnels à copier-coller pour vos clients.",
-           value: "150 €"
         }
       ],
       isDomination: true,
@@ -44,7 +39,7 @@ const Pricing: React.FC = () => {
     },
     {
       title: "PACK SÉRÉNITÉ (ABONNEMENT)",
-      price: "149 € /mois",
+      price: "197 € /mois",
       originalPrice: "250 € /mois",
       priceNote: "Tarif fixe garanti", // Changé de "Bloqué à vie"
       description: "Préservez votre trésorerie. Service tout inclus sans gestion.",
@@ -57,7 +52,8 @@ const Pricing: React.FC = () => {
         "Support Prioritaire 7j/7"
       ],
       bonuses: [
-        { title: "Frais de mise en service", value: "500 €", desc: "(Payables une seule fois)" }
+        { title: "Formation : Maîtriser Google", desc: "Gérez votre image comme un pro.", value: "OFFERTE" },
+        { title: "Frais de mise en service", desc: "Au lieu de 500€", value: "OFFERTS" }
       ],
       isDomination: false,
       buttonText: "Choisir la mensualisation"
@@ -220,7 +216,7 @@ const Pricing: React.FC = () => {
                   </Button>
                   
                   <p className={`text-center text-[10px] mt-4 font-medium uppercase tracking-wide ${isDomination ? 'text-slate-500' : 'text-slate-400'}`}>
-                    {isDomination ? '⚡ Places limitées par secteur' : 'Engagement 5 mois seulement'}
+                    {isDomination ? '⚡ Limité à 1 activité par ville pour éviter la concurrence' : 'Engagement 3 mois minimum'}
                   </p>
 
                 </div>

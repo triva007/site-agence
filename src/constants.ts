@@ -135,7 +135,7 @@ export const TESTIMONIALS: Testimonial[] = [
     role: "Gérant Garage",
     company: "AutoFix",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    quote: "Ce que j'apprécie, c'est que le site m'appartient vraiment. On est enfin visibles sur Google Maps sans payer de pub. Le téléphone sonne plus souvent et les clients nous trouvent sérieux avant même d'arriver."
+    quote: "Avant, on était invisibles sur Google. Maintenant, on a une image pro et les clients du coin nous trouvent facilement. C'est rassurant d'avoir un partenaire qui gère toute la technique pour nous."
   },
   {
     id: 2,
@@ -143,14 +143,14 @@ export const TESTIMONIALS: Testimonial[] = [
     role: "Restauratrice",
     company: "Le Petit Coin",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    quote: "Le système de filtre d'avis est top. J'avais peur des mauvaises notes injustifiées. Là, je récupère les avis positifs sur Google et je gère les petits soucis en privé. Ça rassure énormément les futurs clients."
+    quote: "Je voulais surtout protéger ma réputation. Le filtre d'avis fonctionne parfaitement : je gère les petits soucis en privé et ma note Google reste propre. C'est un vrai poids en moins au quotidien."
   }
 ];
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
     title: "PACK INTÉGRAL : DOMINATION LOCALE",
-    price: "990 €",
+    price: "1'297 €",
     originalPrice: "2'200 €",
     priceNote: "LE PRIX AUGMENTE TRÈS BIENTÔT",
     description: "Tout le système (Site + Google + Réputation). Attention, vu la demande, ce tarif de lancement va bientôt augmenter.",
@@ -196,7 +196,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     ],
     bonuses: [
       { title: "Formation : Maîtriser Google", desc: "Gérez votre image comme un pro.", value: "OFFERTE" },
-      { title: "Frais de mise en service", desc: "(Payables une seule fois)", value: "OFFERTS" }
+      { title: "Frais de mise en service", desc: "Au lieu de 500€", value: "OFFERTS" }
     ],
     isPopular: false,
     buttonText: "Choisir la formule flexible",
@@ -208,7 +208,7 @@ export const COMPARISON_DATA: ComparisonPoint[] = [
   {
     label: "Paiement",
     bad: "Souvent rigide (tout ou rien)",
-    good: "Flexible : Comptant (990€) ou Mensuel (197€)"
+    good: "Flexible : Comptant (1'297€) ou Mensuel (197€)"
   },
   {
     label: "Propriété du site",
@@ -230,7 +230,7 @@ export const COMPARISON_DATA: ComparisonPoint[] = [
 export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Quelle offre dois-je choisir ?",
-    answer: "Si vous avez la trésorerie et que vous voulez être propriétaire immédiat sans frais récurrents (hors hébergement après 1 an), le 'Pack Domination' à 990€ (tarif promo) est l'investissement le plus rentable. Si vous préférez lisser la dépense, le 'Pack Sérénité' à 197€/mois est idéal."
+    answer: "Si vous avez la trésorerie et que vous voulez être propriétaire immédiat sans frais récurrents (hors hébergement après 1 an), le 'Pack Domination' à 1'297€ (tarif promo) est l'investissement le plus rentable. Si vous préférez lisser la dépense, le 'Pack Sérénité' à 197€/mois est idéal."
   },
   {
     question: "Pourquoi y a-t-il des frais de mise en service ?",

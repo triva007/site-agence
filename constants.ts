@@ -150,7 +150,7 @@ export const TESTIMONIALS: Testimonial[] = [
 export const PRICING_PLANS: PricingPlan[] = [
   {
     title: "PACK INTÉGRAL : DOMINATION LOCALE",
-    price: "990 €",
+    price: "1'297 €",
     originalPrice: "2'200 €",
     priceNote: "LE PRIX AUGMENTE TRÈS BIENTÔT",
     description: "Tout le système (Site + Google + Réputation). Attention, vu la demande, ce tarif de lancement va bientôt augmenter.",
@@ -208,7 +208,7 @@ export const COMPARISON_DATA: ComparisonPoint[] = [
   {
     label: "Paiement",
     bad: "Souvent rigide (tout ou rien)",
-    good: "Flexible : Comptant (990€) ou Mensuel (197€)"
+    good: "Flexible : Comptant (1'297€) ou Mensuel (197€)"
   },
   {
     label: "Propriété du site",
@@ -230,7 +230,7 @@ export const COMPARISON_DATA: ComparisonPoint[] = [
 export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Quelle offre dois-je choisir ?",
-    answer: "Si vous avez la trésorerie et que vous voulez être propriétaire immédiat sans frais récurrents (hors hébergement après 1 an), le 'Pack Domination' à 990€ (tarif promo) est l'investissement le plus rentable. Si vous préférez lisser la dépense, le 'Pack Sérénité' à 197€/mois est idéal."
+    answer: "Si vous avez la trésorerie et que vous voulez être propriétaire immédiat sans frais récurrents (hors hébergement après 1 an), le 'Pack Domination' à 1'297€ (tarif promo) est l'investissement le plus rentable. Si vous préférez lisser la dépense, le 'Pack Sérénité' à 197€/mois est idéal."
   },
   {
     question: "Pourquoi y a-t-il des frais de mise en service ?",
