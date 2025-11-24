@@ -3,7 +3,7 @@ import React from 'react';
 import { Check, X, Lock, Clock, Wallet, MessageCircle, ShieldCheck, MapPin, Trophy, TrendingUp } from 'lucide-react';
 
 const Comparison: React.FC = () => {
-  // Données intégrées pour garantir l'affichage immédiat
+  // Données intégrées directement pour garantir l'affichage immédiat sans dépendance
   const points = [
     {
       icon: MapPin,
@@ -79,7 +79,7 @@ const Comparison: React.FC = () => {
         </div>
 
         <div className="mt-12 text-center reveal">
-           <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-5 py-3 rounded-full text-sm font-bold uppercase tracking-wide border border-green-100 shadow-sm">
+           <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-5 py-3 rounded-full text-sm font-bold uppercase tracking-wide border border-green-100 shadow-sm hover:shadow-md transition-shadow cursor-default">
               <ShieldCheck size={18} /> Garantie Transparence Totale
            </div>
         </div>
