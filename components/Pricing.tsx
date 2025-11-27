@@ -1,177 +1,90 @@
 
 import React from 'react';
-import { CheckCircle2, Gift, TrendingUp, ShieldCheck, Sparkles, AlertTriangle, Infinity } from 'lucide-react';
+import { CheckCircle2, Gift, ShieldCheck, Sparkles, Star, Trophy } from 'lucide-react';
 import Button from './Button';
 
 const Pricing: React.FC = () => {
-  // DONNÉES CODÉES EN DUR (HARDCODED) POUR GARANTIR L'AFFICHAGE
-  const PLANS = [
-    {
-      title: "PACK INTÉGRAL : DOMINATION LOCALE",
-      price: "1 297 €",
-      originalPrice: "2 200 €",
-      priceNote: "LE PRIX AUGMENTE TRÈS BIENTÔT",
-      description: "Tout le système (Site + Google + Réputation). Attention, vu la demande, ce tarif de lancement va bientôt augmenter.",
-      features: [
-        "🚀 Livré en 7 jours (Clé en main)",
-        "Site Web Pro (Création ou Refonte complète)",
-        "Positionnement Google (Pour être vu)",
-        "🛡️ Filtre Anti-Mauvais Avis (Protection)",
-        "Optimisation Fiche Google Maps",
-        "Rédaction Commerciale (On vend votre expertise)",
-        "✅ 100% À VOUS (Propriétaire à vie)"
-      ],
-      // BONUS
-      bonuses: [
-        {
-           title: "Formation : Maîtriser Google",
-           desc: "Tuto vidéo simple pour gérer votre fiche et poster vos photos comme un pro.",
-           value: "290 €"
-        },
-        {
-           title: "Hébergement & Maintenance (3 mois offerts)",
-           desc: "Serveur, mises à jour et technique offerts pour démarrer sereinement.",
-           value: "180 €"
-        }
-      ],
-      isDomination: true,
-      buttonText: "Bloquer ce tarif maintenant"
-    },
-    {
-      title: "PACK SÉRÉNITÉ (ABONNEMENT)",
-      price: "197 € /mois",
-      originalPrice: "297 € /mois",
-      priceNote: "Engagement 3 mois", 
-      description: "La solution flexible. Tout est inclus (Maintenance, Hébergement, Modifications), vous ne gérez rien.",
-      features: [
-        "Création du site Internet Pro",
-        "Hébergement & Nom de domaine INCLUS",
-        "Maintenance technique 24/7 INCLUSE",
-        "Modifications illimitées",
-        "Zéro apport de départ",
-        "Support Prioritaire 7j/7"
-      ],
-      // BONUS
-      bonuses: [
-        { 
-            title: "Formation : Maîtriser Google", 
-            desc: "Gérez votre image comme un pro.",
-            value: "OFFERTE" 
-        },
-        { 
-            title: "Frais de mise en service", 
-            desc: "Au lieu de 500€",
-            value: "OFFERTS" 
-        }
-      ],
-      isDomination: false,
-      buttonText: "Choisir la formule flexible"
-    }
-  ];
-
   return (
     <section id="pricing" className="py-24 bg-[#020617] relative overflow-hidden scroll-mt-32">
       
       {/* Background Ambient Effects */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-blue/20 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-brand-yellow/10 rounded-full blur-[120px]"></div>
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
-        <div className="text-center mb-16 reveal">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-brand-blue text-sm font-bold uppercase tracking-wider mb-6">
-            <Sparkles size={14} /> Offre limitée par secteur
+        <div className="text-center mb-12 reveal">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-sm font-bold uppercase tracking-wider mb-6">
+            <Trophy size={14} /> Opportunité Unique
           </div>
           <h2 className="text-4xl sm:text-6xl font-black text-white mb-6 tracking-tight">
-            Choisissez votre <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-cyan-400">liberté.</span>
+            Devenez notre <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow to-orange-400">Ambassadeur Local.</span>
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
-            Pas de devis à tiroirs. Pas de coûts cachés. Juste deux options claires pour propulser votre activité.
+            Nous cherchons un partenaire de référence dans votre secteur. <br/>
+            Nous baissons notre marge, vous nous offrez votre réussite en témoignage.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto items-start">
-          {PLANS.map((plan, index) => {
-            const isDomination = plan.isDomination;
-            
-            // Logic to separate numeric value from currency/period for better styling
-            const priceValue = plan.price.replace('€', '').replace('/mois', '').trim();
-            const isMonthly = plan.price.includes('/mois');
-
-            return (
-              <div 
-                key={index} 
-                className={`reveal stagger-${index + 1} relative flex flex-col rounded-[2rem] transition-all duration-300 overflow-hidden
-                  ${isDomination 
-                    ? 'bg-[#0B1121] border-2 border-brand-blue shadow-[0_0_50px_-12px_rgba(0,85,255,0.3)] z-20 transform lg:scale-105' 
-                    : 'bg-white border border-slate-200 shadow-xl opacity-95 lg:scale-95 z-10'
-                  }
-                `}
-              >
+        {/* SINGLE CARD LAYOUT - AMBASSADEUR */}
+        <div className="max-w-lg mx-auto reveal stagger-1">
+            <div className="relative flex flex-col rounded-[2.5rem] overflow-hidden bg-[#0B1121] border-2 border-brand-yellow shadow-[0_0_60px_-15px_rgba(255,214,0,0.15)] transform hover:scale-[1.02] transition-transform duration-500">
                 
-                {/* URGENCE HEADER FOR DOMINATION */}
-                {isDomination && (
-                  <div className="bg-gradient-to-r from-red-900/80 to-red-600/80 backdrop-blur-sm py-3 px-4 text-center border-b border-red-500/30">
-                     <div className="flex items-center justify-center gap-2 text-white text-sm font-black uppercase tracking-widest animate-pulse">
-                        <TrendingUp size={18} /> {plan.priceNote}
-                     </div>
-                  </div>
-                )}
+                {/* AMBASSADOR RIBBON */}
+                <div className="bg-gradient-to-r from-brand-yellow to-orange-500 py-3 px-4 text-center">
+                    <div className="flex items-center justify-center gap-2 text-slate-900 text-sm font-black uppercase tracking-widest animate-pulse">
+                    <Star size={16} fill="currentColor" /> OFFRE PARTENAIRE / AMBASSADEUR
+                    </div>
+                </div>
 
-                <div className={`p-8 sm:p-10 flex-grow flex flex-col ${isDomination ? 'text-white' : 'text-slate-900'}`}>
+                <div className="p-8 sm:p-12 flex-grow flex flex-col text-white">
                   
                   {/* Title & Price */}
-                  <div className="text-center mb-8">
-                    <h3 className={`text-xl font-black uppercase tracking-wide mb-4 ${isDomination ? 'text-brand-blue' : 'text-slate-800'}`}>
-                      {plan.title}
+                  <div className="text-center mb-10">
+                    <h3 className="text-2xl font-black uppercase tracking-wide mb-2 text-brand-blue">
+                      PACK INTÉGRAL : PROPRIÉTAIRE
                     </h3>
+                    <p className="text-slate-400 text-sm font-medium mb-6">Site Web + Google + Propriété Totale</p>
                     
                     <div className="flex flex-col items-center justify-center">
-                      <span className={`text-xl line-through font-bold decoration-2 mb-1 ${isDomination ? 'text-slate-500 decoration-red-500' : 'text-slate-400 decoration-red-500'}`}>
-                          {plan.originalPrice}
+                      <span className="text-xl line-through font-bold decoration-red-500 text-slate-500 mb-1">
+                          1 990 €
                       </span>
-                      
-                      {/* New Price Rendering Logic */}
-                      <div className="flex items-baseline justify-center gap-1">
-                        <span className={`text-5xl sm:text-7xl font-black tracking-tighter ${isDomination ? 'text-white' : 'text-slate-900'}`}>
-                          {priceValue}
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-7xl sm:text-8xl font-black tracking-tighter text-white">
+                          990
                         </span>
                         <div className="flex flex-col items-start leading-none">
-                           <span className={`text-2xl font-bold ${isDomination ? 'text-slate-400' : 'text-slate-500'}`}>€</span>
-                           {isMonthly && <span className={`text-xs font-bold uppercase ${isDomination ? 'text-slate-500' : 'text-slate-400'}`}>/mois</span>}
+                           <span className="text-3xl font-bold text-brand-yellow">€</span>
+                           <span className="text-xs font-bold uppercase text-slate-500 mt-1">Paiement unique</span>
                         </div>
                       </div>
                     </div>
                     
-                    {isDomination && (
-                      <div className="inline-block bg-slate-800 text-slate-300 text-xs font-bold px-4 py-1.5 rounded-full mt-4 border border-slate-700">
-                        Paiement unique à vie
-                      </div>
-                    )}
-                    {!isDomination && (
-                       <div className="inline-flex items-center gap-1 mt-4 text-brand-blue font-bold text-sm bg-blue-50 px-3 py-1 rounded-lg">
-                          <Infinity size={14} /> {plan.priceNote}
-                       </div>
-                    )}
-
-                    <p className={`mt-6 font-medium leading-relaxed px-4 ${isDomination ? 'text-slate-300' : 'text-slate-500'}`}>
-                      {plan.description}
-                    </p>
+                    <div className="inline-block bg-slate-800/50 text-slate-300 text-xs font-bold px-4 py-1.5 rounded-full mt-6 border border-slate-700">
+                       ✅ 0€ de frais cachés • 0€ de loyer mensuel
+                    </div>
                   </div>
 
                   {/* Features List */}
-                  <div className={`rounded-2xl p-6 mb-8 ${isDomination ? 'bg-[#1E293B]/50 border border-slate-700/50' : 'bg-slate-50 border border-slate-100'}`}>
-                    <ul className="space-y-4">
-                      {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                          <div className={`mt-0.5 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 
-                            ${isDomination ? 'bg-brand-blue/20 text-brand-blue' : 'bg-green-100 text-green-600'}`}>
+                  <div className="rounded-3xl p-8 mb-8 bg-[#1E293B]/30 border border-slate-700/50">
+                    <ul className="space-y-5">
+                        {[
+                            "🚀 Site Web Pro livré en 7 jours",
+                            "✅ 100% Propriétaire (Site à vous)",
+                            "📍 Référencement Google Local (SEO)",
+                            "📱 Design Moderne & Mobile First",
+                            "🛡️ Certificat de Sécurité SSL",
+                            "✍️ Rédaction Commerciale Incluse"
+                        ].map((feature, i) => (
+                        <li key={i} className="flex items-start gap-4">
+                          <div className="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 bg-brand-blue/20 text-brand-blue">
                             <CheckCircle2 size={16} strokeWidth={3} />
                           </div>
-                          <span className={`text-sm sm:text-base font-bold ${isDomination ? 'text-slate-200' : 'text-slate-700'}`}>
+                          <span className="text-base font-bold text-slate-200">
                             {feature}
                           </span>
                         </li>
@@ -179,75 +92,57 @@ const Pricing: React.FC = () => {
                     </ul>
                   </div>
 
-                  {/* BONUS SECTION */}
-                  {plan.bonuses && plan.bonuses.length > 0 && (
-                    <div className={`mt-auto mb-8 rounded-2xl p-1 ${isDomination ? 'bg-gradient-to-b from-brand-yellow to-yellow-600' : 'bg-slate-100'}`}>
-                      <div className={`rounded-xl p-5 h-full ${isDomination ? 'bg-[#0B1121]' : 'bg-white'}`}>
-                        <div className={`flex items-center gap-2 font-black uppercase text-xs tracking-wider mb-4 ${isDomination ? 'text-brand-yellow' : 'text-slate-500'}`}>
-                          <Gift size={16} /> {isDomination ? "Bonus Offerts (Durée Limitée)" : "Frais de démarrage"}
+                  {/* BONUS SECTION (AMBASSADEUR) */}
+                  <div className="mt-auto mb-10 rounded-2xl p-[1px] bg-gradient-to-r from-brand-yellow/50 to-orange-500/50">
+                      <div className="rounded-2xl p-6 bg-[#0F172A] relative overflow-hidden">
+                        {/* Glow effect */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-brand-yellow/10 rounded-full blur-3xl"></div>
+
+                        <div className="flex items-center gap-2 font-black uppercase text-xs tracking-wider mb-6 text-brand-yellow relative z-10">
+                          <Gift size={16} /> Bonus Ambassadeur (Inclus)
                         </div>
                         
-                        <ul className="space-y-4">
-                          {plan.bonuses.map((bonus, i) => (
-                            <li key={i} className={`relative pl-0 ${isDomination ? 'border-b border-slate-800 last:border-0 pb-4 last:pb-0' : ''}`}>
-                              
-                              {isDomination ? (
-                                <>
-                                  <div className="flex justify-between items-start mb-1">
-                                    <span className="font-bold text-white text-sm">{bonus.title}</span>
-                                    <div className="text-right shrink-0 ml-2">
-                                        <div className="text-[10px] text-slate-500 line-through decoration-red-500">Valeur {bonus.value}</div>
-                                        <div className="text-[10px] font-black text-brand-yellow uppercase">OFFERT</div>
-                                    </div>
-                                  </div>
-                                  <p className="text-xs text-slate-400 leading-snug pr-10">
-                                    {bonus.desc}
-                                  </p>
-                                </>
-                              ) : (
-                                <div className="flex justify-between items-center text-sm">
-                                  <span className="font-bold text-slate-700">{bonus.title}</span>
-                                  <span className={`px-2 py-0.5 rounded text-xs font-bold ${bonus.value.includes('OFFERT') ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'}`}>
-                                    {bonus.value}
-                                  </span>
+                        <ul className="space-y-4 relative z-10">
+                            <li className="flex justify-between items-center border-b border-slate-800 pb-3 last:border-0 last:pb-0">
+                                <div>
+                                    <span className="font-bold text-white text-sm block">Optimisation Fiche Google (GMB)</span>
+                                    <span className="text-[10px] text-slate-400">Pour apparaître sur la carte</span>
                                 </div>
-                              )}
-
+                                <div className="text-[10px] font-black bg-brand-yellow text-brand-dark px-2 py-1 rounded uppercase">Offert</div>
                             </li>
-                          ))}
+                            <li className="flex justify-between items-center">
+                                <div>
+                                    <span className="font-bold text-white text-sm block">Pack Juridique</span>
+                                    <span className="text-[10px] text-slate-400">Mentions légales & RGPD conformes</span>
+                                </div>
+                                <div className="text-[10px] font-black bg-brand-yellow text-brand-dark px-2 py-1 rounded uppercase">Offert</div>
+                            </li>
                         </ul>
                       </div>
                     </div>
-                  )}
 
                   {/* CTA Button */}
                   <Button 
-                    variant={isDomination ? 'primary' : 'outline'}
-                    className={`w-full justify-center py-5 text-lg font-bold rounded-xl shadow-xl transition-transform active:scale-95 ${
-                      isDomination 
-                        ? 'bg-brand-yellow text-slate-900 hover:bg-yellow-400 border-none shadow-brand-yellow/20' 
-                        : ''
-                    }`}
+                    variant='primary'
+                    className="w-full justify-center py-6 text-xl font-bold rounded-2xl shadow-[0_0_30px_-5px_rgba(255,214,0,0.4)] transition-transform hover:scale-[1.02] active:scale-95 bg-brand-yellow text-slate-900 border-none hover:bg-yellow-400"
                     onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                   >
-                    {plan.buttonText} {isDomination && "⚡"}
+                    Profiter de l'offre Ambassadeur
                   </Button>
                   
-                  <p className={`text-center text-[10px] mt-4 font-medium uppercase tracking-wide ${isDomination ? 'text-slate-500' : 'text-slate-400'}`}>
-                    {isDomination ? '⚡ Limité à 1 activité par ville pour éviter la concurrence' : 'Engagement 3 mois minimum'}
+                  <p className="text-center text-[10px] mt-4 font-medium uppercase tracking-wide text-slate-500">
+                    Offre limitée à 1 seul partenaire par secteur géographique
                   </p>
 
                 </div>
-              </div>
-            );
-          })}
+            </div>
         </div>
         
         {/* Guarantee Badge */}
         <div className="mt-16 flex justify-center reveal">
           <div className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-6 py-3 text-slate-300 text-sm font-medium hover:bg-white/10 transition-colors cursor-default">
             <ShieldCheck className="text-brand-yellow" />
-            Garantie "Satisfait ou Remboursé" incluse dans tous les packs.
+            Garantie "Satisfait ou Remboursé" incluse.
           </div>
         </div>
 

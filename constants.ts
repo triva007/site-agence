@@ -27,7 +27,7 @@ export const NAV_ITEMS: NavigationItem[] = [
   { label: 'Pourquoi nous ?', href: '#problem' },
   { label: 'Résultats', href: '#results' },
   { label: 'Notre Méthode', href: '#process' },
-  { label: 'Offres & Tarifs', href: '#pricing' },
+  { label: 'Offre Ambassadeur', href: '#pricing' },
 ];
 
 export const STATS = [
@@ -149,58 +149,34 @@ export const TESTIMONIALS: Testimonial[] = [
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
-    title: "PACK INTÉGRAL : DOMINATION LOCALE",
-    price: "1'297 €",
-    originalPrice: "2'200 €",
-    priceNote: "LE PRIX AUGMENTE TRÈS BIENTÔT",
-    description: "Tout le système (Site + Google + Réputation). Attention, vu la demande, ce tarif de lancement va bientôt augmenter.",
+    title: "PACK INTÉGRAL : PROPRIÉTAIRE",
+    price: "990 €",
+    originalPrice: "1 990 €",
+    priceNote: "OFFRE PARTENAIRE / AMBASSADEUR",
+    description: "Devenez notre réussite locale de référence. Nous baissons notre marge, vous nous offrez votre témoignage.",
     features: [
-      "🚀 Livré en 7 jours (Clé en main)",
-      "Site Web Pro (Création ou Refonte complète)",
-      "Positionnement Google (Pour être vu)",
-      "🛡️ Filtre Anti-Mauvais Avis (Protection)",
-      "Optimisation Fiche Google Maps",
-      "Rédaction Commerciale (On vend votre expertise)",
-      "✅ 100% À VOUS (Propriétaire à vie)"
+      "🚀 Site Web Pro livré en 7 jours",
+      "✅ 100% Propriétaire (0€ de loyer)",
+      "📍 Référencement Google Local (SEO)",
+      "📱 Design Mobile First",
+      "🛡️ Certificat Sécurité SSL",
+      "✍️ Rédaction Commerciale Incluse"
     ],
     bonuses: [
       {
-         title: "Formation : Maîtriser Google",
-         desc: "Tuto vidéo simple pour gérer votre fiche et poster vos photos comme un pro.",
-         value: "290 €"
+         title: "Optimisation Fiche Google (GMB)",
+         desc: "Pour apparaître sur la carte",
+         value: "OFFERT"
       },
       {
-         title: "Hébergement & Maintenance (3 mois offerts)",
-         desc: "Serveur, mises à jour et technique offerts pour démarrer sereinement.",
-         value: "180 €"
+         title: "Pack Juridique",
+         desc: "Mentions légales & RGPD conformes",
+         value: "OFFERT"
       }
     ],
     isPopular: true, 
-    buttonText: "Bloquer ce tarif maintenant",
+    buttonText: "Profiter de l'offre Ambassadeur",
     buttonVariant: "primary" 
-  },
-  {
-    title: "PACK SÉRÉNITÉ (ABONNEMENT)",
-    price: "197 € /mois",
-    originalPrice: "297 € /mois",
-    discountLabel: "Idéal Trésorerie",
-    priceNote: "Engagement 3 mois",
-    description: "Préservez votre trésorerie. Service tout inclus sans gestion.",
-    features: [
-      "Création du site Internet Pro",
-      "Hébergement & Nom de domaine INCLUS",
-      "Maintenance technique 24/7 INCLUSE",
-      "Modifications illimitées",
-      "Zéro apport de départ",
-      "Support Prioritaire 7j/7"
-    ],
-    bonuses: [
-      { title: "Formation : Maîtriser Google", desc: "Gérez votre image comme un pro.", value: "OFFERTE" },
-      { title: "Frais de mise en service", desc: "Au lieu de 500€", value: "OFFERTS" }
-    ],
-    isPopular: false,
-    buttonText: "Choisir la formule flexible",
-    buttonVariant: "outline"
   }
 ];
 
@@ -229,16 +205,16 @@ export const COMPARISON_DATA: ComparisonPoint[] = [
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "Quelle offre dois-je choisir ?",
-    answer: "Si vous avez la trésorerie et que vous voulez être propriétaire immédiat sans frais récurrents (hors hébergement après 1 an), le 'Pack Domination' à 1'297€ (tarif promo) est l'investissement le plus rentable. Si vous préférez lisser la dépense, le 'Pack Sérénité' à 197€/mois est idéal."
+    question: "Pourquoi ce tarif 'Ambassadeur' si bas ?",
+    answer: "Nous cherchons à nous implanter durablement dans votre secteur. Nous acceptons de réduire notre marge sur le premier client de la zone en échange d'un témoignage vidéo/écrit une fois le site en ligne. C'est du gagnant-gagnant."
   },
   {
-    question: "Pourquoi y a-t-il des frais de mise en service ?",
-    answer: "Bonne nouvelle : avec l'offre actuelle, les frais de mise en service (normalement 500€) sont OFFERTS."
+    question: "Est-ce qu'il y a des frais mensuels cachés ?",
+    answer: "Aucun. Avec le Pack Intégral Propriétaire, vous payez une seule fois 990€. Le site est à vous à 100%. Seuls l'hébergement et le nom de domaine (environ 70€/an) seront à régler à partir de la 2ème année."
   },
   {
-    question: "Pour le Pack Domination, que se passe-t-il après ?",
-    answer: "Les 3 premiers mois d'hébergement sont offerts. Ensuite, le site vous appartient, vous payez simplement l'hébergement (environ 70€/an) directement au fournisseur. Vous êtes libre."
+    question: "Le site m'appartient-il vraiment ?",
+    answer: "Oui, à 100%. Contrairement aux offres 'Sérénité' ou aux concurrents qui louent le site, ici vous êtes propriétaire du code, du design et du contenu. Vous êtes libre de partir quand vous voulez."
   },
   {
     question: "Le délai de 7 jours est-il réel ?",
