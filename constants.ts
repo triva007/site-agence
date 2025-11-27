@@ -151,14 +151,14 @@ export const PRICING_PLANS: PricingPlan[] = [
   {
     title: "PACK INTÉGRAL : PROPRIÉTAIRE",
     price: "990 €",
-    originalPrice: "1 990 €",
+    originalPrice: "2 000 €",
     priceNote: "OFFRE PARTENAIRE / AMBASSADEUR",
     description: "Devenez notre réussite locale de référence. Nous baissons notre marge, vous nous offrez votre témoignage.",
     features: [
       "🚀 Site Web Pro livré en 7 jours",
       "✅ 100% Propriétaire (0€ de loyer)",
       "📍 Référencement Google Local (SEO)",
-      "📱 Design Mobile First",
+      "📱 Design Moderne & Mobile First",
       "🛡️ Certificat Sécurité SSL",
       "✍️ Rédaction Commerciale Incluse"
     ],
@@ -184,7 +184,7 @@ export const COMPARISON_DATA: ComparisonPoint[] = [
   {
     label: "Paiement",
     bad: "Souvent rigide (tout ou rien)",
-    good: "Flexible : Comptant (1'297€) ou Mensuel (197€)"
+    good: "Flexible : Comptant (990€) ou Mensuel (197€)"
   },
   {
     label: "Propriété du site",
