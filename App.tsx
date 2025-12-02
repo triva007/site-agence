@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -10,6 +11,7 @@ import Testimonials from './components/Testimonials';
 import Comparison from './components/Comparison';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 
 const App: React.FC = () => {
   
@@ -43,6 +45,7 @@ const App: React.FC = () => {
         <FAQ />
       </main>
       <Footer />
+      <FloatingWhatsApp />
     </div>
   );
 };
