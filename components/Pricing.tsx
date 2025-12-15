@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CheckCircle2, Gift, ShieldCheck, Sparkles, Star, Trophy } from 'lucide-react';
+import { CheckCircle2, Gift, ShieldCheck, Sparkles, Star, Trophy, Clock } from 'lucide-react';
 import Button from './Button';
 
 const Pricing: React.FC = () => {
@@ -42,30 +42,37 @@ const Pricing: React.FC = () => {
 
                 <div className="p-8 sm:p-12 flex-grow flex flex-col text-white">
                   
-                  {/* Title & Price */}
+                  {/* Title & Price Replacement */}
                   <div className="text-center mb-10">
                     <h3 className="text-2xl font-black uppercase tracking-wide mb-2 text-brand-blue">
                       PACK INTÉGRAL : PROPRIÉTAIRE
                     </h3>
-                    <p className="text-slate-400 text-sm font-medium mb-6">Site Web + Google + Propriété Totale</p>
+                    <p className="text-slate-400 text-sm font-medium mb-8">Site Web + Google + Propriété Totale</p>
                     
-                    <div className="flex flex-col items-center justify-center">
-                      <span className="text-xl line-through font-bold decoration-red-500 text-slate-500 mb-1">
-                          2 000 €
-                      </span>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-7xl sm:text-8xl font-black tracking-tighter text-white">
-                          990
-                        </span>
-                        <div className="flex flex-col items-start leading-none">
-                           <span className="text-3xl font-bold text-brand-yellow">€</span>
-                           <span className="text-xs font-bold uppercase text-slate-500 mt-1">Paiement unique</span>
-                        </div>
-                      </div>
+                    {/* Softened Discount Badge Area */}
+                    <div className="flex flex-col items-center justify-center py-4 bg-slate-800/30 rounded-2xl border border-white/5 relative overflow-hidden group">
+                       <div className="absolute inset-0 bg-brand-yellow/5 group-hover:bg-brand-yellow/10 transition-colors"></div>
+                       
+                       <div className="relative z-10 text-center">
+                           <span className="block text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-yellow to-orange-400 drop-shadow-sm">
+                             - 50%
+                           </span>
+                           <span className="text-slate-300 font-bold text-sm uppercase tracking-widest mt-1 block">
+                             Sur le tarif public
+                           </span>
+                       </div>
+
+                       {/* Limited Time Badge */}
+                       <div className="mt-4 inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 px-3 py-1 rounded-full">
+                          <Clock size={12} className="text-red-400" />
+                          <span className="text-[10px] font-bold text-red-400 uppercase tracking-wide">
+                             Offre limitée dans le temps
+                          </span>
+                       </div>
                     </div>
                     
-                    <div className="inline-block bg-slate-800/50 text-slate-300 text-xs font-bold px-4 py-1.5 rounded-full mt-6 border border-slate-700">
-                       ✅ 0€ de frais cachés • 0€ de loyer mensuel
+                    <div className="inline-block text-slate-400 text-xs font-medium mt-6">
+                       ✅ Paiement unique • 0€ de frais cachés
                     </div>
                   </div>
 
