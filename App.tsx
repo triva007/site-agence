@@ -12,6 +12,7 @@ import Comparison from './components/Comparison';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
+import Values from './components/Values';
 
 const App: React.FC = () => {
   
@@ -38,6 +39,7 @@ const App: React.FC = () => {
         <Stats />
         <Problem />
         <Benefits />
+        <Values />
         <Process />
         <Comparison />
         <Pricing />
