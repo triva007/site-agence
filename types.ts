@@ -33,6 +33,8 @@ export interface Testimonial {
   company: string;
   quote: string;
   avatar: string;
+  date?: string;
+  websiteUrl?: string;
 }
 
 export interface FaqItem {
@@ -43,12 +45,12 @@ export interface FaqItem {
 export interface PricingPlan {
   title: string;
   price: string;
-  originalPrice?: string; // Prix barré
-  discountLabel?: string; // Badge promo (-500€)
-  priceNote?: string; // Message d'urgence
+  originalPrice?: string; 
+  discountLabel?: string; 
+  priceNote?: string; 
   description: string;
   features: string[];
-  bonuses?: { title: string; value: string; desc: string }[]; // Cadeaux inclus avec description
+  bonuses?: { title: string; value: string; desc: string }[]; 
   isPopular?: boolean;
   buttonText: string;
   buttonVariant: 'primary' | 'secondary' | 'outline';

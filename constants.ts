@@ -27,7 +27,7 @@ export const NAV_ITEMS: NavigationItem[] = [
   { label: 'Pourquoi nous ?', href: '#problem' },
   { label: 'Résultats', href: '#results' },
   { label: 'Notre Méthode', href: '#process' },
-  { label: 'Offre Ambassadeur', href: '#pricing' },
+  { label: 'Programme Ambassadeur', href: '#pricing' },
 ];
 
 export const STATS = [
@@ -37,23 +37,84 @@ export const STATS = [
   { value: "100%", label: "Liberté de choix" },
 ];
 
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: 1,
+    name: "Johanna",
+    role: "Avocate",
+    company: "Cabinet Johanna",
+    avatar: "",
+    date: "Il y a 2 semaines",
+    quote: "En tant qu'avocate, je bénéficie maintenant d'un site professionnel qui me permet de développer ma clientèle de manière quasi automatisée, en fournissant des devis sur mesure à mes futurs clients. Grâce au professionnalisme et à l’implication d'Aaron, mon site est un outil désormais essentiel pour mon activité. Triva-Media, c'est la rapidité et l'efficacité et un service de première qualité.",
+    websiteUrl: "https://johanna-avocat.vercel.app/"
+  },
+  {
+    id: 2,
+    name: "Léa",
+    role: "Nutritionniste",
+    company: "LPrea Nutrition",
+    avatar: "", 
+    date: "Il y a 1 mois",
+    quote: "Aaron est incroyablement à l'écoute, on sent un vrai contact humain derrière la technique. Le système qu'il a mis en place a boosté ma visibilité locale en un temps record. Mon site travaille désormais pour moi 24h/24 et l'automatisation des contacts me fait gagner un temps précieux au quotidien.",
+    websiteUrl: "https://lprea-nutrition.com/"
+  },
+  {
+    id: 3,
+    name: "Lucas",
+    role: "Sophrologue",
+    company: "LP Sophrologie",
+    avatar: "",
+    date: "Il y a 3 semaines",
+    quote: "La rapidité d'exécution d'Aaron m'a bluffé : 7 jours pour un site complet qui génère déjà des appels. Le contact est fluide, pro et très humain. Depuis la mise en ligne, ma visibilité sur Google Maps a explosé. C'est l'investissement le plus rentable que j'ai fait pour mon cabinet cette année.",
+    websiteUrl: "https://lp-sophro.vercel.app/"
+  }
+];
+
+export const PRICING_PLANS: PricingPlan[] = [
+  {
+    title: "PACK CROISSANCE INTÉGRAL",
+    price: "SUR DEVIS",
+    originalPrice: "2 000 €",
+    priceNote: "PROGRAMME AMBASSADEUR 2026",
+    description: "Devenez notre réussite locale de référence. Nous baissons notre marge, vous nous offrez votre témoignage.",
+    features: [
+      "🚀 Site Web Pro livré en 7 jours",
+      "✅ 100% Propriétaire (0€ de loyer)",
+      "📍 Référencement Google Local (SEO)",
+      "📱 Design Moderne & Mobile First",
+      "🛡️ Certificat Sécurité SSL",
+      "✍️ Rédaction Commerciale Incluse"
+    ],
+    bonuses: [
+      {
+         title: "Optimisation Fiche Google (GMB)",
+         desc: "Pour apparaître sur la carte",
+         value: "OFFERT"
+      }
+    ],
+    isPopular: true, 
+    buttonText: "Vérifier la disponibilité locale",
+    buttonVariant: "primary" 
+  }
+];
+
 export const PROBLEM_CARDS = [
   {
     icon: XCircle,
     title: "L'Invisibilité Numérique",
-    description: "97% de vos prospects cherchent un pro sur Google avant d'appeler. Si vous n'êtes pas dans le Top 3, vous offrez littéralement votre chiffre d'affaires à vos concurrents.",
+    description: "97% de vos prospects cherchent une entreprise locale sur Google avant d'appeler. Si vous n'êtes pas dans le Top 3, vous offrez littéralement votre chiffre d'affaires à vos concurrents.",
     color: "bg-red-50 text-red-600"
   },
   {
     icon: ImageOff,
     title: "L'Image Amateur",
-    description: "Un site lent, moche ou non sécurisé fait fuir 80% des visiteurs instantanément. Votre site doit inspirer confiance dès la première seconde, sinon vous perdez des appels.",
+    description: "Un site lent, moche ou non sécurisé fait fuir 80% des visiteurs instantanément. Votre image doit inspirer confiance dès la première seconde.",
     color: "bg-orange-50 text-orange-600"
   },
   {
     icon: Star,
     title: "La Hantise des Mauvais Avis",
-    description: "Une seule mauvaise note injustifiée peut ruiner votre réputation. Notre système 'Bouclier' intercepte les mécontents en privé et propulse les clients ravis sur Google.",
+    description: "Une seule mauvaise note injustifiée peut ruiner votre réputation. Notre système 'Bouclier' intercepte les mécontents en privé.",
     color: "bg-slate-100 text-slate-600"
   }
 ];
@@ -62,7 +123,7 @@ export const FEATURES: Feature[] = [
   {
     icon: TrendingUp,
     title: "Domination Locale",
-    description: "Nous optimisons tout pour que lorsque quelqu'un tape votre métier + votre ville, c'est VOUS qui sortez en premier."
+    description: "Nous optimisons tout pour que lorsque quelqu'un tape votre métier + votre ville, c'est VOTRE entreprise qui sort en premier."
   },
   {
     icon: ShieldCheck,
@@ -77,7 +138,7 @@ export const FEATURES: Feature[] = [
   {
     icon: Lock,
     title: "Liberté Totale",
-    description: "Choisissez votre modèle : Pack Visibilité (Achat unique) ou Pack Sérénité (Abonnement). Pas de frais cachés."
+    description: "Pas de frais cachés, pas de location. Vous êtes propriétaire de votre outil de travail numérique à 100%."
   },
   {
     icon: Zap,
@@ -90,7 +151,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
   {
     number: "1",
     title: "Audit & Choix",
-    description: "On analyse votre marché. Vous choisissez la formule qui arrange votre trésorerie : Achat Comptant ou Abonnement Mensuel."
+    description: "On analyse votre marché et on définit la meilleure stratégie pour votre entreprise locale."
   },
   {
     number: "2",
@@ -110,14 +171,14 @@ export const PORTFOLIO: Project[] = [
     title: "Bistrot 12",
     category: "Restauration",
     image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Formule Abonnement : +40% de réservations sans sortir de trésorerie."
+    description: "+40% de réservations en ligne dès le premier mois."
   },
   {
     id: 2,
     title: "Garage Vauthier",
     category: "Automobile",
     image: "https://images.unsplash.com/photo-1486006920555-c77dcf18193c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Pack Visibilité : Site rentabilisé en 2 mois grâce au SEO local."
+    description: "Positionnement en n°1 sur Maps en un temps record."
   },
   {
     id: 3,
@@ -128,73 +189,16 @@ export const PORTFOLIO: Project[] = [
   }
 ];
 
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    id: 1,
-    name: "Marc",
-    role: "Gérant Garage",
-    company: "AutoFix",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    quote: "Avant, on était invisibles sur Google. Maintenant, on a une image pro et les clients du coin nous trouvent facilement. C'est rassurant d'avoir un partenaire qui gère toute la technique pour nous."
-  },
-  {
-    id: 2,
-    name: "Sophie",
-    role: "Restauratrice",
-    company: "Le Petit Coin",
-    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    quote: "Je voulais surtout protéger ma réputation. Le filtre d'avis fonctionne parfaitement : je gère les petits soucis en privé et ma note Google reste propre. C'est un vrai poids en moins au quotidien."
-  }
-];
-
-export const PRICING_PLANS: PricingPlan[] = [
-  {
-    title: "PACK INTÉGRAL : PROPRIÉTAIRE",
-    price: "990 €",
-    originalPrice: "2 000 €",
-    priceNote: "OFFRE PARTENAIRE / AMBASSADEUR",
-    description: "Devenez notre réussite locale de référence. Nous baissons notre marge, vous nous offrez votre témoignage.",
-    features: [
-      "🚀 Site Web Pro livré en 7 jours",
-      "✅ 100% Propriétaire (0€ de loyer)",
-      "📍 Référencement Google Local (SEO)",
-      "📱 Design Moderne & Mobile First",
-      "🛡️ Certificat Sécurité SSL",
-      "✍️ Rédaction Commerciale Incluse"
-    ],
-    bonuses: [
-      {
-         title: "Optimisation Fiche Google (GMB)",
-         desc: "Pour apparaître sur la carte",
-         value: "OFFERT"
-      },
-      {
-         title: "Pack Juridique",
-         desc: "Mentions légales & RGPD conformes",
-         value: "OFFERT"
-      }
-    ],
-    isPopular: true, 
-    buttonText: "Profiter de l'offre Ambassadeur",
-    buttonVariant: "primary" 
-  }
-];
-
 export const COMPARISON_DATA: ComparisonPoint[] = [
   {
-    label: "Paiement",
-    bad: "Souvent rigide (tout ou rien)",
-    good: "Flexible : Comptant (990€) ou Mensuel (197€)"
+    label: "Exclusivité",
+    bad: "Travaille avec tout le monde",
+    good: "Un seul partenaire par ville et métier"
   },
   {
     label: "Propriété du site",
-    bad: "Souvent flou (Location cachée)",
-    good: "100% Propriétaire avec le Pack Domination"
-  },
-  {
-    label: "Gestion technique",
-    bad: "Facturée à l'heure",
-    good: "Incluse avec le Pack Sérénité"
+    bad: "Location cachée",
+    good: "100% Propriétaire"
   },
   {
     label: "Délai de livraison",
@@ -205,20 +209,12 @@ export const COMPARISON_DATA: ComparisonPoint[] = [
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "Pourquoi ce tarif 'Ambassadeur' si bas ?",
-    answer: "Nous cherchons à nous implanter durablement dans votre secteur. Nous acceptons de réduire notre marge sur le premier client de la zone en échange d'un témoignage vidéo/écrit une fois le site en ligne. C'est du gagnant-gagnant."
+    question: "Pourquoi ce tarif 'Ambassadeur' pour 2026 ?",
+    answer: "Nous cherchons à nous implanter durablement. Nous acceptons de réduire notre marge sur la première entreprise de la zone en échange d'un témoignage honnête."
   },
   {
-    question: "Est-ce qu'il y a des frais mensuels cachés ?",
-    answer: "Aucun. Avec le Pack Intégral Propriétaire, vous payez une seule fois 990€. Le site est à vous à 100%. Seuls l'hébergement et le nom de domaine (environ 70€/an) seront à régler à partir de la 2ème année."
-  },
-  {
-    question: "Le site m'appartient-il vraiment ?",
-    answer: "Oui, à 100%. Contrairement aux offres 'Sérénité' ou aux concurrents qui louent le site, ici vous êtes propriétaire du code, du design et du contenu. Vous êtes libre de partir quand vous voulez."
-  },
-  {
-    question: "Le délai de 7 jours est-il réel ?",
-    answer: "Absolument. Dès que nous avons validé vos besoins, notre équipe se met au travail pour livrer une première version complète sous une semaine."
+    question: "Le site appartient-il à mon entreprise ?",
+    answer: "Oui, à 100%. Vous êtes propriétaire du code, du design et du contenu. Vous êtes libre de partir quand vous voulez."
   }
 ];
 
