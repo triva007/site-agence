@@ -43,22 +43,21 @@ const Hero: React.FC = () => {
               </button>
               <div className="flex items-center gap-2 text-sm font-bold text-slate-500">
                  <div className="flex -space-x-2">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" className="w-8 h-8 rounded-full border-2 border-white" alt=""/>
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" className="w-8 h-8 rounded-full border-2 border-white" alt=""/>
-                    <img src="https://randomuser.me/api/portraits/men/86.jpg" className="w-8 h-8 rounded-full border-2 border-white" alt=""/>
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" className="w-8 h-8 rounded-full border-2 border-white" alt="Client satisfait 1"/>
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" className="w-8 h-8 rounded-full border-2 border-white" alt="Client satisfait 2"/>
+                    <img src="https://randomuser.me/api/portraits/men/86.jpg" className="w-8 h-8 rounded-full border-2 border-white" alt="Client satisfait 3"/>
                  </div>
                  <p>Rejoignez les pros qui réussissent</p>
               </div>
             </div>
           </div>
 
-          {/* Visual Content - Phone Mockup Shortened & Cleaned */}
+          {/* Visual Content */}
           <div className="lg:w-1/2 relative reveal stagger-2 mt-8 lg:mt-0 w-full max-w-[500px] lg:max-w-none mx-auto">
             <div className="relative">
               
               {/* Phone Frame */}
               <div className="relative z-20 mx-auto w-[280px] sm:w-[300px] bg-slate-900 rounded-[2.5rem] p-2 shadow-2xl ring-1 ring-slate-900/50">
-                 {/* Screen - Shortened height */}
                  <div className="bg-white rounded-[2rem] overflow-hidden h-[480px] relative flex flex-col border-[3px] border-slate-900">
                     
                     {/* Search Bar */}
@@ -69,19 +68,13 @@ const Hero: React.FC = () => {
                        </div>
                        <div className="flex gap-1.5 overflow-x-hidden pb-1">
                           <div className="px-2.5 py-1 bg-brand-blue text-white rounded-full text-[8px] font-bold">Meilleurs résultats</div>
-                          <div className="px-2.5 py-1 bg-white border border-slate-200 text-slate-500 rounded-full text-[8px] font-bold">Proximité</div>
                        </div>
                     </div>
                     
                     {/* Map View */}
                     <div className="h-28 w-full relative bg-slate-100 flex-shrink-0">
                        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/shattered-island.png')]"></div>
-                       
-                       {/* Your Pin */}
                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-10">
-                          <div className="bg-brand-blue text-white text-[8px] font-bold px-2 py-0.5 rounded shadow-md mb-1 animate-bounce">
-                             C'est vous !
-                          </div>
                           <div className="relative">
                              <div className="w-8 h-8 bg-brand-blue rounded-full border-2 border-white shadow-lg flex items-center justify-center z-10 relative">
                                 <MapPin size={14} className="text-white fill-white" />
@@ -94,15 +87,11 @@ const Hero: React.FC = () => {
                     {/* Results List */}
                     <div className="flex-1 bg-slate-50 p-3 relative -mt-4 rounded-t-2xl z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] flex flex-col">
                        <div className="w-8 h-1 bg-slate-200 rounded-full mx-auto mb-3 flex-shrink-0"></div>
-                       
-                       {/* #1 Result Card (User) - PROMINENT */}
                        <div className="bg-white rounded-xl p-3 shadow-xl border-l-4 border-brand-blue mb-3 transform scale-[1.02] relative z-20">
-                          <div className="absolute -left-2 -top-2 w-6 h-6 bg-brand-yellow text-brand-dark rounded-full flex items-center justify-center text-xs font-black border-2 border-white shadow-sm">1</div>
                           <div className="flex justify-between items-start mb-1 pl-1">
                              <div>
-                                <h3 className="font-black text-slate-900 text-sm">VOTRE ENTREPRISE</h3>
+                                <h3 className="font-black text-slate-900 text-sm uppercase">Votre Entreprise</h3>
                                 <div className="flex items-center gap-1 mt-0.5">
-                                   <span className="text-[10px] text-slate-500 font-medium">5.0</span>
                                    <div className="flex text-brand-yellow">
                                       <Star size={8} fill="currentColor" />
                                       <Star size={8} fill="currentColor" />
@@ -110,49 +99,20 @@ const Hero: React.FC = () => {
                                       <Star size={8} fill="currentColor" />
                                       <Star size={8} fill="currentColor" />
                                    </div>
-                                   <span className="text-slate-400 text-[9px]">(128)</span>
                                 </div>
                              </div>
-                             <div className="bg-green-100 text-green-700 text-[8px] font-bold px-1.5 py-0.5 rounded">OUVERT</div>
                           </div>
-
                           <div className="flex gap-2 mt-2">
-                             <div className="flex-1 bg-brand-blue text-white py-1.5 rounded-md flex items-center justify-center gap-1 text-xs font-bold shadow-md shadow-brand-blue/20">
+                             <div className="flex-1 bg-brand-blue text-white py-1.5 rounded-md flex items-center justify-center gap-1 text-xs font-bold">
                                 <Phone size={12} /> Appeler
                              </div>
-                             <div className="flex-1 bg-slate-50 border border-slate-100 text-slate-600 py-1.5 rounded-md flex items-center justify-center gap-1 text-xs font-bold">
-                                <Globe size={12} /> Site Web
-                             </div>
                           </div>
                        </div>
-                       
-                       {/* Competitor 1 (Explicitly labeled "Concurrent") */}
-                       <div className="bg-white/60 rounded-xl p-2 border border-slate-200 mb-2 opacity-70 scale-95 origin-top grayscale flex items-center justify-between">
-                          <div>
-                             <div className="text-xs font-bold text-slate-400 mb-1">Concurrent</div>
-                             <div className="flex gap-0.5 text-slate-300">
-                                <Star size={8} fill="currentColor" />
-                                <Star size={8} fill="currentColor" />
-                                <Star size={8} fill="currentColor" />
-                             </div>
-                          </div>
-                          <div className="h-6 w-16 bg-slate-100 rounded"></div>
-                       </div>
-
-                       {/* Competitor 2 */}
-                       <div className="bg-white/30 rounded-xl p-2 border border-slate-100 opacity-40 blur-[0.5px] scale-90 origin-top grayscale">
-                          <div className="h-3 w-20 bg-slate-200 rounded mb-1"></div>
-                       </div>
-
-                        {/* Bottom gradient fade */}
-                       <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-slate-50 to-transparent pointer-events-none z-30"></div>
                     </div>
                  </div>
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
     </section>

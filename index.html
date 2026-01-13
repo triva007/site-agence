@@ -1,12 +1,57 @@
+
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth scroll-pt-32">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Triva-Media | Remplissez votre agenda grâce à Google.</title>
+    
+    <!-- SEO Primaire -->
+    <title>Triva-Media | Agence Marketing Local : Dominez Google en 7 Jours</title>
+    <meta name="description" content="Triva-Media transforme votre visibilité locale. Site web professionnel livré en 7 jours, SEO Google Maps et système de protection d'avis. Devenez le n°1 dans votre ville." />
+    <link rel="canonical" href="https://triva-media.com/" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://triva-media.com/" />
+    <meta property="og:title" content="Triva-Media | Votre entreprise mérite d'être N°1 sur Google" />
+    <meta property="og:description" content="Transformez vos visiteurs Google en clients réels. Expertise en marketing local pour artisans et PME." />
+    <meta property="og:image" content="https://triva-media.com/og-image.png" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://triva-media.com/" />
+    <meta name="twitter:title" content="Triva-Media | Agence Marketing Local" />
+    <meta name="twitter:description" content="Site web pro et SEO local en 7 jours. Arrêtez de laisser vos clients à vos concurrents." />
+    <meta name="twitter:image" content="https://triva-media.com/og-image.png" />
+
+    <!-- Données Structurées JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Triva-Media",
+        "image": "https://triva-media.com/logo.png",
+        "url": "https://triva-media.com",
+        "telephone": "+33767056066",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "FR"
+        },
+        "description": "Agence de marketing digital spécialisée dans la visibilité locale pour les PME et artisans.",
+        "founder": {
+          "@type": "Person",
+          "name": "Aaron"
+        }
+      }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS via CDN for immediate rendering -->
+    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -14,11 +59,11 @@
           extend: {
             colors: {
               brand: {
-                blue: '#0055FF', // Electric Royal Blue
-                dark: '#0B0F19', // Dark Navy
-                light: '#F8FAFC', // Very light gray/blue
-                yellow: '#FFD600', // Accent
-                lightBlue: '#A3C2FF', // Light text on dark bg
+                blue: '#0055FF',
+                dark: '#0B0F19',
+                light: '#F8FAFC',
+                yellow: '#FFD600',
+                lightBlue: '#A3C2FF',
               }
             },
             fontFamily: {
@@ -33,28 +78,16 @@
               'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
             },
             keyframes: {
-              float: {
-                "0%, 100%": { transform: "translateY(0)" },
-                "50%": { transform: "translateY(-20px)" },
-              },
+              float: { "0%, 100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-20px)" } },
               blob: {
                 "0%": { transform: "translate(0px, 0px) scale(1)" },
                 "33%": { transform: "translate(30px, -50px) scale(1.1)" },
                 "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
                 "100%": { transform: "translate(0px, 0px) scale(1)" },
               },
-              marquee: {
-                '0%': { transform: 'translateX(0%)' },
-                '100%': { transform: 'translateX(-100%)' },
-              },
-              marquee2: {
-                '0%': { transform: 'translateX(100%)' },
-                '100%': { transform: 'translateX(0%)' },
-              },
-              fadeInUp: {
-                '0%': { opacity: '0', transform: 'translateY(20px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              }
+              marquee: { '0%': { transform: 'translateX(0%)' }, '100%': { transform: 'translateX(-100%)' } },
+              marquee2: { '0%': { transform: 'translateX(100%)' }, '100%': { transform: 'translateX(0%)' } },
+              fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
             },
           }
         }

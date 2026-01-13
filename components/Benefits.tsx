@@ -60,11 +60,11 @@ const Benefits: React.FC = () => {
              </div>
              <div className="mt-8 w-full h-40 sm:h-48 bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden relative">
                  <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-transparent z-10"></div>
-                 <img src="https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=600&q=80" className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" alt="Clients" />
+                 <img src="https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=600&q=80" className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" alt="Entreprise locale dominant son marché grâce au web" />
              </div>
           </div>
 
-          {/* Feature 2: Le Filtre Anti-Mauvais Foi (Dark Card) */}
+          {/* Feature 2: Le Filtre Anti-Mauvais Foi */}
           <div className="reveal md:col-span-1 lg:col-span-2 bg-[#0B1121] text-white rounded-3xl p-6 sm:p-8 border border-slate-800 group overflow-hidden relative flex flex-col justify-between min-h-[320px] shadow-xl">
             <div className="absolute right-0 top-0 p-8 opacity-5 text-brand-blue">
                <ShieldCheck size={180} />
@@ -74,7 +74,6 @@ const Benefits: React.FC = () => {
               <div className="w-12 h-12 bg-slate-800/50 rounded-xl flex items-center justify-center backdrop-blur-md mb-5 border border-slate-700 shadow-inner text-brand-yellow">
                 <ShieldCheck size={24} />
               </div>
-              
               <h3 className="text-2xl font-black mb-3 text-white">Le Filtre Anti-Mauvais Foi</h3>
               <p className="text-slate-400 text-sm leading-relaxed font-medium mb-6">
                 Le client est content ? Son avis va sur Google.<br/> 
@@ -83,14 +82,11 @@ const Benefits: React.FC = () => {
               </p>
             </div>
 
-            {/* Visualization Box */}
             <div className="mt-auto bg-[#020617] rounded-xl p-4 border border-slate-800/50 shadow-inner relative z-10">
                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                     <span>Note du Client</span>
                     <span>Résultat</span>
                 </div>
-                
-                {/* 5 Stars - Public */}
                 <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-800/50">
                     <div className="flex text-brand-yellow gap-0.5">
                         {[...Array(5)].map((_,i) => <Star key={i} size={12} fill="currentColor" />)}
@@ -99,8 +95,6 @@ const Benefits: React.FC = () => {
                         <CheckCircle2 size={12} /> Public (Visible)
                     </div>
                 </div>
-
-                {/* 1 Star - Blocked */}
                 <div className="flex items-center justify-between">
                     <div className="flex gap-0.5">
                         <Star size={12} fill="currentColor" className="text-red-500" />
@@ -116,7 +110,7 @@ const Benefits: React.FC = () => {
             </div>
           </div>
 
-          {/* Feature 3: Création ou Refonte */}
+          {/* ... autres features restées inchangées ... */}
           <div className="reveal md:col-span-1 bg-blue-50 rounded-3xl p-6 sm:p-8 border border-blue-100 group hover:shadow-lg hover:shadow-blue-100/50 transition-all min-h-[200px]">
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-4 text-brand-blue">
                {React.createElement(features[2].icon, { size: 24 })}
@@ -125,7 +119,6 @@ const Benefits: React.FC = () => {
             <p className="text-slate-600 text-sm">{features[2].description}</p>
           </div>
 
-          {/* Feature 4: Propriété 100% */}
           <div className="reveal md:col-span-1 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm hover:shadow-md transition-all min-h-[200px]">
             <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mb-4 text-brand-dark">
                {React.createElement(features[3].icon, { size: 24 })}
@@ -134,7 +127,6 @@ const Benefits: React.FC = () => {
             <p className="text-slate-500 text-sm">{features[3].description}</p>
           </div>
 
-           {/* Feature 5: Hébergement Offert */}
           <div className="reveal md:col-span-3 lg:col-span-2 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6 hover:border-brand-blue/30 transition-colors">
              <div className="flex-shrink-0 w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-green-600">
                 {React.createElement(features[4].icon, { size: 32 })}
@@ -146,7 +138,6 @@ const Benefits: React.FC = () => {
           </div>
 
         </div>
-
       </div>
     </section>
   );
