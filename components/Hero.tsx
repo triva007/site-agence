@@ -87,6 +87,8 @@ const Hero: React.FC = () => {
                     {/* Results List */}
                     <div className="flex-1 bg-slate-50 p-3 relative -mt-4 rounded-t-2xl z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] flex flex-col">
                        <div className="w-8 h-1 bg-slate-200 rounded-full mx-auto mb-3 flex-shrink-0"></div>
+                       
+                       {/* RESULT 1: USER (HIGHLIGHTED) */}
                        <div className="bg-white rounded-xl p-3 shadow-xl border-l-4 border-brand-blue mb-3 transform scale-[1.02] relative z-20">
                           <div className="flex justify-between items-start mb-1 pl-1">
                              <div>
@@ -103,11 +105,48 @@ const Hero: React.FC = () => {
                              </div>
                           </div>
                           <div className="flex gap-2 mt-2">
-                             <div className="flex-1 bg-brand-blue text-white py-1.5 rounded-md flex items-center justify-center gap-1 text-xs font-bold">
+                             <div className="flex-1 bg-brand-blue text-white py-1.5 rounded-md flex items-center justify-center gap-1 text-xs font-bold shadow-lg shadow-brand-blue/30">
                                 <Phone size={12} /> Appeler
                              </div>
                           </div>
                        </div>
+
+                       {/* RESULT 2: COMPETITOR (DIMMED) */}
+                       <div className="bg-white rounded-lg p-2.5 shadow-sm border border-slate-200 mb-2 relative z-10 opacity-70">
+                          <div className="flex justify-between items-start">
+                             <div>
+                                <h3 className="font-bold text-slate-500 text-[10px] uppercase">Concurrent</h3>
+                                <div className="flex items-center gap-1 mt-0.5">
+                                   <div className="flex text-slate-300">
+                                      <Star size={8} fill="currentColor" />
+                                      <Star size={8} fill="currentColor" />
+                                      <Star size={8} fill="currentColor" />
+                                      <Star size={8} />
+                                      <Star size={8} />
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+
+                       {/* RESULT 3: COMPETITOR (DIMMED MORE) */}
+                       <div className="bg-white rounded-lg p-2.5 shadow-sm border border-slate-200 mb-2 relative z-10 opacity-50 blur-[0.3px]">
+                          <div className="flex justify-between items-start">
+                             <div>
+                                <h3 className="font-bold text-slate-400 text-[10px] uppercase">Concurrent</h3>
+                                <div className="flex items-center gap-1 mt-0.5">
+                                   <div className="flex text-slate-200">
+                                      <Star size={8} fill="currentColor" />
+                                      <Star size={8} fill="currentColor" />
+                                      <Star size={8} />
+                                      <Star size={8} />
+                                      <Star size={8} />
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+
                     </div>
                  </div>
               </div>
