@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Zap, MapPin, ShieldCheck, Gift, Star } from 'lucide-react';
+import { Zap, MapPin, ShieldCheck, Gift, Star, Sparkles } from 'lucide-react';
 
 const Pricing: React.FC = () => {
   return (
@@ -81,6 +81,16 @@ const Pricing: React.FC = () => {
                   <div>
                     <h4 className="font-black text-slate-900 text-base">Bouclier Anti-Mauvais Avis</h4>
                     <p className="text-slate-400 text-xs mt-0.5">Filtrage intelligent pour protéger votre note 5/5.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-5">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-brand-blue shrink-0">
+                    <Sparkles size={20} />
+                  </div>
+                  <div>
+                    <h4 className="font-black text-slate-900 text-base">Optimisation I.A. (ChatGPT)</h4>
+                    <p className="text-slate-400 text-xs mt-0.5">Visibilité optimisée pour être recommandé par les IA.</p>
                   </div>
                 </div>
 

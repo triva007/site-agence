@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TrendingUp, ShieldCheck, RefreshCcw, Lock, Zap, Star, CheckCircle2, Ban } from 'lucide-react';
+import { TrendingUp, ShieldCheck, RefreshCcw, Lock, Zap, Star, CheckCircle2, Ban, Sparkles } from 'lucide-react';
 
 const Benefits: React.FC = () => {
   const features = [
@@ -28,6 +28,11 @@ const Benefits: React.FC = () => {
       icon: Zap,
       title: "Livraison Express",
       description: "Votre outil de travail est prêt à générer du chiffre d'affaires en une semaine chrono (7 jours)."
+    },
+    {
+      icon: Sparkles,
+      title: "Recommandé par l'IA",
+      description: "Votre site est optimisé pour être cité et recommandé par ChatGPT et les autres intelligences artificielles (LLMO)."
     }
   ];
 
@@ -134,6 +139,16 @@ const Benefits: React.FC = () => {
              <div>
                 <h3 className="text-xl font-bold text-slate-900 mb-1">{features[4].title}</h3>
                 <p className="text-slate-500 text-sm">{features[4].description}</p>
+             </div>
+          </div>
+
+          <div className="reveal md:col-span-3 lg:col-span-2 bg-gradient-to-br from-indigo-50 to-white rounded-3xl p-6 sm:p-8 border border-indigo-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6 hover:shadow-md transition-all">
+             <div className="flex-shrink-0 w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
+                {React.createElement(features[5].icon, { size: 32 })}
+             </div>
+             <div>
+                <h3 className="text-xl font-bold text-slate-900 mb-1">{features[5].title}</h3>
+                <p className="text-slate-500 text-sm">{features[5].description}</p>
              </div>
           </div>
 
