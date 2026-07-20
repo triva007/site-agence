@@ -1,6 +1,6 @@
 {
-  "name": "Triva-Media",
-  "description": "Transformez vos visiteurs Google en clients réels. Triva-Media aide les entreprises locales à remplir leur agenda et faire sonner leur téléphone grâce à internet.",
+  "name": "Triva Media",
+  "description": "Triva Media — Publicité Facebook & Instagram pour photographes et vidéastes de mariage",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -3,12 +3,10 @@ import React, { useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Problem from './components/Problem';
-import Stats from './components/Stats';
-import Benefits from './components/Benefits';
 import Process from './components/Process';
-import Pricing from './components/Pricing';
-import Testimonials from './components/Testimonials';
-import Comparison from './components/Comparison';
+import NoPromises from './components/NoPromises';
+import PilotProgram from './components/PilotProgram';
+import About from './components/About';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
@@ -31,17 +29,15 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-brand-dark font-sans selection:bg-brand-blue selection:text-white">
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-slate-900 selection:text-white">
       <Header />
       <main>
         <Hero />
-        <Stats />
         <Problem />
-        <Benefits />
         <Process />
-        <Comparison />
-        <Pricing />
-        <Testimonials />
+        <NoPromises />
+        <PilotProgram />
+        <About />
         <FAQ />
       </main>
       <Footer />

@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { FAQ_ITEMS } from '../constants';
 import { Plus, Minus } from 'lucide-react';
 
 const FAQ: React.FC = () => {
@@ -10,61 +9,67 @@ const FAQ: React.FC = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  return (
-    <section id="faq" className="py-24 bg-white scroll-mt-32">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          
-          <div className="lg:col-span-1 reveal">
-            <h2 className="text-4xl sm:text-5xl font-black text-brand-dark mb-8">
-              Questions <br/> fréquentes
-            </h2>
-            
-            <div className="hidden lg:block space-y-4">
-               <div className="w-1 h-12 bg-brand-blue"></div>
-               <div className="text-sm font-bold uppercase tracking-widest text-slate-400">Support</div>
-               <div className="text-sm font-bold uppercase tracking-widest text-slate-400">Process</div>
-               <div className="text-sm font-bold uppercase tracking-widest text-brand-blue">FAQ</div>
-            </div>
-          </div>
+  const faqItems = [
+    {
+      question: "Combien ça coûte ?",
+      answer: "Une mise en place, puis un abonnement mensuel. Votre budget publicitaire se paie directement à Meta, sur votre compte : cet argent ne passe jamais par moi. Les chiffres exacts dépendent de votre zone et de vos objectifs, je les donne en appel, et tout est annoncé avant de commencer, sans frais cachés."
+    },
+    {
+      question: "Vous vous engagez sur quoi, concrètement ?",
+      answer: "Un objectif de demandes qualifiées défini ensemble au départ, selon votre budget. S'il n'est pas atteint, je continue de travailler gratuitement jusqu'à l'atteindre, dans la limite d'un mois. Je ne promets ni mariages signés, ni chiffres magiques."
+    },
+    {
+      question: "Un formulaire qui demande le budget, ça ne fait pas fuir ?",
+      answer: "Si, et c'est le but. Ça fait fuir ceux qui n'ont ni date ni budget. Ceux qui passent le filtre sont ceux avec qui vous signez."
+    },
+    {
+      question: "J'ai déjà testé la pub, ça n'a rien donné.",
+      answer: "Booster un post envoie du trafic vers votre profil, où il se perd. Ici, la campagne envoie vers un formulaire qui filtre et récupère le téléphone. Ce n'est pas le même métier."
+    }
+  ];
 
-          <div className="lg:col-span-2 space-y-4 reveal stagger-1">
-            {FAQ_ITEMS.map((item, index) => (
-              <div 
-                key={index} 
-                className="border-b border-slate-100 last:border-0"
+  return (
+    <section id="faq" className="py-24 bg-slate-50 border-t border-slate-100">
+      <div className="max-w-4xl mx-auto px-6">
+        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-dark mb-12 text-center reveal">
+          FAQ
+        </h2>
+
+        <div className="space-y-4 reveal stagger-1">
+          {faqItems.map((item, index) => (
+            <div 
+              key={index} 
+              className="bg-white border border-slate-200"
+            >
+              <button
+                className="w-full px-6 py-6 text-left flex justify-between items-center focus:outline-none group"
+                onClick={() => toggleFAQ(index)}
               >
-                <button
-                  className="w-full py-6 text-left flex justify-between items-center focus:outline-none group"
-                  onClick={() => toggleFAQ(index)}
-                >
-                  <span className={`font-bold text-lg transition-colors ${openIndex === index ? 'text-brand-blue' : 'text-brand-dark group-hover:text-brand-blue'}`}>
-                    {item.question}
-                  </span>
-                  <div className={`flex-shrink-0 ml-4 transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}>
-                    {openIndex === index ? (
-                      <Minus className="h-5 w-5 text-brand-blue" />
-                    ) : (
-                      <Plus className="h-5 w-5 text-slate-400" />
-                    )}
-                  </div>
-                </button>
-                
-                <div 
-                  className={`grid transition-all duration-300 ease-in-out ${
-                    openIndex === index ? 'grid-rows-[1fr] opacity-100 pb-8' : 'grid-rows-[0fr] opacity-0'
-                  }`}
-                >
-                  <div className="overflow-hidden">
-                     <p className="text-slate-600 leading-relaxed">
-                      {item.answer}
-                     </p>
-                  </div>
+                <span className={`font-bold text-lg transition-colors ${openIndex === index ? 'text-brand-dark' : 'text-slate-600 group-hover:text-brand-dark'}`}>
+                  {item.question}
+                </span>
+                <div className="flex-shrink-0 ml-4 transition-transform duration-300">
+                  {openIndex === index ? (
+                    <Minus className="h-5 w-5 text-brand-dark" />
+                  ) : (
+                    <Plus className="h-5 w-5 text-slate-400" />
+                  )}
+                </div>
+              </button>
+              
+              <div 
+                className={`grid transition-all duration-300 ease-in-out px-6 ${
+                  openIndex === index ? 'grid-rows-[1fr] opacity-100 pb-6' : 'grid-rows-[0fr] opacity-0'
+                }`}
+              >
+                <div className="overflow-hidden">
+                   <p className="text-slate-600 leading-relaxed">
+                    {item.answer}
+                   </p>
                 </div>
               </div>
-            ))}
-          </div>
-
+            </div>
+          ))}
         </div>
       </div>
     </section>
