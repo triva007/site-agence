@@ -29,28 +29,31 @@ const FAQ: React.FC = () => {
   ];
 
   return (
-    <section id="faq" className="py-24 bg-slate-50 border-t border-slate-100">
+    <section id="faq" className="py-24 bg-brand-cream border-t border-slate-100">
       <div className="max-w-4xl mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-dark mb-12 text-center reveal">
-          FAQ
-        </h2>
+        <div className="text-center mb-12 reveal">
+          <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">Questions</div>
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-12">
+            FAQ
+          </h2>
+        </div>
 
         <div className="space-y-4 reveal stagger-1">
           {faqItems.map((item, index) => (
             <div 
               key={index} 
-              className="bg-white border border-slate-200"
+              className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm"
             >
               <button
                 className="w-full px-6 py-6 text-left flex justify-between items-center focus:outline-none group"
                 onClick={() => toggleFAQ(index)}
               >
-                <span className={`font-bold text-lg transition-colors ${openIndex === index ? 'text-brand-dark' : 'text-slate-600 group-hover:text-brand-dark'}`}>
+                <span className={`font-bold text-lg transition-colors ${openIndex === index ? 'text-brand-accent' : 'text-slate-600 group-hover:text-brand-dark'}`}>
                   {item.question}
                 </span>
                 <div className="flex-shrink-0 ml-4 transition-transform duration-300">
                   {openIndex === index ? (
-                    <Minus className="h-5 w-5 text-brand-dark" />
+                    <Minus className="h-5 w-5 text-brand-accent" />
                   ) : (
                     <Plus className="h-5 w-5 text-slate-400" />
                   )}

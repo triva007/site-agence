@@ -21,12 +21,13 @@ const Process: React.FC = () => {
   ];
 
   return (
-    <section id="method" className="py-24 bg-slate-50 border-t border-slate-100">
+    <section id="method" className="py-24 bg-white border-t border-slate-100">
       <div className="max-w-5xl mx-auto px-6">
         
         <div className="text-center mb-16 reveal">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-dark mb-4">
-            La méthode
+          <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">La méthode</div>
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-4">
+            3 étapes
           </h2>
         </div>
 
@@ -34,12 +35,15 @@ const Process: React.FC = () => {
           {steps.map((step, index) => {
             const Icon = step.icon;
             return (
-              <div key={index} className="bg-white p-8 border border-slate-100 reveal stagger-1">
-                <div className="w-12 h-12 bg-slate-50 border border-slate-100 text-brand-dark flex items-center justify-center rounded-full mb-6">
-                  <Icon size={24} strokeWidth={1.5} />
+              <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal stagger-1 relative overflow-hidden">
+                <div className="absolute top-4 right-6 text-7xl font-black text-brand-accent opacity-[0.07]">
+                  {index + 1}
                 </div>
-                <h3 className="text-xl font-display font-bold text-brand-dark mb-3">{step.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{step.description}</p>
+                <div className="w-16 h-16 bg-brand-cream text-brand-accent flex items-center justify-center rounded-2xl mb-6 relative z-10">
+                  <Icon size={32} strokeWidth={1.5} />
+                </div>
+                <h3 className="text-xl font-display font-bold text-brand-dark mb-3 relative z-10">{index + 1}. {step.title}</h3>
+                <p className="text-slate-600 leading-relaxed relative z-10">{step.description}</p>
               </div>
             );
           })}

@@ -4,8 +4,10 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import Problem from './components/Problem';
 import Process from './components/Process';
+import ForWho from './components/ForWho';
+import HowToStart from './components/HowToStart';
 import NoPromises from './components/NoPromises';
-import PilotProgram from './components/PilotProgram';
+import CurrentTest from './components/CurrentTest';
 import About from './components/About';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
@@ -35,8 +37,10 @@ const App: React.FC = () => {
         <Hero />
         <Problem />
         <Process />
+        <ForWho />
+        <HowToStart />
         <NoPromises />
-        <PilotProgram />
+        <CurrentTest />
         <About />
         <FAQ />
       </main>
