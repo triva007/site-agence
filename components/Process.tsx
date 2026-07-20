@@ -26,7 +26,7 @@ const Process: React.FC = () => {
   ];
 
   return (
-    <section id="method" className="py-24 bg-white border-t border-slate-100">
+    <section id="method" className="py-16 md:py-24 bg-white border-t border-slate-100">
       <div className="max-w-5xl mx-auto px-6">
         
         <div className="text-center mb-16 reveal">

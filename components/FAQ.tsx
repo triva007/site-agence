@@ -33,7 +33,7 @@ const FAQ: React.FC = () => {
   ];
 
   return (
-    <section id="faq" className="py-24 bg-brand-cream border-t border-slate-100">
+    <section id="faq" className="py-16 md:py-24 bg-brand-cream border-t border-slate-100">
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-12 reveal">
           <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">Questions</div>

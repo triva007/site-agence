@@ -5,7 +5,7 @@ import { ArrowRight, Facebook, Mail, MessageCircle } from 'lucide-react';
 const Footer: React.FC = () => {
   return (
     <footer className="bg-brand-dark relative">
-      <div className="py-32">
+      <div className="py-20 md:py-32">
         <div className="max-w-3xl mx-auto px-6 text-center reveal">
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-8 tracking-tight">
             Envie de savoir si votre zone est libre ?

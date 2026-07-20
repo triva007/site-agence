@@ -22,7 +22,7 @@ const Problem: React.FC = () => {
   ];
 
   return (
-    <section id="problem" className="py-24 bg-brand-cream border-t border-slate-100">
+    <section id="problem" className="py-16 md:py-24 bg-brand-cream border-t border-slate-100">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {cards.map((card, index) => (

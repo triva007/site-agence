@@ -21,7 +21,7 @@ const ForWho: React.FC = () => {
   ];
 
   return (
-    <section id="for-who" className="py-24 bg-brand-cream border-t border-slate-100">
+    <section id="for-who" className="py-16 md:py-24 bg-brand-cream border-t border-slate-100">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center mb-16 reveal">
           <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">Pour qui</div>

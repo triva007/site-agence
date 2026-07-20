@@ -2,7 +2,7 @@ import React from 'react';
 
 const CurrentTest: React.FC = () => {
   return (
-    <section id="current-test" className="py-24 bg-brand-cream border-t border-slate-100">
+    <section id="current-test" className="py-16 md:py-24 bg-brand-cream border-t border-slate-100">
       <div className="max-w-4xl mx-auto px-6">
         <div className="bg-white p-10 md:p-12 shadow-sm border border-slate-200 rounded-2xl reveal">
           <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">Transparent</div>

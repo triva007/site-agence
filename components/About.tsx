@@ -2,10 +2,10 @@ import React from 'react';
 
 const About: React.FC = () => {
   return (
-    <section id="about" className="py-32 bg-white border-t border-slate-100">
+    <section id="about" className="py-20 md:py-32 bg-white border-t border-slate-100">
       <div className="max-w-5xl mx-auto px-6">
         <div className="grid md:grid-cols-[1fr_1.5fr] gap-12 items-start">
-          <div className="reveal">
+          <div className="reveal max-w-sm mx-auto md:max-w-none">
             <div className="aspect-[4/5] overflow-hidden bg-slate-100 rounded-2xl shadow-sm border border-slate-100">
                {/* Vraie photo lumineuse d'Aaron fournie par l'utilisateur */}
                <img 

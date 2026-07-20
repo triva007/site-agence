@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 const LegalNotice: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-3xl mx-auto px-6 py-24">
+      <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         <a 
           href="/" 
           className="inline-flex items-center gap-2 text-brand-dark hover:text-brand-accent transition-colors font-bold mb-12"

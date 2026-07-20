@@ -21,7 +21,7 @@ const HowToStart: React.FC = () => {
   ];
 
   return (
-    <section id="how-to-start" className="py-24 bg-white border-t border-slate-100">
+    <section id="how-to-start" className="py-16 md:py-24 bg-white border-t border-slate-100">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center mb-16 reveal">
           <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">Processus</div>

@@ -2,7 +2,7 @@ import React from 'react';
 
 const NoPromises: React.FC = () => {
   return (
-    <section id="no-promises" className="relative py-32 bg-slate-900 border-t border-slate-100 overflow-hidden">
+    <section id="no-promises" className="relative py-20 md:py-32 bg-slate-900 border-t border-slate-100 overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img 
           src="https://images.unsplash.com/photo-1542131596-ebdeba301bc6?auto=format&fit=crop&q=80&w=2000"
