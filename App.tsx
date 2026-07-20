@@ -8,6 +8,7 @@ import ForWho from './components/ForWho';
 import HowToStart from './components/HowToStart';
 import NoPromises from './components/NoPromises';
 import CurrentTest from './components/CurrentTest';
+import Comparison from './components/Comparison';
 import About from './components/About';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
@@ -30,6 +31,9 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Add js-enabled class to body for progressive enhancement animations
+    document.body.classList.add('js-enabled');
+
     // Only initialize scroll reveal if we are on the main page
     if (currentPath !== '/') return;
 
@@ -61,6 +65,7 @@ const App: React.FC = () => {
         <ForWho />
         <HowToStart />
         <NoPromises />
+        <Comparison />
         <CurrentTest />
         <About />
         <FAQ />

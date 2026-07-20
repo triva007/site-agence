@@ -30,9 +30,9 @@ const Process: React.FC = () => {
       <div className="max-w-5xl mx-auto px-6">
         
         <div className="text-center mb-16 reveal">
-          <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">La méthode</div>
+          <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">LA MÉTHODE</div>
           <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-4">
-            4 étapes
+            Le Filtre Couple
           </h2>
         </div>
 
@@ -40,7 +40,7 @@ const Process: React.FC = () => {
           {steps.map((step, index) => {
             const Icon = step.icon;
             return (
-              <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal stagger-1 relative overflow-hidden">
+              <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal stagger-1 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <div className="absolute top-4 right-6 text-7xl font-black text-brand-accent opacity-[0.07]">
                   {index + 1}
                 </div>

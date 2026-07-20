@@ -19,7 +19,7 @@ const Hero: React.FC = () => {
             </h1>
             
             <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
-              Un système complet pour les photographes et vidéastes de mariage : la publicité, le filtre qui écarte les curieux, et le cadre de rappel pour transformer les demandes en rendez-vous. Les couples viennent à vous, même pendant que vous shootez.
+              Un système complet pour les photographes et vidéastes de mariage : la publicité, le Filtre Couple qui écarte les curieux, et le cadre de rappel pour transformer les demandes en rendez-vous. Les couples viennent à vous, même pendant que vous shootez.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start w-full sm:w-auto">
@@ -27,13 +27,21 @@ const Hero: React.FC = () => {
                 href="https://wa.me/33767056066"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto bg-brand-dark text-white hover:bg-slate-800 px-8 py-4 rounded-full font-medium text-lg flex items-center justify-center gap-2 transition-all"
+                className="w-full sm:w-auto bg-brand-dark text-white hover:bg-slate-800 px-8 py-4 rounded-full font-medium text-lg flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
               >
                 M'écrire sur WhatsApp <ArrowRight size={20} />
               </a>
               <div className="text-sm font-medium text-slate-400">
                 Je réponds moi-même, sous 24h.
               </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-1.5 sm:gap-2 text-xs text-slate-500 font-medium">
+              <span>Un seul prestataire par zone</span>
+              <span className="text-slate-300">·</span>
+              <span>Vos demandes ne sont jamais partagées</span>
+              <span className="text-slate-300">·</span>
+              <span>Sans engagement caché</span>
             </div>
           </div>
 

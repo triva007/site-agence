@@ -31,7 +31,7 @@ const ForWho: React.FC = () => {
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {cards.map((card, index) => (
-            <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal stagger-1">
+            <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal stagger-1 hover:-translate-y-1 hover:shadow-md transition-all duration-200">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-slate-50 text-brand-accent">
                 {React.createElement(card.icon, { size: 32, strokeWidth: 1.5 })}
               </div>

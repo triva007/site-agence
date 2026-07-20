@@ -31,7 +31,7 @@ const HowToStart: React.FC = () => {
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {steps.map((step, index) => (
-            <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal stagger-1 relative overflow-hidden">
+            <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal stagger-1 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <div className="absolute top-4 right-6 text-7xl font-black text-brand-accent opacity-[0.07]">
                   {index + 1}
                 </div>

@@ -26,7 +26,7 @@ const Problem: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {cards.map((card, index) => (
-            <div key={index} className="reveal stagger-1 flex flex-col items-start bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+            <div key={index} className="reveal stagger-1 flex flex-col items-start bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:-translate-y-1 hover:shadow-md transition-all duration-200">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-slate-50 border border-slate-100 text-brand-accent">
                 {React.createElement(card.icon, { size: 32, strokeWidth: 1.5 })}
               </div>
