@@ -37,14 +37,44 @@ const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Visual Content - Real Wedding Photo */}
-          <div className="lg:w-1/2 relative reveal stagger-2 mt-8 lg:mt-0 w-full max-w-[500px] lg:max-w-none mx-auto">
+          {/* Visual Content - Phone Mockup over Real Wedding Photo */}
+          <div className="lg:w-1/2 relative mt-8 lg:mt-0 w-full max-w-[500px] lg:max-w-none mx-auto">
             <div className="aspect-[4/5] rounded-2xl overflow-hidden relative shadow-2xl shadow-slate-200/50">
               <img 
                 src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200" 
                 alt="Couple de mariés" 
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                className="w-full h-full object-cover grayscale"
               />
+              
+              {/* Phone Mockup overlay */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm">
+                <div className="w-full max-w-[320px] bg-white rounded-[2rem] shadow-2xl border-4 border-slate-900 overflow-hidden flex flex-col">
+                  {/* Phone Header / Notch area */}
+                  <div className="bg-slate-900 h-6 w-full flex justify-center rounded-b-xl mb-6 mx-auto max-w-[120px]"></div>
+                  
+                  {/* Notification Card */}
+                  <div className="px-4 pb-8">
+                    <div className="bg-white border border-slate-100 rounded-xl p-4 shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-2 h-2 rounded-full bg-brand-accent"></div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Nouvelle demande</span>
+                      </div>
+                      <div className="space-y-2 text-sm font-medium text-brand-dark">
+                        <p>· Julie & Thomas</p>
+                        <p>· Mariage le 14 juin 2027</p>
+                        <p>· Domaine près de Lyon</p>
+                        <p>· Budget photo : 2 500 à 3 500 €</p>
+                        <p>· 06 4X XX XX XX</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 text-center text-white">
+                  <p className="font-bold text-sm">Ce que vous recevez, directement dans votre téléphone.</p>
+                  <p className="text-xs text-white/70 mt-1 italic">exemple de demande type</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

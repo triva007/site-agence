@@ -16,15 +16,14 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-/* Reveal on Scroll */
+/* Reveal on Scroll (Disabled) */
 .reveal {
-  opacity: 0;
-  transform: translateY(15px);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  transform: none;
 }
 .reveal.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 .stagger-1 { transition-delay: 100ms; }

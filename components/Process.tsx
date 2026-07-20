@@ -4,17 +4,17 @@ import { Camera, Filter, Smartphone } from 'lucide-react';
 const Process: React.FC = () => {
   const steps = [
     {
-      title: "1. Votre campagne",
+      title: "Votre campagne",
       description: "Je crée les publicités à partir de VOS images. Vos plus beaux moments arrêtent le scroll mieux que n'importe quel texte.",
       icon: Camera
     },
     {
-      title: "2. Le filtre",
+      title: "Le filtre",
       description: "Avant de pouvoir envoyer sa demande, le couple indique sa date, son lieu et son budget. Les curieux s'arrêtent là. Les couples sérieux passent.",
       icon: Filter
     },
     {
-      title: "3. Votre téléphone",
+      title: "Votre téléphone",
       description: "Vous recevez la demande complète avec le numéro du couple. Vous rappelez, vous faites votre métier.",
       icon: Smartphone
     }
@@ -42,7 +42,7 @@ const Process: React.FC = () => {
                 <div className="w-16 h-16 bg-brand-cream text-brand-accent flex items-center justify-center rounded-2xl mb-6 relative z-10">
                   <Icon size={32} strokeWidth={1.5} />
                 </div>
-                <h3 className="text-xl font-display font-bold text-brand-dark mb-3 relative z-10">{index + 1}. {step.title}</h3>
+                <h3 className="text-xl font-display font-bold text-brand-dark mb-3 relative z-10">{step.title}</h3>
                 <p className="text-slate-600 leading-relaxed relative z-10">{step.description}</p>
               </div>
             );

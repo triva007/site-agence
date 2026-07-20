@@ -44,7 +44,7 @@ const Header: React.FC = () => {
       <header 
         className={`pointer-events-auto transition-all duration-500 ease-out ${
           scrolled 
-            ? 'w-full max-w-5xl bg-white/90 backdrop-blur-xl shadow-sm rounded-full py-3 px-6 border border-slate-100' 
+            ? 'w-full max-w-5xl bg-white shadow-sm rounded-full py-3 px-6 border border-slate-100' 
             : 'w-full max-w-7xl bg-transparent py-4 px-2'
         }`}
       >
@@ -78,11 +78,9 @@ const Header: React.FC = () => {
               href="https://wa.me/33767056066"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative px-6 py-2.5 rounded-full font-medium text-sm transition-all overflow-hidden bg-brand-dark text-white hover:bg-slate-800"
+              className="inline-flex items-center justify-center px-6 py-2.5 bg-brand-dark text-white rounded-full font-medium text-sm hover:bg-slate-800 transition-colors"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                M'écrire <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform"/>
-              </span>
+              M'écrire sur WhatsApp
             </a>
           </div>
 

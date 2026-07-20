@@ -38,7 +38,7 @@ const HowToStart: React.FC = () => {
                 <div className="w-16 h-16 bg-brand-cream text-brand-accent flex items-center justify-center rounded-2xl mb-6 relative z-10">
                   <step.icon size={32} strokeWidth={1.5} />
                 </div>
-                <h3 className="text-xl font-display font-bold text-brand-dark mb-3 relative z-10">{index + 1}. {step.title}</h3>
+                <h3 className="text-xl font-display font-bold text-brand-dark mb-3 relative z-10">{step.title}</h3>
                 <p className="text-slate-600 leading-relaxed relative z-10">{step.description}</p>
             </div>
           ))}

@@ -12,7 +12,7 @@ const CurrentTest: React.FC = () => {
           
           <div className="prose prose-lg prose-slate max-w-none text-slate-600 space-y-6">
             <p>
-              Été 2026 : je fais tourner un test en cours avec 3 photographes et vidéastes de mariage. Les résultats chiffrés seront publiés ici fin août.
+              Été 2026 : je fais tourner un test avec 3 photographes et vidéastes de mariage. Les résultats chiffrés seront publiés ici fin août.
             </p>
             <p>
               C'est aussi pour ça qu'il n'y a pas encore d'études de cas sur cette page : je préfère montrer du réel que des captures d'écran invérifiables.
