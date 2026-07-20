@@ -19,7 +19,7 @@ const Hero: React.FC = () => {
             </h1>
             
             <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
-              J'aide les photographes et vidéastes de mariage à recevoir des demandes de devis qualifiées : une date, un lieu, un budget, un téléphone. Le reste, c'est votre talent qui le fait.
+              Un système complet pour les photographes et vidéastes de mariage : la publicité, le filtre qui écarte les curieux, et le cadre de rappel pour transformer les demandes en rendez-vous. Les couples viennent à vous, même pendant que vous shootez.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start w-full sm:w-auto">

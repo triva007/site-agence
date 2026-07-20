@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Filter, Smartphone } from 'lucide-react';
+import { Camera, Filter, Smartphone, MessageSquare } from 'lucide-react';
 
 const Process: React.FC = () => {
   const steps = [
@@ -17,6 +17,11 @@ const Process: React.FC = () => {
       title: "Votre téléphone",
       description: "Vous recevez la demande complète avec le numéro du couple. Vous rappelez, vous faites votre métier.",
       icon: Smartphone
+    },
+    {
+      title: "La conversion",
+      description: "Je ne vous laisse pas seul avec les demandes. Vous recevez mon cadre de rappel : quand rappeler, quoi dire, comment amener le couple vers un rendez-vous. Vous restez le photographe, vous avez juste le script en plus.",
+      icon: MessageSquare
     }
   ];
 
@@ -27,11 +32,11 @@ const Process: React.FC = () => {
         <div className="text-center mb-16 reveal">
           <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">La méthode</div>
           <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-4">
-            3 étapes
+            4 étapes
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => {
             const Icon = step.icon;
             return (

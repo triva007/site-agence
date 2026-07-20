@@ -19,6 +19,10 @@ const FAQ: React.FC = () => {
       answer: "Un objectif de demandes qualifiées défini ensemble au départ, selon votre budget. S'il n'est pas atteint, je continue de travailler gratuitement jusqu'à l'atteindre, dans la limite d'un mois. Je ne promets ni mariages signés, ni chiffres magiques."
     },
     {
+      question: "Et une fois que la demande arrive, je fais quoi ?",
+      answer: "C'est exactement là que la plupart perdent la vente : rappel trop tardif, mauvais premiers mots. Je vous fournis un cadre simple : quand rappeler, quoi dire, comment proposer le rendez-vous. Et on l'ajuste ensemble selon vos retours."
+    },
+    {
       question: "Un formulaire qui demande le budget, ça ne fait pas fuir ?",
       answer: "Si, et c'est le but. Ça fait fuir ceux qui n'ont ni date ni budget. Ceux qui passent le filtre sont ceux avec qui vous signez."
     },

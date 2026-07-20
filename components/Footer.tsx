@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
               © {new Date().getFullYear()} Triva Media. Tous droits réservés.
             </div>
             <div>
-              <a href="#" className="hover:text-slate-300 transition-colors">Mentions légales</a>
+              <a href="/mentions-legales" className="hover:text-slate-300 transition-colors">Mentions légales</a>
             </div>
           </div>
         </div>
