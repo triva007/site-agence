@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, HelpCircle } from 'lucide-react';
 
 const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -33,12 +33,15 @@ const FAQ: React.FC = () => {
   ];
 
   return (
-    <section id="faq" className="py-16 md:py-24 bg-brand-cream border-t border-slate-100">
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="text-center mb-12 reveal">
-          <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">Questions</div>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-12">
-            FAQ
+    <section id="faq" className="py-20 md:py-28 bg-brand-cream border-y border-slate-200/60">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-14 reveal">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-brand-accent/30 text-brand-accent font-bold uppercase tracking-widest text-xs mb-3 shadow-2xs">
+            <HelpCircle size={14} />
+            <span>Questions</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-brand-dark tracking-tight">
+            Foire aux questions
           </h2>
         </div>
 
@@ -46,20 +49,24 @@ const FAQ: React.FC = () => {
           {faqItems.map((item, index) => (
             <div 
               key={index} 
-              className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm"
+              className={`bg-white border rounded-2xl overflow-hidden transition-all duration-300 ${
+                openIndex === index 
+                  ? 'border-brand-accent/50 shadow-md ring-1 ring-brand-accent/20' 
+                  : 'border-slate-200/80 shadow-xs hover:border-slate-300'
+              }`}
             >
               <button
-                className="w-full px-6 py-6 text-left flex justify-between items-center focus:outline-none group"
+                className="w-full px-6 py-5 sm:py-6 text-left flex justify-between items-center focus:outline-none group cursor-pointer"
                 onClick={() => toggleFAQ(index)}
               >
-                <span className={`font-bold text-lg transition-colors ${openIndex === index ? 'text-brand-accent' : 'text-slate-600 group-hover:text-brand-dark'}`}>
+                <span className={`font-bold text-base sm:text-lg transition-colors ${openIndex === index ? 'text-brand-dark' : 'text-slate-700 group-hover:text-brand-dark'}`}>
                   {item.question}
                 </span>
-                <div className="flex-shrink-0 ml-4 transition-transform duration-300">
+                <div className={`flex-shrink-0 ml-4 p-1.5 rounded-full transition-all duration-300 ${openIndex === index ? 'bg-brand-cream text-brand-accent' : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'}`}>
                   {openIndex === index ? (
-                    <Minus className="h-5 w-5 text-brand-accent" />
+                    <Minus className="h-4 w-4" />
                   ) : (
-                    <Plus className="h-5 w-5 text-slate-400" />
+                    <Plus className="h-4 w-4" />
                   )}
                 </div>
               </button>
@@ -70,7 +77,7 @@ const FAQ: React.FC = () => {
                 }`}
               >
                 <div className="overflow-hidden">
-                   <p className="text-slate-600 leading-relaxed">
+                   <p className="text-slate-600 text-sm sm:text-base leading-relaxed pt-2 border-t border-slate-100">
                     {item.answer}
                    </p>
                 </div>

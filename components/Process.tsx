@@ -26,12 +26,14 @@ const Process: React.FC = () => {
   ];
 
   return (
-    <section id="method" className="py-16 md:py-24 bg-white border-t border-slate-100">
-      <div className="max-w-5xl mx-auto px-6">
+    <section id="method" className="py-20 md:py-28 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center mb-16 reveal">
-          <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">LA MÉTHODE</div>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-4">
+          <div className="inline-block text-xs font-bold uppercase tracking-widest text-brand-accent mb-3">
+            LA MÉTHODE
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-brand-dark tracking-tight">
             Le Filtre Couple
           </h2>
         </div>
@@ -40,15 +42,20 @@ const Process: React.FC = () => {
           {steps.map((step, index) => {
             const Icon = step.icon;
             return (
-              <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal stagger-1 relative overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-200">
-                <div className="absolute top-4 right-6 text-7xl font-black text-brand-accent opacity-[0.07]">
-                  {index + 1}
+              <div 
+                key={index} 
+                className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200/80 reveal stagger-1 relative overflow-hidden hover:-translate-y-1 hover:shadow-xl hover:border-brand-accent/50 transition-all duration-300 flex flex-col justify-between group"
+              >
+                <div className="absolute top-4 right-5 text-6xl font-black text-brand-accent/10 select-none group-hover:text-brand-accent/20 transition-colors">
+                  0{index + 1}
                 </div>
-                <div className="w-16 h-16 bg-brand-cream text-brand-accent flex items-center justify-center rounded-2xl mb-6 relative z-10">
-                  <Icon size={32} strokeWidth={1.5} />
+                <div>
+                  <div className="w-14 h-14 bg-brand-cream border border-brand-accent/20 text-brand-accent flex items-center justify-center rounded-2xl mb-6 relative z-10 group-hover:bg-brand-accent group-hover:text-white transition-colors duration-300">
+                    <Icon size={26} strokeWidth={1.75} />
+                  </div>
+                  <h3 className="text-xl font-display font-bold text-brand-dark mb-3 relative z-10">{step.title}</h3>
+                  <p className="text-slate-600 leading-relaxed text-sm sm:text-base relative z-10">{step.description}</p>
                 </div>
-                <h3 className="text-xl font-display font-bold text-brand-dark mb-3 relative z-10">{step.title}</h3>
-                <p className="text-slate-600 leading-relaxed relative z-10">{step.description}</p>
               </div>
             );
           })}

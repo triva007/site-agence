@@ -52,7 +52,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -62,15 +62,18 @@
           extend: {
             colors: {
               brand: {
-                dark: '#0f172a', /* slate-900 */
-                accent: '#C8A96A', /* champagne doré */
-                cream: '#FAF7F2',
+                dark: '#0A0F1D',
+                accent: '#C8A96A',
+                accentHover: '#B59556',
+                cream: '#FAF8F5',
+                creamDark: '#F2EDE4',
                 whatsapp: '#25D366'
               }
             },
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              display: ['Montserrat', 'sans-serif'],
+              sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+              display: ['Montserrat', '"Plus Jakarta Sans"', 'sans-serif'],
+              serif: ['"Playfair Display"', 'serif'],
             }
           }
         }

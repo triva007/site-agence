@@ -21,22 +21,27 @@ const ForWho: React.FC = () => {
   ];
 
   return (
-    <section id="for-who" className="py-16 md:py-24 bg-brand-cream border-t border-slate-100">
-      <div className="max-w-5xl mx-auto px-6">
+    <section id="for-who" className="py-20 md:py-28 bg-brand-cream border-y border-slate-200/60">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 reveal">
-          <div className="text-brand-accent font-bold uppercase tracking-widest text-sm mb-4">Pour qui</div>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-4">
+          <div className="inline-block text-xs font-bold uppercase tracking-widest text-brand-accent mb-3">
+            Pour qui
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-brand-dark tracking-tight">
             Ceux que j'accompagne
           </h2>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {cards.map((card, index) => (
-            <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal stagger-1 hover:-translate-y-1 hover:shadow-md transition-all duration-200">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-slate-50 text-brand-accent">
-                {React.createElement(card.icon, { size: 32, strokeWidth: 1.5 })}
+            <div 
+              key={index} 
+              className="bg-white p-8 sm:p-9 rounded-2xl shadow-sm border border-slate-200/80 reveal stagger-1 hover:-translate-y-1 hover:shadow-lg hover:border-brand-accent/40 transition-all duration-300 flex flex-col items-start group"
+            >
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-brand-cream border border-brand-accent/20 text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors duration-300">
+                {React.createElement(card.icon, { size: 28, strokeWidth: 1.75 })}
               </div>
               <h3 className="text-xl font-display font-bold text-brand-dark mb-3">{card.title}</h3>
-              <p className="text-slate-600 leading-relaxed">{card.description}</p>
+              <p className="text-slate-600 leading-relaxed text-sm sm:text-base">{card.description}</p>
             </div>
           ))}
         </div>
