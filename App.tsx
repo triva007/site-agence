@@ -1,16 +1,17 @@
-
 import React, { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import Problem from './components/Problem';
+import MarketReality from './components/MarketReality';
+import AcquisitionSystem from './components/AcquisitionSystem';
+import RoiCalculator from './components/RoiCalculator';
+import ComparisonSection from './components/ComparisonSection';
+import QualificationCheck from './components/QualificationCheck';
 import Process from './components/Process';
-import ForWho from './components/ForWho';
-import HowToStart from './components/HowToStart';
-import NoPromises from './components/NoPromises';
-import CurrentTest from './components/CurrentTest';
-import Comparison from './components/Comparison';
-import About from './components/About';
+import Offer from './components/Offer';
+import AboutFounder from './components/AboutFounder';
+import BookingSection from './components/BookingSection';
 import FAQ from './components/FAQ';
+import FinalCTA from './components/FinalCTA';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 import LegalNotice from './components/LegalNotice';
@@ -30,45 +31,26 @@ const App: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // Add js-enabled class to body for progressive enhancement animations
-    document.body.classList.add('js-enabled');
-
-    // Only initialize scroll reveal if we are on the main page
-    if (currentPath !== '/') return;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
-
-    const elements = document.querySelectorAll('.reveal');
-    elements.forEach(el => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, [currentPath]);
-
   if (currentPath === '/mentions-legales') {
     return <LegalNotice />;
   }
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-slate-900 selection:text-white">
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-brand-blue selection:text-white">
       <Header />
       <main>
         <Hero />
-        <Problem />
+        <MarketReality />
+        <AcquisitionSystem />
+        <RoiCalculator />
+        <ComparisonSection />
+        <QualificationCheck />
         <Process />
-        <ForWho />
-        <HowToStart />
-        <NoPromises />
-        <Comparison />
-        <CurrentTest />
-        <About />
+        <Offer />
+        <AboutFounder />
+        <BookingSection />
         <FAQ />
+        <FinalCTA />
       </main>
       <Footer />
       <FloatingWhatsApp />

@@ -1,84 +1,127 @@
-
 import React from 'react';
-import { ArrowRight, Facebook, Mail, MessageCircle } from 'lucide-react';
+import { Mail, MessageCircle, ShieldCheck, MapPin } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-brand-dark relative text-white overflow-hidden">
-      {/* Background glow overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(197,160,89,0.15),transparent_70%)] pointer-events-none"></div>
+    <footer className="bg-slate-950 text-white relative border-t border-slate-800">
+      
+      {/* Upper Footer */}
+      <div className="py-16 sm:py-20 relative z-10 border-b border-slate-800/80">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+            
+            {/* Col 1: Brand info */}
+            <div className="md:col-span-2 space-y-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-brand-blue flex items-center justify-center text-white font-black text-base">
+                  T
+                </div>
+                <span className="text-xl font-display font-black tracking-tight text-white">
+                  Triva Media
+                </span>
+              </div>
+              
+              <p className="text-sm text-slate-400 max-w-md leading-relaxed">
+                Système d'acquisition publicitaire Meta Ads pour les professionnels du bâtiment à fort panier moyen : Piscinistes, Rénovation globale, Menuiserie alu &amp; Vérandas, Extension de maison, Paysagisme haut de gamme.
+              </p>
 
-      <div className="py-20 md:py-32 relative z-10">
-        <div className="max-w-3xl mx-auto px-6 text-center reveal">
-          <div className="inline-block text-xs font-bold uppercase tracking-widest text-brand-accent mb-4">
-            Disponibilité par zone
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-8 tracking-tight">
-            Envie de savoir si votre zone est libre ?
-          </h2>
-          
-          <div className="flex justify-center mt-10">
-            <a 
-              href="https://wa.me/33767056066"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2.5 px-9 py-4 bg-brand-accent text-white font-bold rounded-full text-base sm:text-lg hover:bg-brand-accent/90 transition-all duration-300 shadow-xl shadow-brand-accent/20 hover:scale-105"
-            >
-              <span>M'écrire sur WhatsApp — réponse sous 24h</span>
-              <ArrowRight size={20} />
-            </a>
+              <div className="pt-2 flex items-center gap-2 text-xs text-emerald-400 font-semibold">
+                <ShieldCheck size={16} />
+                <span>Règle stricte d'exclusivité par zone géographique</span>
+              </div>
+            </div>
+
+            {/* Col 2: Navigation Links */}
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
+                Navigation
+              </h4>
+              <ul className="space-y-2.5 text-sm text-slate-300">
+                <li>
+                  <a href="#problem" className="hover:text-brand-blue transition-colors">
+                    Le Constat BTP
+                  </a>
+                </li>
+                <li>
+                  <a href="#system" className="hover:text-brand-blue transition-colors">
+                    Notre Système en 4 Piliers
+                  </a>
+                </li>
+                <li>
+                  <a href="#simulator" className="hover:text-brand-blue transition-colors">
+                    Simulateur de Rentabilité
+                  </a>
+                </li>
+                <li>
+                  <a href="#qualification" className="hover:text-brand-blue transition-colors">
+                    Critères d'Éligibilité
+                  </a>
+                </li>
+                <li>
+                  <a href="#process" className="hover:text-brand-blue transition-colors">
+                    Notre Déploiement
+                  </a>
+                </li>
+                <li>
+                  <a href="#offer" className="hover:text-brand-blue transition-colors">
+                    Offre Clé en Main
+                  </a>
+                </li>
+                <li>
+                  <a href="#faq" className="hover:text-brand-blue transition-colors">
+                    Foire aux Questions
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 3: Direct Contact */}
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
+                Contact Direct
+              </h4>
+              <ul className="space-y-3 text-sm text-slate-300">
+                <li>
+                  <a 
+                    href="https://wa.me/33767056066" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-emerald-400 hover:underline font-semibold"
+                  >
+                    <MessageCircle size={16} />
+                    <span>WhatsApp : 07 67 05 60 66</span>
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="mailto:aaron@triva-media.com" 
+                    className="inline-flex items-center gap-2 hover:text-white transition-colors"
+                  >
+                    <Mail size={16} className="text-slate-400" />
+                    <span>aaron@triva-media.com</span>
+                  </a>
+                </li>
+                <li className="flex items-center gap-2 text-slate-400 text-xs">
+                  <MapPin size={16} className="text-slate-500" />
+                  <span>France entière · Secteur réservé par client</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </div>
       </div>
 
-      <div className="border-t border-slate-800 py-12 relative z-10 bg-slate-950/60">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="text-center md:text-left">
-              <span className="font-display font-bold text-white text-2xl tracking-tight">Triva Media</span>
-              <div className="mt-1 text-slate-400 text-sm">
-                Publicité Facebook & Instagram pour les pros du mariage.
-              </div>
-            </div>
-
-            <div className="flex items-center gap-5">
-              <a 
-                href="https://www.facebook.com/profile.php?id=61552535227323" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-brand-accent hover:text-white transition-all duration-200" 
-                aria-label="Facebook"
-              >
-                <Facebook size={20} />
-              </a>
-              <a 
-                href="https://wa.me/33767056066" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-emerald-600 hover:text-white transition-all duration-200" 
-                aria-label="WhatsApp"
-              >
-                <MessageCircle size={20} />
-              </a>
-              <a 
-                href="mailto:aaron@triva-media.com" 
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-brand-accent hover:text-white transition-all duration-200" 
-                aria-label="Email"
-              >
-                <Mail size={20} />
-              </a>
-            </div>
+      {/* Bottom Bar */}
+      <div className="py-8 bg-black/40">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 font-medium">
+          <div>
+            © {new Date().getFullYear()} Triva Media. Tous droits réservés.
           </div>
-          
-          <div className="mt-10 pt-8 border-t border-slate-800/80 text-center md:text-left text-sm font-medium text-slate-400 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-              © {new Date().getFullYear()} Triva Media. Tous droits réservés.
-            </div>
-            <div>
-              <a href="/mentions-legales" className="hover:text-brand-accent transition-colors underline underline-offset-4 decoration-slate-700">
-                Mentions légales
-              </a>
-            </div>
+          <div className="flex items-center gap-6">
+            <a href="/mentions-legales" className="hover:text-white transition-colors underline">
+              Mentions légales &amp; Confidentialité
+            </a>
           </div>
         </div>
       </div>

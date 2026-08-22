@@ -1,221 +1,197 @@
+import { ProcessStep, FaqItem, TradePreset } from './types';
 
-import { 
-  MapPin, 
-  Smartphone, 
-  TrendingUp, 
-  Zap,
-  Search,
-  Layout,
-  PhoneCall,
-  Clock,
-  ArrowUpRight,
-  XCircle,
-  CheckCircle,
-  ShieldCheck,
-  Lock,
-  RefreshCcw,
-  Star,
-  CreditCard,
-  Calendar,
-  Infinity,
-  Users,
-  ImageOff
-} from 'lucide-react';
-import { Feature, ProcessStep, Project, Testimonial, FaqItem, NavigationItem, PricingPlan, ComparisonPoint, TeamMember } from './types';
-
-export const NAV_ITEMS: NavigationItem[] = [
-  { label: 'Pourquoi nous ?', href: '#problem' },
-  { label: 'Résultats', href: '#results' },
-  { label: 'Notre Méthode', href: '#process' },
-  { label: 'Programme Ambassadeur', href: '#pricing' },
-];
-
-export const STATS = [
-  { value: "+300%", label: "De visibilité locale" },
-  { value: "x5", label: "Appels clients / mois" },
-  { value: "7 Jours", label: "Délai de livraison" },
-  { value: "100%", label: "Liberté de choix" },
-];
-
-export const TESTIMONIALS: Testimonial[] = [
+export const TRADE_PRESETS: TradePreset[] = [
   {
-    id: 1,
-    name: "Johanna",
-    role: "Avocate",
-    company: "Cabinet Johanna",
-    avatar: "",
-    date: "Il y a 2 semaines",
-    quote: "En tant qu'avocate, je bénéficie maintenant d'un site professionnel qui me permet de développer ma clientèle de manière quasi automatisée, en fournissant des devis sur mesure à mes futurs clients. Grâce au professionnalisme et à l’implication d'Aaron, mon site est un outil désormais essentiel pour mon activité. Triva-Media, c'est la rapidité et l'efficacité et un service de première qualité.",
-    websiteUrl: "https://johanna-avocat.vercel.app/"
+    id: "pool",
+    name: "Pisciniste (Coque, Béton, Rénovation)",
+    defaultTicket: 32000,
+    minTicket: 18000,
+    maxTicket: 80000,
+    typicalMargin: 35,
+    description: "Installations complètes, bassins maçonnés, couloirs de nage, volets immergés."
   },
   {
-    id: 2,
-    name: "Léa",
-    role: "Nutritionniste",
-    company: "LPrea Nutrition",
-    avatar: "", 
-    date: "Il y a 1 mois",
-    quote: "Aaron est incroyablement à l'écoute, on sent un vrai contact humain derrière la technique. Le système qu'il a mis en place a boosté ma visibilité locale en un temps record. Mon site travaille désormais pour moi 24h/24 et l'automatisation des contacts me fait gagner un temps précieux au quotidien.",
-    websiteUrl: "https://lprea-nutrition.com/"
+    id: "renovation",
+    name: "Rénovation Globale & Aménagement",
+    defaultTicket: 45000,
+    minTicket: 25000,
+    maxTicket: 150000,
+    typicalMargin: 30,
+    description: "Rénovations complètes de maisons ou appartements, redistribution des pièces, second œuvre lourd."
   },
   {
-    id: 3,
-    name: "Lucas",
-    role: "Sophrologue",
-    company: "LP Sophrologie",
-    avatar: "",
-    date: "Il y a 3 semaines",
-    quote: "La rapidité d'exécution d'Aaron m'a bluffé : 7 jours pour un site complet qui génère déjà des appels. Le contact est fluide, pro et très humain. Depuis la mise en ligne, ma visibilité sur Google Maps a explosé. C'est l'investissement le plus rentable que j'ai fait pour mon cabinet cette année.",
-    websiteUrl: "https://lp-sophro.vercel.app/"
+    id: "extension",
+    name: "Extension de maison & Surélévation",
+    defaultTicket: 65000,
+    minTicket: 35000,
+    maxTicket: 200000,
+    typicalMargin: 28,
+    description: "Agrandissements ossature bois ou maçonnerie, création d'étages, suites parentales."
+  },
+  {
+    id: "joinery",
+    name: "Menuiserie Extérieure & Vérandas / Pergolas",
+    defaultTicket: 16000,
+    minTicket: 8000,
+    maxTicket: 45000,
+    typicalMargin: 38,
+    description: "Pergolas bioclimatiques, vérandas aluminium haut de gamme, baies coulissantes XXL."
+  },
+  {
+    id: "landscape",
+    name: "Aménagement Extérieur & Paysagisme de prestige",
+    defaultTicket: 22000,
+    minTicket: 12000,
+    maxTicket: 60000,
+    typicalMargin: 32,
+    description: "Terrasses bois/grès cérame, cuisines d'été, aménagements complets de jardins de villa."
+  },
+  {
+    id: "roofing",
+    name: "Couverture, Charpente & Toiture complète",
+    defaultTicket: 28000,
+    minTicket: 15000,
+    maxTicket: 70000,
+    typicalMargin: 33,
+    description: "Réfections complètes de toitures, charpentes traditionnelles, zinguerie haut de gamme."
   }
 ];
 
-export const PRICING_PLANS: PricingPlan[] = [
+export const PILLARS = [
   {
-    title: "PACK CROISSANCE INTÉGRAL",
-    price: "SUR DEVIS",
-    originalPrice: "2 000 €",
-    priceNote: "PROGRAMME AMBASSADEUR 2026",
-    description: "Devenez notre réussite locale de référence. Nous baissons notre marge, vous nous offrez votre témoignage.",
-    features: [
-      "🚀 Site Web Pro livré en 7 jours",
-      "✅ 100% Propriétaire (0€ de loyer)",
-      "📍 Référencement Google Local (SEO)",
-      "📱 Design Moderne & Mobile First",
-      "🛡️ Certificat Sécurité SSL",
-      "✍️ Rédaction Commerciale Incluse"
-    ],
-    bonuses: [
-      {
-         title: "Optimisation Fiche Google (GMB)",
-         desc: "Pour apparaître sur la carte",
-         value: "OFFERT"
-      }
-    ],
-    isPopular: true, 
-    buttonText: "Vérifier la disponibilité locale",
-    buttonVariant: "primary" 
+    number: "01",
+    title: "Ciblage géographique laser",
+    subtitle: "Uniquement les propriétaires de maisons sur votre secteur",
+    description: "Nous paramétrons les algorithmes Meta pour diffuser vos campagnes exclusivement auprès des propriétaires résidant dans un rayon défini autour de votre entreprise (ex: 25 à 45 km). Finis les contacts hors zone ou non finançables."
+  },
+  {
+    number: "02",
+    title: "Mise en valeur de votre savoir-faire",
+    subtitle: "Des annonces qui imposent votre autorité locale",
+    description: "Nous structurons des publicités attractives basées sur vos chantiers récents et vos atouts (garantie décennale, finitions irréprochables, respect des délais). L'objectif : créer le coup de cœur chez des particuliers en phase de réflexion active."
+  },
+  {
+    number: "03",
+    title: "Filtre anti-curieux multi-questions",
+    subtitle: "Élimination des projets non qualifiés avant tout appel",
+    description: "Avant de pouvoir vous contacter, le prospect doit obligatoirement renseigner son statut (propriétaire confirmé), la nature exacte de ses travaux, sa date idéale de démarrage et son budget estimé. Vous ne perdez plus une seule minute avec des locataires ou des budgets irréalistes."
+  },
+  {
+    number: "04",
+    title: "Transmission exclusive en temps réel",
+    subtitle: "Chaque demande vous appartient à 100%",
+    description: "Dès qu'un dossier est validé, vous recevez une alerte instantanée sur WhatsApp, SMS ou par e-mail avec l'ensemble des réponses du client. Vous êtes le seul et unique professionnel contacté : aucune mise en concurrence artificielle."
   }
 ];
 
-export const PROBLEM_CARDS = [
+export const COMPARISON_POINTS = [
   {
-    icon: XCircle,
-    title: "L'Invisibilité Numérique",
-    description: "97% de vos prospects cherchent une entreprise locale sur Google avant d'appeler. Si vous n'êtes pas dans le Top 3, vous offrez littéralement votre chiffre d'affaires à vos concurrents.",
-    color: "bg-red-50 text-red-600"
+    criterion: "Propriété des demandes",
+    triva: "100% Exclusif. Chaque prospect demande explicitement à travailler avec votre entreprise.",
+    traditional: "Partagé avec 3 à 5 concurrents simultanément.",
+    wordOfMouth: "Exclusif, mais totalement imprévisible d'un mois à l'autre."
   },
   {
-    icon: ImageOff,
-    title: "L'Image Amateur",
-    description: "Un site lent, moche ou non sécurisé fait fuir 80% des visiteurs instantanément. Votre image doit inspirer confiance dès la première seconde.",
-    color: "bg-orange-50 text-orange-600"
+    criterion: "Filtrage du budget",
+    triva: "Filtre strict obligatoire (seuls les projets au-dessus de votre seuil de rentabilité passent).",
+    traditional: "Aucun filtre sérieux : multitude de demandes de dépannage ou sans budget.",
+    wordOfMouth: "Aléatoire : beaucoup de temps passé à chiffrer des projets qui n'aboutissent pas."
   },
   {
-    icon: Star,
-    title: "La Hantise des Mauvais Avis",
-    description: "Une seule mauvaise note injustifiée peut ruiner votre réputation. Notre système 'Bouclier' intercepte les mécontents en privé.",
-    color: "bg-slate-100 text-slate-600"
-  }
-];
-
-export const FEATURES: Feature[] = [
-  {
-    icon: TrendingUp,
-    title: "Domination Locale",
-    description: "Nous optimisons tout pour que lorsque quelqu'un tape votre métier + votre ville, c'est VOTRE entreprise qui sort en premier."
+    criterion: "Contrôle du carnet de commandes",
+    triva: "Volume pilotable : vous pouvez accélérer ou freiner selon la charge de vos équipes.",
+    traditional: "Abonnement fixe avec des leads de qualité très variable.",
+    wordOfMouth: "Subi : périodes de surcharge suivies de trous imprévus dans le planning."
   },
   {
-    icon: ShieldCheck,
-    title: "Le Bouclier d'Avis",
-    description: "Notre système intelligent filtre les avis : les clients contents sont dirigés vers Google, les mécontents vers un formulaire privé."
-  },
-  {
-    icon: RefreshCcw,
-    title: "Création ou Refonte",
-    description: "Site existant ou page blanche : nous livrons un site moderne, rapide et vendeur en seulement 7 jours."
-  },
-  {
-    icon: Lock,
-    title: "Liberté Totale",
-    description: "Pas de frais cachés, pas de location. Vous êtes propriétaire de votre outil de travail numérique à 100%."
-  },
-  {
-    icon: Zap,
-    title: "Livraison Express",
-    description: "Votre outil de travail est prêt à générer du chiffre d'affaires en une semaine chrono (7 jours)."
+    criterion: "Notoriété locale de votre marque",
+    triva: "Toutes les publicités valorisent votre nom, vos réalisations et votre réputation locale.",
+    traditional: "Vous financez la marque de la plateforme tierce, pas la vôtre.",
+    wordOfMouth: "Limitée au cercle proche de vos anciens clients."
   }
 ];
 
 export const PROCESS_STEPS: ProcessStep[] = [
   {
-    number: "1",
-    title: "Audit & Choix",
-    description: "On analyse votre marché et on définit la meilleure stratégie pour votre entreprise locale."
+    number: "01",
+    title: "Diagnostic de votre zone (30 min)",
+    description: "Échange direct avec Aaron pour analyser votre secteur, vos prestations cibles et votre capacité d'absorption de nouveaux chantiers.",
+    details: [
+      "Définition du rayon d'intervention optimal",
+      "Sélection des chantiers les plus rentables pour votre planning",
+      "Vérification de la disponibilité exclusive de votre secteur"
+    ]
   },
   {
-    number: "2",
-    title: "Construction Express",
-    description: "En 7 jours, nous créons (ou refaisons) votre site haute performance et installons le système de filtrage d'avis."
+    number: "02",
+    title: "Conception du dispositif d'acquisition",
+    description: "Nous rédigeons les angles publicitaires et assemblons les visuels valorisant vos réalisations, sans vous faire perdre de temps.",
+    details: [
+      "Rédaction des accroches adaptées à la psychologie des propriétaires",
+      "Mise en avant de vos garanties (décennale, finitions, sérieux)",
+      "Création des formats publicitaires prêts à diffuser"
+    ]
   },
   {
-    number: "3",
-    title: "Lancement & Clients",
-    description: "Mise en ligne immédiate. Indexation Google. Votre téléphone commence à sonner."
+    number: "03",
+    title: "Paramétrage du filtre de qualification",
+    description: "Construction du questionnaire qui vérifie le budget, le type d'habitation et le délai souhaité par le particulier.",
+    details: [
+      "Seuil de budget minimum personnalisé",
+      "Vérification de l'adresse et du statut de propriétaire",
+      "Connexion de la transmission directe sur votre WhatsApp / E-mail"
+    ]
+  },
+  {
+    number: "04",
+    title: "Lancement & Optimisation continue",
+    description: "Activation des campagnes sur Facebook & Instagram avec un suivi serré pour maximiser le nombre de contacts pertinents.",
+    details: [
+      "Ajustement quotidien du ciblage et des budgets",
+      "Élimination des requêtes non pertinentes",
+      "Point régulier et transparent avec Aaron sur les retours chantiers"
+    ]
   }
 ];
 
-export const PORTFOLIO: Project[] = [
-  {
-    id: 1,
-    title: "Bistrot 12",
-    category: "Restauration",
-    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "+40% de réservations en ligne dès le premier mois."
-  },
-  {
-    id: 2,
-    title: "Garage Vauthier",
-    category: "Automobile",
-    image: "https://images.unsplash.com/photo-1486006920555-c77dcf18193c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Positionnement en n°1 sur Maps en un temps record."
-  },
-  {
-    id: 3,
-    title: "L'Atelier Coiffure",
-    category: "Beauté",
-    image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    description: "Refonte complète et nettoyage des avis Google."
-  }
-];
-
-export const COMPARISON_DATA: ComparisonPoint[] = [
-  {
-    label: "Exclusivité",
-    bad: "Travaille avec tout le monde",
-    good: "Un seul partenaire par ville et métier"
-  },
-  {
-    label: "Propriété du site",
-    bad: "Location cachée",
-    good: "100% Propriétaire"
-  },
-  {
-    label: "Délai de livraison",
-    bad: "Plusieurs semaines",
-    good: "7 jours garantis"
-  }
-];
+export const WHO_IS_IT_FOR = {
+  ideal: [
+    "Vous êtes artisan ou dirigeant d'une entreprise du BTP spécialisée dans les chantiers à panier moyen élevé (piscines, rénovations complètes, extensions, menuiseries premium, toitures).",
+    "Vous avez un véritable savoir-faire, une assurance décennale à jour et des réalisations dont vous êtes fier.",
+    "Vous souhaitez stabiliser votre planning plusieurs mois à l'avance sans dépendre uniquement du bouche-à-oreille.",
+    "Vous avez la capacité commerciale et technique de rappeler les demandes sérieuses sous 24 à 48 heures."
+  ],
+  notFor: [
+    "Les artisans qui recherchent uniquement des interventions de dépannage urgent ou des chantiers à moins de 5 000 €.",
+    "Les entreprises déjà saturées pour les 18 prochains mois sans volonté d'augmenter leur panier moyen ou de recruter.",
+    "Les structures qui ne peuvent pas répondre au téléphone ou traiter les demandes des clients dans un délai raisonnable.",
+    "Ceux qui cherchent une solution magique sans investissement publicitaire dédié."
+  ]
+};
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "Pourquoi ce tarif 'Ambassadeur' pour 2026 ?",
-    answer: "Nous cherchons à nous implanter durablement. Nous acceptons de réduire notre marge sur la première entreprise de la zone en échange d'un témoignage honnête."
+    question: "Pourquoi privilégier Meta Ads (Facebook & Instagram) plutôt que Google ou d'autres canaux ?",
+    answer: "Sur Google, vous captez uniquement les personnes qui cherchent déjà activement et qui comparent 10 devis sur la première page. Sur Facebook et Instagram, nous allons chercher directement les propriétaires de maisons dans leur quotidien avec des visuels qui déclenchent un coup de cœur pour vos réalisations. Cela permet de susciter des projets avant même qu'ils ne songent à faire jouer la concurrence."
   },
   {
-    question: "Le site appartient-il à mon entreprise ?",
-    answer: "Oui, à 100%. Vous êtes propriétaire du code, du design et du contenu. Vous êtes libre de partir quand vous voulez."
+    question: "Les demandes reçues sont-elles vraiment exclusives à mon entreprise ?",
+    answer: "Oui, à 100%. Contrairement aux plateformes d'annonces ou de mise en relation qui revendent la même coordonnée à plusieurs artisans, toutes nos campagnes sont diffusées au nom et aux couleurs de votre entreprise. Quand un particulier remplit le formulaire, c'est pour être recontacté par vous, et uniquement par vous."
+  },
+  {
+    question: "Quel budget publicitaire dois-je prévoir pour la régie Meta ?",
+    answer: "Nous conseillons généralement un budget publicitaire régie de 15 € à 25 € par jour (soit environ 450 € à 750 € par mois), versé directement à Meta. Pour des chantiers dont le panier moyen oscille entre 20 000 € et 70 000 €, une seule signature par mois (voire un chantier tous les deux mois) rentabilise très largement l'ensemble du dispositif."
+  },
+  {
+    question: "Je n'ai pas de photos professionnelles ou de vidéos tournées par une agence, est-ce bloquant ?",
+    answer: "Pas du tout. Au contraire, les photos et courtes vidéos réelles prises sur vos chantiers avec un smartphone génèrent souvent plus de confiance et de proximité que des visuels trop aseptisés. Nous nous chargeons de les recadrer, de les mettre en valeur et de concevoir des textes percutants."
+  },
+  {
+    question: "Pourquoi appliquez-vous une règle d'exclusivité par zone géographique ?",
+    answer: "Parce qu'il serait malhonnête de faire tourner des publicités concurrentes pour deux piscinistes ou deux maîtres d'œuvre sur la même agglomération. Nous travaillons avec une seule entreprise par corps d'état et par secteur géographique pour maximiser votre impact local."
+  },
+  {
+    question: "Comment se déroule la collaboration et y a-t-il un engagement long terme ?",
+    answer: "La collaboration est directe et humaine avec Aaron. Nous fonctionnons sans engagement contraignant : la meilleure façon de pérenniser notre partenariat est de générer des chantiers rentables et réguliers pour votre entreprise."
   }
 ];
-
-export const TEAM: TeamMember[] = [];

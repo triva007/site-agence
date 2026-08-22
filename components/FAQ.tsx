@@ -1,90 +1,90 @@
-
 import React, { useState } from 'react';
-import { Plus, Minus, HelpCircle } from 'lucide-react';
+import { ChevronDown, HelpCircle, MessageCircle } from 'lucide-react';
+import { FAQ_ITEMS } from '../constants';
 
 const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
+  const toggle = (idx: number) => {
+    setOpenIndex(openIndex === idx ? null : idx);
   };
 
-  const faqItems = [
-    {
-      question: "Combien ça coûte ?",
-      answer: "Une mise en place, puis un abonnement mensuel. Votre budget publicitaire se paie directement à Meta, sur votre compte : cet argent ne passe jamais par moi. Les chiffres exacts dépendent de votre zone et de vos objectifs, je les donne en appel, et tout est annoncé avant de commencer, sans frais cachés."
-    },
-    {
-      question: "Vous vous engagez sur quoi, concrètement ?",
-      answer: "Un objectif de demandes qualifiées défini ensemble au départ, selon votre budget. S'il n'est pas atteint, je continue de travailler gratuitement jusqu'à l'atteindre, dans la limite d'un mois. Je ne promets ni mariages signés, ni chiffres magiques."
-    },
-    {
-      question: "Et une fois que la demande arrive, je fais quoi ?",
-      answer: "C'est exactement là que la plupart perdent la vente : rappel trop tardif, mauvais premiers mots. Je vous fournis un cadre simple : quand rappeler, quoi dire, comment proposer le rendez-vous. Et on l'ajuste ensemble selon vos retours."
-    },
-    {
-      question: "Un formulaire qui demande le budget, ça ne fait pas fuir ?",
-      answer: "Si, et c'est le but. Ça fait fuir ceux qui n'ont ni date ni budget. Ceux qui passent le filtre sont ceux avec qui vous signez."
-    },
-    {
-      question: "J'ai déjà testé la pub, ça n'a rien donné.",
-      answer: "Booster un post envoie du trafic vers votre profil, où il se perd. Ici, la campagne envoie vers un formulaire qui filtre et récupère le téléphone. Ce n'est pas le même métier."
-    }
-  ];
-
   return (
-    <section id="faq" className="py-20 md:py-28 bg-brand-cream border-y border-slate-200/60">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14 reveal">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-brand-accent/30 text-brand-accent font-bold uppercase tracking-widest text-xs mb-3 shadow-2xs">
+    <section id="faq" className="py-20 lg:py-28 bg-slate-50 relative border-t border-slate-200">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blueLight border border-brand-blue/20 text-brand-blue text-xs font-bold uppercase tracking-wider mb-4">
             <HelpCircle size={14} />
-            <span>Questions</span>
+            <span>Transparence Totale</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-brand-dark tracking-tight">
-            Foire aux questions
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black text-brand-dark tracking-tight mb-5">
+            Questions fréquentes des artisans
           </h2>
+
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+            Des réponses claires et sans détour sur le fonctionnement de nos campagnes publicitaires Meta.
+          </p>
         </div>
 
-        <div className="space-y-4 reveal stagger-1">
-          {faqItems.map((item, index) => (
-            <div 
-              key={index} 
-              className={`bg-white border rounded-2xl overflow-hidden transition-all duration-300 ${
-                openIndex === index 
-                  ? 'border-brand-accent/50 shadow-md ring-1 ring-brand-accent/20' 
-                  : 'border-slate-200/80 shadow-xs hover:border-slate-300'
-              }`}
-            >
-              <button
-                className="w-full px-6 py-5 sm:py-6 text-left flex justify-between items-center focus:outline-none group cursor-pointer"
-                onClick={() => toggleFAQ(index)}
-              >
-                <span className={`font-bold text-base sm:text-lg transition-colors ${openIndex === index ? 'text-brand-dark' : 'text-slate-700 group-hover:text-brand-dark'}`}>
-                  {item.question}
-                </span>
-                <div className={`flex-shrink-0 ml-4 p-1.5 rounded-full transition-all duration-300 ${openIndex === index ? 'bg-brand-cream text-brand-accent' : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'}`}>
-                  {openIndex === index ? (
-                    <Minus className="h-4 w-4" />
-                  ) : (
-                    <Plus className="h-4 w-4" />
-                  )}
-                </div>
-              </button>
-              
+        {/* Accordion list */}
+        <div className="space-y-4">
+          {FAQ_ITEMS.map((item, idx) => {
+            const isOpen = openIndex === idx;
+
+            return (
               <div 
-                className={`grid transition-all duration-300 ease-in-out px-6 ${
-                  openIndex === index ? 'grid-rows-[1fr] opacity-100 pb-6' : 'grid-rows-[0fr] opacity-0'
+                key={idx}
+                className={`bg-white border rounded-2xl transition-all duration-200 overflow-hidden shadow-2xs ${
+                  isOpen ? 'border-brand-blue ring-1 ring-brand-blue/15' : 'border-slate-200 hover:border-slate-300'
                 }`}
               >
-                <div className="overflow-hidden">
-                   <p className="text-slate-600 text-sm sm:text-base leading-relaxed pt-2 border-t border-slate-100">
-                    {item.answer}
-                   </p>
-                </div>
+                <button
+                  onClick={() => toggle(idx)}
+                  className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-bold text-base sm:text-lg text-brand-dark"
+                  aria-expanded={isOpen}
+                >
+                  <span>{item.question}</span>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                    isOpen ? 'bg-brand-blue text-white rotate-180' : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    <ChevronDown size={16} />
+                  </div>
+                </button>
+
+                {isOpen && (
+                  <div className="px-5 sm:px-6 pb-6 pt-1 text-sm sm:text-base text-slate-600 leading-relaxed border-t border-slate-100">
+                    <p>{item.answer}</p>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
+        {/* Extra contact box */}
+        <div className="mt-12 p-6 rounded-3xl bg-white border border-slate-200 text-center flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <div className="text-left">
+            <h4 className="font-bold text-base text-brand-dark">
+              Une question spécifique à votre entreprise ou votre secteur ?
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+              Posez-la directement à Aaron, réponse rapide par message ou note vocale.
+            </p>
+          </div>
+          <a
+            href="https://wa.me/33767056066"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold text-xs whitespace-nowrap shadow-sm transition-colors"
+          >
+            <MessageCircle size={15} />
+            <span>M'écrire sur WhatsApp</span>
+          </a>
+        </div>
+
       </div>
     </section>
   );

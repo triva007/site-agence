@@ -1,15 +1,14 @@
-
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth scroll-pt-32">
+<html lang="fr" class="scroll-smooth scroll-pt-28">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- SEO Primaire - Optimisé < 60 chars -->
-    <title>Triva Media — Publicité Facebook & Instagram pour photographes et vidéastes de mariage</title>
+    <!-- SEO Primaire -->
+    <title>Triva Media — Acquisition Meta Ads pour les pros du bâtiment</title>
     
-    <!-- Meta Description - Optimisée < 160 chars -->
-    <meta name="description" content="Des demandes de couples avec date, lieu et budget, directement dans votre téléphone. Campagnes gérées de A à Z pour les pros du mariage." />
+    <!-- Meta Description -->
+    <meta name="description" content="Système d'acquisition publicitaire Meta Ads exclusif pour les professionnels du bâtiment à fort panier moyen : piscinistes, rénovation globale, menuiserie premium, extension." />
     
     <link rel="canonical" href="https://triva-media.com/" />
     <meta name="robots" content="index, follow" />
@@ -17,15 +16,15 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://triva-media.com/" />
-    <meta property="og:title" content="Triva Media — Publicité Facebook & Instagram pour photographes et vidéastes de mariage" />
-    <meta property="og:description" content="Des demandes de couples avec date, lieu et budget, directement dans votre téléphone. Campagnes gérées de A à Z pour les pros du mariage." />
+    <meta property="og:title" content="Triva Media — Acquisition Meta Ads pour les pros du bâtiment" />
+    <meta property="og:description" content="Génération de demandes de chantiers qualifiés et exclusifs pour piscinistes, rénovation globale, menuiserie premium et extension." />
     <meta property="og:image" content="https://triva-media.com/og-image.png" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://triva-media.com/" />
-    <meta name="twitter:title" content="Triva Media | Agence Marketing Local" />
-    <meta name="twitter:description" content="Site web pro et SEO local en 7 jours. Arrêtez de laisser vos clients à vos concurrents." />
+    <meta name="twitter:title" content="Triva Media | Acquisition BTP Haut Panier Moyen" />
+    <meta name="twitter:description" content="Système d'acquisition publicitaire Meta Ads pour les entreprises du bâtiment à fort panier moyen." />
     <meta name="twitter:image" content="https://triva-media.com/og-image.png" />
 
     <!-- Données Structurées JSON-LD -->
@@ -33,16 +32,16 @@
       {
         "@context": "https://schema.org",
         "@type": "ProfessionalService",
-        "name": "Triva-Media",
+        "name": "Triva Media",
         "image": "https://triva-media.com/logo.png",
         "url": "https://triva-media.com",
         "telephone": "+33767056066",
-        "priceRange": "$$",
+        "priceRange": "$$$",
         "address": {
           "@type": "PostalAddress",
           "addressCountry": "FR"
         },
-        "description": "Des demandes de couples avec date, lieu et budget, directement dans votre téléphone. Campagnes gérées de A à Z pour les pros du mariage.",
+        "description": "Agence d'acquisition publicitaire Meta Ads pour les professionnels du bâtiment à fort panier moyen : piscinistes, rénovation, menuiserie, extension.",
         "founder": {
           "@type": "Person",
           "name": "Aaron"
@@ -52,7 +51,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -62,18 +61,25 @@
           extend: {
             colors: {
               brand: {
-                dark: '#0A0F1D',
-                accent: '#C8A96A',
-                accentHover: '#B59556',
-                cream: '#FAF8F5',
-                creamDark: '#F2EDE4',
+                blue: '#0055FF',
+                blueHover: '#0047D6',
+                blueDark: '#003399',
+                blueLight: '#EEF4FF',
+                blueSoft: '#E0EBFF',
+                dark: '#0B0F19',
+                darkNavy: '#0F172A',
+                surface: '#F8FAFC',
+                border: '#E2E8F0',
                 whatsapp: '#25D366'
               }
             },
             fontFamily: {
-              sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-              display: ['Montserrat', '"Plus Jakarta Sans"', 'sans-serif'],
-              serif: ['"Playfair Display"', 'serif'],
+              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+              display: ['"Plus Jakarta Sans"', 'sans-serif']
+            },
+            boxShadow: {
+              'glow': '0 0 25px rgba(0, 85, 255, 0.25)',
+              'card': '0 2px 8px rgba(11, 15, 25, 0.04), 0 12px 24px rgba(11, 15, 25, 0.06)'
             }
           }
         }
@@ -93,7 +99,7 @@
       }
     </script>
   </head>
-  <body class="antialiased text-slate-900 overflow-x-hidden bg-slate-50">
+  <body class="antialiased text-slate-900 overflow-x-hidden bg-white selection:bg-brand-blue selection:text-white">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

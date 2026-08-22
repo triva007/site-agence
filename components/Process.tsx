@@ -1,60 +1,69 @@
 import React from 'react';
-import { Camera, Filter, Smartphone, MessageSquare } from 'lucide-react';
+import { PhoneCall, FileEdit, CheckCircle2, Rocket, ArrowRight, ShieldCheck } from 'lucide-react';
+import { PROCESS_STEPS } from '../constants';
+
+const STEP_ICONS = [PhoneCall, FileEdit, CheckCircle2, Rocket];
 
 const Process: React.FC = () => {
-  const steps = [
-    {
-      title: "Votre campagne",
-      description: "Je crée les publicités à partir de VOS images. Vos plus beaux moments arrêtent le scroll mieux que n'importe quel texte.",
-      icon: Camera
-    },
-    {
-      title: "Le filtre",
-      description: "Avant de pouvoir envoyer sa demande, le couple indique sa date, son lieu et son budget. Les curieux s'arrêtent là. Les couples sérieux passent.",
-      icon: Filter
-    },
-    {
-      title: "Votre téléphone",
-      description: "Vous recevez la demande complète avec le numéro du couple. Vous rappelez, vous faites votre métier.",
-      icon: Smartphone
-    },
-    {
-      title: "La conversion",
-      description: "Je ne vous laisse pas seul avec les demandes. Vous recevez mon cadre de rappel : quand rappeler, quoi dire, comment amener le couple vers un rendez-vous. Vous restez le photographe, vous avez juste le script en plus.",
-      icon: MessageSquare
-    }
-  ];
-
   return (
-    <section id="method" className="py-20 md:py-28 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="process" className="py-20 lg:py-28 bg-white relative">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         
-        <div className="text-center mb-16 reveal">
-          <div className="inline-block text-xs font-bold uppercase tracking-widest text-brand-accent mb-3">
-            LA MÉTHODE
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blueLight border border-brand-blue/20 text-brand-blue text-xs font-bold uppercase tracking-wider mb-4">
+            <Rocket size={14} />
+            <span>Déploiement Simple &amp; Rapide</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-brand-dark tracking-tight">
-            Le Filtre Couple
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black text-brand-dark tracking-tight mb-5">
+            Comment nous mettons en place votre système
           </h2>
+
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+            Votre métier, c'est de bâtir. Le nôtre, c'est de vous apporter les chantiers sans vous faire perdre de temps technique.
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
+        {/* 4 Steps Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {PROCESS_STEPS.map((step, idx) => {
+            const Icon = STEP_ICONS[idx];
             return (
               <div 
-                key={index} 
-                className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200/80 reveal stagger-1 relative overflow-hidden hover:-translate-y-1 hover:shadow-xl hover:border-brand-accent/50 transition-all duration-300 flex flex-col justify-between group"
+                key={idx}
+                className="bg-slate-50 border border-slate-200/90 rounded-3xl p-6 hover:border-brand-blue/40 hover:shadow-card transition-all flex flex-col justify-between"
               >
-                <div className="absolute top-4 right-5 text-6xl font-black text-brand-accent/10 select-none group-hover:text-brand-accent/20 transition-colors">
-                  0{index + 1}
-                </div>
                 <div>
-                  <div className="w-14 h-14 bg-brand-cream border border-brand-accent/20 text-brand-accent flex items-center justify-center rounded-2xl mb-6 relative z-10 group-hover:bg-brand-accent group-hover:text-white transition-colors duration-300">
-                    <Icon size={26} strokeWidth={1.75} />
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="w-9 h-9 rounded-xl bg-brand-blue text-white flex items-center justify-center font-black text-sm">
+                      {step.number}
+                    </span>
+                    <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600">
+                      <Icon size={18} />
+                    </div>
                   </div>
-                  <h3 className="text-xl font-display font-bold text-brand-dark mb-3 relative z-10">{step.title}</h3>
-                  <p className="text-slate-600 leading-relaxed text-sm sm:text-base relative z-10">{step.description}</p>
+
+                  <h3 className="text-base sm:text-lg font-bold text-brand-dark mb-2">
+                    {step.title}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                    {step.description}
+                  </p>
+
+                  <ul className="space-y-2 pt-4 border-t border-slate-200/80">
+                    {step.details.map((detail, dIdx) => (
+                      <li key={dIdx} className="text-xs text-slate-600 flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-blue mt-1.5 shrink-0"></span>
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mt-6 pt-4 text-[11px] font-bold text-brand-blue uppercase tracking-wider">
+                  Étape {idx + 1} validée
                 </div>
               </div>
             );

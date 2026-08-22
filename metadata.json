@@ -1,6 +1,6 @@
 {
   "name": "Triva Media",
-  "description": "Triva Media — Publicité Facebook & Instagram pour photographes et vidéastes de mariage",
+  "description": "Triva Media — Agence de publicité Meta Ads pour les professionnels du bâtiment à haut panier moyen (piscinistes, rénovation, menuiserie, extension)",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
