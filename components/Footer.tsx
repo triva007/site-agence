@@ -119,8 +119,11 @@ const Footer: React.FC = () => {
             © {new Date().getFullYear()} Triva Media. Tous droits réservés.
           </div>
           <div className="flex items-center gap-6">
+            <a href="/politique-de-confidentialite" className="hover:text-white transition-colors underline">
+              Politique de Confidentialité
+            </a>
             <a href="/mentions-legales" className="hover:text-white transition-colors underline">
-              Mentions légales &amp; Confidentialité
+              Mentions Légales
             </a>
           </div>
         </div>

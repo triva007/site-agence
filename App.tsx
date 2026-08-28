@@ -15,6 +15,7 @@ import FinalCTA from './components/FinalCTA';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 import LegalNotice from './components/LegalNotice';
+import PrivacyPolicy from './components/PrivacyPolicy';
 
 const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -30,6 +31,10 @@ const App: React.FC = () => {
       window.removeEventListener('popstate', onLocationChange);
     };
   }, []);
+
+  if (currentPath === '/politique-de-confidentialite' || currentPath === '/privacy' || currentPath === '/confidentialite') {
+    return <PrivacyPolicy />;
+  }
 
   if (currentPath === '/mentions-legales') {
     return <LegalNotice />;
