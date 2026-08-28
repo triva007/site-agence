@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowLeft, ShieldCheck, Lock, Mail, FileText, CheckCircle } from 'lucide-react';
 
 const PrivacyPolicy: React.FC = () => {
+  useEffect(() => {
+    document.title = "Politique de Confidentialité | Triva Media";
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
       {/* Top Header */}

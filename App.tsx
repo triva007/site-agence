@@ -32,11 +32,17 @@ const App: React.FC = () => {
     };
   }, []);
 
-  if (currentPath === '/politique-de-confidentialite' || currentPath === '/privacy' || currentPath === '/confidentialite') {
+  const normalizedPath = currentPath.replace(/\/$/, '') || '/';
+
+  if (
+    normalizedPath === '/politique-de-confidentialite' || 
+    normalizedPath === '/privacy' || 
+    normalizedPath === '/confidentialite'
+  ) {
     return <PrivacyPolicy />;
   }
 
-  if (currentPath === '/mentions-legales') {
+  if (normalizedPath === '/mentions-legales') {
     return <LegalNotice />;
   }
 
