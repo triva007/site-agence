@@ -56,10 +56,19 @@ const Contact: React.FC = () => {
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Réserver un créneau d'échange</h3>
             {/* Début de widget en ligne Calendly */}
             <div 
-              className="calendly-inline-widget w-full rounded-2xl overflow-hidden" 
+              className="calendly-inline-widget w-full rounded-2xl overflow-hidden bg-white shadow-xs" 
               data-url="https://calendly.com/aaron-triva-media/decouverte?hide_gdpr_banner=1" 
               style={{ minWidth: '320px', height: '700px' }}
-            ></div>
+            >
+              <iframe
+                src="https://calendly.com/aaron-triva-media/decouverte?hide_gdpr_banner=1"
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                title="Calendly Triva Media"
+                className="w-full h-full min-h-[700px] border-0 rounded-2xl"
+              />
+            </div>
             {/* Fin de widget en ligne Calendly */}
             <p className="text-xs text-center text-slate-400 mt-4">
               Vos données restent 100% confidentielles. Zéro démarchage intempestif.
