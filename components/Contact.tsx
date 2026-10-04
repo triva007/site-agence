@@ -1,7 +1,6 @@
 
 import React from 'react';
-import Button from './Button';
-import { Phone, Mail, MapPin, Send } from 'lucide-react';
+import { Phone, Mail } from 'lucide-react';
 
 const Contact: React.FC = () => {
   return (
@@ -52,62 +51,19 @@ const Contact: React.FC = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="reveal delay-200 bg-white rounded-3xl p-8 sm:p-10 shadow-2xl shadow-black/20">
-            <h3 className="text-2xl font-bold text-slate-900 mb-6">Demande de devis gratuit</h3>
-            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="space-y-1">
-                  <label htmlFor="name" className="block text-sm font-semibold text-slate-700 ml-1">Nom complet</label>
-                  <input 
-                    type="text" 
-                    id="name" 
-                    className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-brand-blue focus:border-transparent outline-none transition-all focus:bg-white"
-                    placeholder="Jean Dupont"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label htmlFor="phone" className="block text-sm font-semibold text-slate-700 ml-1">Téléphone</label>
-                  <input 
-                    type="tel" 
-                    id="phone" 
-                    className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-brand-blue focus:border-transparent outline-none transition-all focus:bg-white"
-                    placeholder="06 ..."
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-1">
-                <label htmlFor="email" className="block text-sm font-semibold text-slate-700 ml-1">Email professionnel</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-brand-blue focus:border-transparent outline-none transition-all focus:bg-white"
-                  placeholder="jean@entreprise.com"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label htmlFor="message" className="block text-sm font-semibold text-slate-700 ml-1">Votre projet</label>
-                <textarea 
-                  id="message" 
-                  rows={4} 
-                  className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-brand-blue focus:border-transparent outline-none transition-all focus:bg-white resize-none"
-                  placeholder="Je souhaite refaire le site de mon restaurant..."
-                ></textarea>
-              </div>
-
-              <Button 
-                variant="primary" 
-                className="w-full text-lg py-4 mt-2 group"
-              >
-                Envoyer ma demande
-                <Send className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <p className="text-xs text-center text-slate-400 mt-4">
-                Vos données restent confidentielles.
-              </p>
-            </form>
+          {/* Contact Calendly Widget */}
+          <div className="reveal delay-200 bg-white rounded-3xl p-4 sm:p-8 shadow-2xl shadow-black/20">
+            <h3 className="text-2xl font-bold text-slate-900 mb-4">Réserver un créneau d'échange</h3>
+            {/* Début de widget en ligne Calendly */}
+            <div 
+              className="calendly-inline-widget w-full rounded-2xl overflow-hidden" 
+              data-url="https://calendly.com/aaron-triva-media/decouverte?hide_gdpr_banner=1" 
+              style={{ minWidth: '320px', height: '700px' }}
+            ></div>
+            {/* Fin de widget en ligne Calendly */}
+            <p className="text-xs text-center text-slate-400 mt-4">
+              Vos données restent 100% confidentielles. Zéro démarchage intempestif.
+            </p>
           </div>
 
         </div>
