@@ -1,4 +1,5 @@
 import React from 'react';
+import AmbientVideo from './AmbientVideo';
 
 export const StepByStep: React.FC = () => {
   const steps = [
@@ -29,7 +30,8 @@ export const StepByStep: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-16 sm:mb-20">
+<div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-16 sm:mb-20">
+                  <div className="max-w-3xl">
           <span className="text-xs font-bold uppercase tracking-widest text-citron mb-3 inline-block">
             Processus
           </span>
@@ -40,6 +42,17 @@ export const StepByStep: React.FC = () => {
             </span>
             .
           </h2>
+        </div>
+          <p className="text-lg text-texteSombreSec leading-relaxed max-w-md">
+            De l’appel de diagnostic au premier bilan : vous savez à chaque étape ce qui se passe et ce qu’on attend de vous.
+          </p>
+          <figure className="relative mx-auto lg:mx-0 w-[62%] max-w-[260px] shrink-0 aspect-[9/16] rounded-[24px] overflow-hidden border border-white/15 glass p-1.5">
+            <div className="relative h-full w-full overflow-hidden rounded-[18px] bg-encreDeep">
+              <img src="/media/chantier.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+              <AmbientVideo src="/media/chantier.mp4" />
+            </div>
+            <figcaption className="absolute bottom-3 left-0 right-0 text-center text-[11px] uppercase tracking-[0.18em] text-white/70">Images d’ambiance</figcaption>
+          </figure>
         </div>
 
         {/* Steps Grid: horizontal on lg, vertical on mobile/tablet */}

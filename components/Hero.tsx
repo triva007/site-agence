@@ -34,8 +34,15 @@ export const Hero: React.FC = () => {
       {/* Arrière-plan : eau animée en code, puis vidéo d'ambiance Omni par-dessus si elle existe */}
       <div className="absolute inset-0 -z-10">
         <WaterSurface />
-        <img src="/media/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-45" />
-        <AmbientVideo src="/media/hero.mp4" eager className="opacity-55" />
+        {/* Ordinateur : vidéo horizontale ; téléphone : vidéo verticale */}
+        <div className="absolute inset-0 hidden lg:block">
+          <img src="/media/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-45" />
+          <AmbientVideo src="/media/hero.mp4" className="opacity-55" />
+        </div>
+        <div className="absolute inset-0 lg:hidden">
+          <img src="/media/hero-mobile.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
+          <AmbientVideo src="/media/hero-mobile.mp4" className="opacity-50" />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-encreDeep/90 via-encreDeep/75 to-encreDeep/30" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-encreDeep to-transparent" />
       </div>
