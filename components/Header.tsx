@@ -100,23 +100,11 @@ export const Header: React.FC = () => {
             </a>
           </div>
 
-          {/* Mobile Right Controls: CTA button + Hamburger */}
+          {/* Mobile : menu seul, la barre du bas porte les boutons */}
           <div className="flex sm:hidden items-center gap-2">
-            <a
-              href="#diagnostic"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#diagnostic');
-              }}
-              data-cta="header_verifier_mobile"
-              className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-citron text-encre text-xs font-bold tracking-tight active:scale-95"
-            >
-              Vérifier
-            </a>
-
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="w-10 h-10 rounded-full border border-bordureSombre flex items-center justify-center text-texteSombre hover:text-citron focus:outline-none"
+              className="w-11 h-11 rounded-full border border-bordureSombre flex items-center justify-center text-texteSombre hover:text-citron focus:outline-none"
               aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
               aria-expanded={menuOpen}
             >

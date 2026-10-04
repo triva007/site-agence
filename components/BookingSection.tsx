@@ -1,125 +1,132 @@
 import React, { useState } from 'react';
-import { Check, MessageCircle, ExternalLink, Loader2 } from 'lucide-react';
+import { Check, MessageCircle, ExternalLink, Loader2, Phone } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
+
+// Couleurs de l'agenda alignées sur le site (appliquées par Calendly si l'offre le permet)
+const CALENDLY_EMBED =
+  CONTACT_INFO.calendlyUrl +
+  '&hide_landing_page_details=1&primary_color=0b6e7d&text_color=0b2a3a&background_color=ffffff';
 
 export const BookingSection: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const pills = [
-    'Vérification de l\'exclusivité de votre zone',
-    'Échange direct avec Aaron, sans commercial',
-    'Aucun démarchage ensuite si ce n\'est pas pour vous'
+  const steps = [
+    { n: '1', t: 'Choisissez un jour et une heure', d: 'Les créneaux affichés sont ceux d’Aaron, en direct.' },
+    { n: '2', t: 'Laissez votre nom et votre numéro', d: 'Une minute, rien d’autre à préparer.' },
+    { n: '3', t: 'Aaron vous appelle à l’heure dite', d: '30 minutes, gratuit, sans engagement.' },
+  ];
+
+  const checks = [
+    'Votre secteur est-il encore libre ?',
+    'Combien de propriétaires dans votre zone ?',
+    'Ce qu’on peut raisonnablement en attendre',
   ];
 
   return (
-    <section id="diagnostic" className="py-20 sm:py-28 lg:py-32 bg-papier text-texteClair relative">
+    <section id="diagnostic" className="py-20 sm:py-28 lg:py-32 bg-papier text-texteClair relative scroll-mt-20">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        
-        {/* Section Header */}
-        <div className="max-w-3xl mb-12 sm:mb-14">
-          <span className="text-xs font-bold uppercase tracking-widest text-vertProfond mb-3 inline-block">
+        {/* En-tête */}
+        <div className="max-w-3xl mb-10 sm:mb-12">
+          <span className="text-sm font-bold uppercase tracking-widest text-vertProfond mb-3 inline-block">
             Diagnostic gratuit · 30 min
           </span>
-          <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteClair leading-[1.12] tracking-[-0.03em] mb-4">
+          <h2 className="text-[34px] sm:text-[44px] lg:text-[56px] font-extrabold text-texteClair leading-[1.06] tracking-[-0.03em] mb-4">
             Votre secteur est-il encore{' '}
-            <span className="font-serif italic font-normal text-vertProfond">
-              libre
-            </span>
-            {' '}?
+            <span className="font-serif italic font-normal text-vertProfond">libre</span> ?
           </h2>
-          <p className="text-base sm:text-lg text-texteClairSec leading-relaxed">
-            Choisissez un créneau. En 30 minutes, on regarde le nombre de propriétaires dans votre zone, la disponibilité de votre secteur et ce qu'on peut raisonnablement en attendre.
+          <p className="text-lg text-texteClairSec leading-relaxed">
+            Réservez un appel avec Aaron. On regarde ensemble votre zone, et vous savez tout de suite si c’est pour vous.
           </p>
+        </div>
 
-          {/* 3 Value Puces */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-8">
-            {pills.map((pill) => (
-              <div key={pill} className="flex items-start gap-2.5 bg-blanc p-3.5 rounded-2xl border border-bordureClair">
-                <span className="w-5 h-5 rounded-full bg-vertProfond text-blanc flex items-center justify-center shrink-0 mt-0.5" aria-hidden="true">
-                  <Check size={12} strokeWidth={3} />
+        {/* Comment ça se passe + ce qu'on regarde */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5 mb-6 sm:mb-8">
+          <ol className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {steps.map((s) => (
+              <li key={s.n} className="flex sm:flex-col items-start gap-3 sm:gap-3 bg-blanc rounded-2xl border border-bordureClair p-4 sm:p-5">
+                <span className="w-9 h-9 rounded-full bg-encre text-citron grid place-items-center font-extrabold shrink-0">{s.n}</span>
+                <span>
+                  <span className="block text-base font-bold leading-snug">{s.t}</span>
+                  <span className="block text-sm text-texteClairSec mt-1 leading-snug">{s.d}</span>
                 </span>
-                <span className="text-xs sm:text-sm font-bold text-texteClair leading-tight">
-                  {pill}
-                </span>
-              </div>
+              </li>
             ))}
+          </ol>
+          <div className="lg:col-span-2 rounded-2xl bg-encre text-texteSombre p-5 sm:p-6">
+            <p className="text-sm font-bold uppercase tracking-widest text-citron mb-3">Pendant l’appel</p>
+            <ul className="space-y-2.5">
+              {checks.map((c) => (
+                <li key={c} className="flex items-start gap-2.5 text-base">
+                  <span className="w-5 h-5 rounded-full bg-citron text-encre grid place-items-center shrink-0 mt-0.5" aria-hidden="true">
+                    <Check size={12} strokeWidth={3} />
+                  </span>
+                  {c}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        {/* Calendly Booking Card */}
-        <div className="bg-blanc rounded-[24px] p-4 sm:p-8 border border-bordureClair shadow-sm relative">
-          
-          {/* Top Bar with External Link */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-4 px-2">
-            <div className="flex items-center gap-2 text-xs font-semibold text-texteClairSec">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Agenda en direct · Créneaux disponibles avec Aaron</span>
+        {/* Agenda */}
+        <div className="bg-blanc rounded-[24px] border border-bordureClair shadow-[0_20px_60px_rgba(11,42,58,.10)] overflow-hidden">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-b border-bordureClair bg-blanc">
+            <div className="flex items-center gap-2.5 text-sm font-semibold text-texteClair">
+              <span className="relative flex w-2.5 h-2.5">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60 animate-ping" />
+                <span className="relative inline-flex w-2.5 h-2.5 rounded-full bg-emerald-500" />
+              </span>
+              Agenda d’Aaron en direct
             </div>
-
             <a
               href={CONTACT_INFO.calendlyUrl}
               target="_blank"
               rel="noopener noreferrer"
               data-cta="diagnostic_calendly_external"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-vertProfond hover:underline transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-vertProfond hover:underline min-h-[44px]"
             >
-              <span>Ouvrir dans une nouvelle fenêtre</span>
-              <ExternalLink size={13} />
+              Ouvrir en plein écran <ExternalLink size={14} />
             </a>
           </div>
 
-          {/* Calendly Inline Widget Container */}
-          <div 
-            className="calendly-inline-widget w-full rounded-2xl overflow-hidden bg-white border border-slate-200/80 shadow-xs relative"
-            data-url={CONTACT_INFO.calendlyUrl}
-            style={{ minWidth: '320px', height: '700px' }}
-          >
+          <div className="relative h-[1080px] sm:h-[980px] lg:h-[720px]">
             {isLoading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-10 p-6 text-center">
-                <Loader2 size={36} className="text-vertProfond animate-spin mb-3" />
-                <p className="text-sm font-bold text-texteClair mb-1">
-                  Chargement de l'agenda en cours...
-                </p>
-                <p className="text-xs text-texteClairSec max-w-sm">
-                  Connexion sécurisée aux disponibilités d'Aaron.
-                </p>
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-blanc z-10 p-6 text-center">
+                <Loader2 size={34} className="text-vertProfond animate-spin mb-3" />
+                <p className="text-base font-bold text-texteClair">Chargement de l’agenda…</p>
+                <p className="text-sm text-texteClairSec mt-1">Si rien ne s’affiche, utilisez « Ouvrir en plein écran ».</p>
               </div>
             )}
-            
             <iframe
-              src={CONTACT_INFO.calendlyUrl}
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              title="Calendly - Diagnostic Découverte Triva Media"
-              className="w-full h-full min-h-[700px] border-0 rounded-2xl"
+              src={CALENDLY_EMBED}
+              title="Réserver un diagnostic de 30 minutes avec Aaron"
+              className="absolute inset-0 w-full h-full border-0"
+              loading="lazy"
               onLoad={() => setIsLoading(false)}
             />
           </div>
 
-          {/* Under Widget: Direct WhatsApp Alternative */}
-          <div className="mt-8 pt-6 border-t border-bordureClair flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-            <p className="text-sm text-texteClairSec">
-              Vous préférez écrire ?{' '}
+          <div className="px-4 sm:px-6 py-5 border-t border-bordureClair flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#FBF9F5]">
+            <p className="text-base text-texteClairSec">Pas le temps maintenant ? Écrivez ou appelez directement Aaron.</p>
+            <div className="flex flex-col sm:flex-row gap-2.5">
               <a
                 href={CONTACT_INFO.whatsAppHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cta="diagnostic_whatsapp"
-                className="font-bold text-vertProfond hover:underline inline-flex items-center gap-1.5 ml-1"
+                className="h-12 px-5 rounded-full bg-encre text-texteSombre text-sm font-bold inline-flex items-center justify-center gap-2 hover:bg-encreDeep transition"
               >
-                <MessageCircle size={15} className="inline text-vertProfond" />
-                <span>Posez votre question sur WhatsApp</span>
+                <MessageCircle size={17} className="text-citron" /> WhatsApp
               </a>
-            </p>
-
-            <span className="text-xs text-texteClairSec">
-              Réponse directe par Aaron
-            </span>
+              <a
+                href={CONTACT_INFO.phoneHref}
+                data-cta="diagnostic_telephone"
+                className="h-12 px-5 rounded-full border border-bordureClair text-texteClair text-sm font-bold inline-flex items-center justify-center gap-2 hover:border-vertProfond transition"
+              >
+                <Phone size={16} className="text-vertProfond" /> {CONTACT_INFO.phoneDisplay}
+              </a>
+            </div>
           </div>
-
         </div>
-
       </div>
     </section>
   );

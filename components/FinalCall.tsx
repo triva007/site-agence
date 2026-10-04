@@ -10,7 +10,7 @@ export const FinalCall: React.FC = () => {
       {/* Surface d'eau : passez la souris dessus pour faire des ronds dans l'eau */}
       <div className="absolute inset-0 -z-10">
         <WaterSurface intensity={1.15} />
-        <AmbientVideo src="/media/final.mp4" className="opacity-50 mix-blend-luminosity" />
+        <AmbientVideo src="/media/final.mp4" className="opacity-60" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,rgba(7,29,41,.35),rgba(7,29,41,.85))]" />
       </div>
       <div className="max-w-4xl mx-auto px-5 sm:px-8 relative z-10">
@@ -53,7 +53,7 @@ export const FinalCall: React.FC = () => {
         </div>
 
         {/* Reassurance line */}
-        <p className="text-xs sm:text-sm text-texteSombreSec font-medium max-w-xl mx-auto">
+        <p className="text-sm text-texteSombreSec font-medium max-w-xl mx-auto">
           1 pisciniste par secteur · Budget pub sur votre compte · Garantie 30 jours · Sans engagement de durée
         </p>
 

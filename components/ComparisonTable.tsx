@@ -12,7 +12,7 @@ export const ComparisonTable: React.FC = () => {
     },
     {
       label: 'Mise en concurrence',
-      triva: 'Aucune : il a contacté votre entreprise',
+      triva: 'Réduite : il vous contacte avant d’avoir comparé',
       plateformes: 'Forte, guerre des prix',
       boucheAOreille: 'Faible',
       siteWeb: 'Il compare plusieurs sites',
@@ -33,7 +33,7 @@ export const ComparisonTable: React.FC = () => {
     },
     {
       label: 'Prévisible',
-      triva: 'Oui, on peut accélérer ou ralentir',
+      triva: 'Pilotable : on accélère ou on ralentit',
       plateformes: 'Variable',
       boucheAOreille: 'Non',
       siteWeb: 'Non, il faut qu\'on vous cherche',
@@ -145,7 +145,7 @@ export const ComparisonTable: React.FC = () => {
                 </div>
 
                 {/* Other alternatives */}
-                <div className="p-3 rounded-xl bg-slate-50 text-xs space-y-2">
+                <div className="p-3 rounded-xl bg-slate-50 text-sm space-y-2">
                   <div>
                     <span className="font-bold text-slate-700 block">Plateformes :</span>
                     <span className="text-slate-600">{row.plateformes}</span>

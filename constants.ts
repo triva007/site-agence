@@ -5,7 +5,7 @@ export const CONTACT_INFO = {
   email: 'aaron@triva-media.com',
   whatsAppHref: 'https://wa.me/33767056066?text=Bonjour%20Aaron%2C%20je%20suis%20pisciniste%20et%20je%20voudrais%20savoir%20si%20mon%20secteur%20est%20libre.',
   calendlyUrl: 'https://calendly.com/aaron-triva-media/decouverte?hide_gdpr_banner=1',
-  founder: 'Aaron — fondateur de Triva Media',
+  founder: 'Aaron, fondateur de Triva Media',
   area: 'France entière, un secteur réservé par client'
 };
 
@@ -32,6 +32,11 @@ export const FAQ_ITEMS: FaqItem[] = [
     answer: 'On le fixe ensemble pendant le diagnostic, selon la taille de votre zone et vos objectifs. Vous le payez directement à Meta, sur votre compte : vous pouvez l\'augmenter, le baisser ou l\'arrêter.'
   },
   {
+    id: 'prix',
+    question: 'Combien coûte votre accompagnement ?',
+    answer: 'Une mise en place unique, puis uniquement les rendez-vous qualifiés et tenus. Les montants exacts vous sont annoncés par écrit pendant le diagnostic, avant tout paiement. Pas de frais cachés, pas d\'abonnement, et la mise en place est remboursée si aucun rendez-vous qualifié et tenu n\'arrive dans les 30 premiers jours de diffusion.'
+  },
+  {
     id: 'photos-pro',
     question: 'Je n\'ai pas de photos professionnelles. C\'est bloquant ?',
     answer: 'Non. Des photos de chantiers prises au téléphone suffisent. On s\'occupe de les mettre en valeur.'
@@ -44,7 +49,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     id: 'garantie-echec',
     question: 'Et si ça ne marche pas ?',
-    answer: 'Si aucun rendez-vous qualifié et tenu n\'arrive dans les 30 premiers jours de diffusion, on vous rembourse la mise en place. Et comme il n\'y a pas d\'engagement de durée, vous pouvez arrêter au bilan.'
+    answer: 'Si aucun rendez-vous qualifié et tenu n\'arrive dans les 30 premiers jours de diffusion, on vous rembourse la mise en place. Et comme il n\'y a pas d\'engagement de durée, vous pouvez arrêter quand vous voulez.'
   },
   {
     id: 'pourquoi-exclusivite',

@@ -81,7 +81,7 @@ export const OfferGuarantee: React.FC = () => {
         {/* Line under offer and signature quote */}
         <div className="max-w-3xl space-y-4 mb-10">
           <p className="text-base sm:text-lg text-texteClairSec leading-relaxed">
-            Aucun engagement de durée. Au bout de 30 jours, on fait le bilan ensemble : on continue si c'est rentable, sinon on s'arrête.
+            Aucun engagement de durée. À 30 jours, on fait un premier bilan : demandes, appels, devis en cours. Une construction se signe en 2 à 4 mois : vous jugez sur la durée, et vous pouvez arrêter quand vous voulez.
           </p>
 
           <p className="text-2xl sm:text-3xl font-serif italic text-vertProfond font-normal">

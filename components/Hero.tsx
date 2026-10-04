@@ -3,7 +3,6 @@ import WaterSurface from './WaterSurface';
 import AmbientVideo from './AmbientVideo';
 import { Check, MessageCircle, Play } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
-import Logo from './Logo';
 
 export const Hero: React.FC = () => {
   const [videoError, setVideoError] = useState(false);
@@ -26,7 +25,7 @@ export const Hero: React.FC = () => {
   const assurances = [
     '1 seul pisciniste par secteur',
     'Budget pub sur votre propre compte',
-    'Mise en place remboursée si aucun rendez-vous qualifié en 30 jours',
+    'Mise en place remboursée si aucun rendez-vous qualifié et tenu en 30 jours de diffusion',
     'Sans engagement de durée',
   ];
 
@@ -35,8 +34,9 @@ export const Hero: React.FC = () => {
       {/* Arrière-plan : eau animée en code, puis vidéo d'ambiance Omni par-dessus si elle existe */}
       <div className="absolute inset-0 -z-10">
         <WaterSurface />
-        <AmbientVideo src="/media/hero.mp4" eager className="opacity-60 mix-blend-luminosity" />
-        <div className="absolute inset-0 bg-gradient-to-r from-encreDeep via-encreDeep/80 to-encreDeep/20" />
+        <img src="/media/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-45" />
+        <AmbientVideo src="/media/hero.mp4" eager className="opacity-55" />
+        <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-encreDeep/90 via-encreDeep/75 to-encreDeep/30" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-encreDeep to-transparent" />
       </div>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -88,6 +88,10 @@ export const Hero: React.FC = () => {
               </a>
             </div>
 
+            <p className="-mt-6 mb-8 text-sm text-texteSombreSec">
+              Appel gratuit de 30 min avec Aaron. Sans engagement.
+            </p>
+
             {/* 4 Assurances with citron bullets */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full pt-6 border-t border-bordureSombre">
               {assurances.map((item) => (
@@ -95,7 +99,7 @@ export const Hero: React.FC = () => {
                   <span className="w-5 h-5 rounded-full bg-citron text-encre flex items-center justify-center shrink-0 mt-0.5" aria-hidden="true">
                     <Check size={12} strokeWidth={3} />
                   </span>
-                  <span className="text-xs sm:text-sm font-medium text-texteSombre leading-tight">
+                  <span className="text-sm font-medium text-texteSombre leading-snug">
                     {item}
                   </span>
                 </div>
@@ -107,7 +111,7 @@ export const Hero: React.FC = () => {
           {/* Right Column: Video presentation (5 cols) */}
           <div className="lg:col-span-5 flex flex-col items-center">
             
-            <div className="glass w-full max-w-xl relative rounded-[24px] overflow-hidden border border-white/15 p-2 aspect-video flex flex-col">
+            <div className={`glass w-full relative rounded-[24px] overflow-hidden border border-white/15 p-2 flex flex-col ${videoError ? 'max-w-sm' : 'max-w-xl aspect-video'}`}>
               
               {!videoError ? (
                 <div className="relative w-full h-full flex items-center justify-center bg-encreDeep rounded-[18px] overflow-hidden">
@@ -139,28 +143,29 @@ export const Hero: React.FC = () => {
                   )}
                 </div>
               ) : (
-                /* Fallback frame if video file is missing - pristine artisanal aesthetic */
-                <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center rounded-[18px] bg-encreDeep/60">
-                  <div className="p-4 rounded-2xl bg-[#123A4D] border border-bordureSombre mb-4">
-                    <Logo />
+                /* Pas encore de vidéo : exemple de publicité diffusée au nom du pisciniste */
+                <div className="rounded-[18px] bg-white text-[#1c2b33] overflow-hidden">
+                  <div className="flex items-center gap-3 px-4 pt-4 pb-3">
+                    <span className="w-10 h-10 rounded-full bg-encre text-citron grid place-items-center text-sm font-extrabold">VE</span>
+                    <div className="leading-tight">
+                      <p className="text-[15px] font-bold">Votre entreprise de piscines</p>
+                      <p className="text-xs text-[#6b7a82]">Sponsorisé · votre secteur</p>
+                    </div>
                   </div>
-                  <span className="text-citron text-xs font-bold uppercase tracking-widest mb-2">
-                    Présentation Triva Media
-                  </span>
-                  <p className="text-base font-bold text-texteSombre mb-1">
-                    Vidéo à venir
-                  </p>
-                  <p className="text-xs text-texteSombreSec max-w-xs">
-                    Découvrez en 45 secondes le fonctionnement du système pour les piscinistes.
-                  </p>
+                  <p className="px-4 pb-3 text-[15px] leading-snug">Un projet de piscine ? Découvrez nos réalisations près de chez vous.</p>
+                  <img src="/media/piscine.jpg" alt="Exemple de visuel de publicité pour un pisciniste" className="w-full aspect-[4/3] object-cover" />
+                  <div className="flex items-center justify-between gap-3 px-4 py-3 bg-[#F3EEE6]">
+                    <span className="text-[13px] text-[#5B6B73] leading-tight">Décrivez votre projet,<br />on vous rappelle.</span>
+                    <span className="shrink-0 rounded-lg bg-encre text-citron text-sm font-bold px-3.5 py-2.5">Décrire mon projet</span>
+                  </div>
                 </div>
               )}
 
             </div>
 
             {/* Legend below video */}
-            <p className="mt-3.5 text-xs text-texteSombreSec text-center font-medium">
-              Comment ça marche, en 45 secondes
+            <p className="mt-3.5 text-sm text-texteSombreSec text-center font-medium">
+              {videoError ? 'Exemple de publicité diffusée à votre nom' : 'Comment ça marche, en 45 secondes'}
             </p>
 
           </div>

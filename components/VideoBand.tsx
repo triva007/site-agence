@@ -4,14 +4,14 @@ import AmbientVideo from './AmbientVideo';
 /** Bandeau plein écran entre deux sections : une vidéo d'ambiance et une phrase forte. */
 type Props = {
   video: string;
-  image?: string;
+  image: string;
   eyebrow: string;
   children: React.ReactNode;
   align?: 'left' | 'center';
 };
 
-const VideoBand: React.FC<Props> = ({ video, image = '/media/piscine.jpg', eyebrow, children, align = 'left' }) => (
-  <section className="relative isolate flex min-h-[62vh] items-end overflow-hidden bg-encreDeep sm:min-h-[72vh]" aria-label={eyebrow}>
+const VideoBand: React.FC<Props> = ({ video, image, eyebrow, children, align = 'left' }) => (
+  <section className="relative isolate flex min-h-[48vh] items-end overflow-hidden bg-encreDeep sm:min-h-[64vh]" aria-label={eyebrow}>
     <div className="absolute inset-0 -z-10 overflow-hidden">
       <img src={image} alt="" loading="lazy" className="slow-zoom h-full w-full object-cover opacity-80" />
       <AmbientVideo src={video} />

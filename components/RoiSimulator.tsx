@@ -63,15 +63,17 @@ export const RoiSimulator: React.FC = () => {
                     max={80000}
                     step={1000}
                     value={avgTicket}
-                    onChange={(e) => setAvgTicket(Math.max(10000, Math.min(80000, Number(e.target.value) || 0)))}
+                    onChange={(e) => setAvgTicket(Number(e.target.value) || 0)}
+                    onBlur={(e) => setAvgTicket(Math.max(10000, Math.min(80000, Number(e.target.value) || 0)))}
                     className="w-24 bg-transparent text-right font-extrabold text-citron text-base sm:text-lg focus:outline-none"
                   />
-                  <span className="text-xs font-bold text-citron">€ HT</span>
+                  <span className="text-sm font-bold text-citron">€ HT</span>
                 </div>
               </div>
 
               <input
                 type="range"
+                style={{ touchAction: 'pan-y' }}
                 min={10000}
                 max={80000}
                 step={1000}
@@ -81,7 +83,7 @@ export const RoiSimulator: React.FC = () => {
                 aria-label="Curseur prix moyen d'un bassin HT"
               />
 
-              <div className="flex justify-between text-xs text-texteSombreSec mt-2">
+              <div className="flex justify-between text-sm text-texteSombreSec mt-2">
                 <span>10 000 €</span>
                 <span>80 000 €</span>
               </div>
@@ -101,19 +103,21 @@ export const RoiSimulator: React.FC = () => {
                     max={40}
                     step={1}
                     value={marginPercent}
-                    onChange={(e) => setMarginPercent(Math.max(10, Math.min(40, Number(e.target.value) || 0)))}
+                    onChange={(e) => setMarginPercent(Number(e.target.value) || 0)}
+                    onBlur={(e) => setMarginPercent(Math.max(10, Math.min(40, Number(e.target.value) || 0)))}
                     className="w-16 bg-transparent text-right font-extrabold text-citron text-base sm:text-lg focus:outline-none"
                   />
-                  <span className="text-xs font-bold text-citron">%</span>
+                  <span className="text-sm font-bold text-citron">%</span>
                 </div>
               </div>
 
-              <p className="text-xs text-texteSombreSec mb-3">
+              <p className="text-sm text-texteSombreSec mb-3">
                 Vos charges fixes sont déjà payées : sur un chantier supplémentaire, il vous reste la marge du chantier.
               </p>
 
               <input
                 type="range"
+                style={{ touchAction: 'pan-y' }}
                 min={10}
                 max={40}
                 step={1}
@@ -123,7 +127,7 @@ export const RoiSimulator: React.FC = () => {
                 aria-label="Curseur pourcentage de marge sur chantier supplémentaire"
               />
 
-              <div className="flex justify-between text-xs text-texteSombreSec mt-2">
+              <div className="flex justify-between text-sm text-texteSombreSec mt-2">
                 <span>10 %</span>
                 <span>40 %</span>
               </div>
@@ -133,7 +137,7 @@ export const RoiSimulator: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <label htmlFor="monthlyBudget" className="text-sm sm:text-base font-bold text-texteSombre">
-                  Budget total par mois, publicité et accompagnement compris
+                  Budget mensuel estimé : publicité Meta + rendez-vous facturés
                 </label>
                 <div className="flex items-center gap-1 bg-encreDeep px-3 py-1.5 rounded-xl border border-bordureSombre">
                   <input
@@ -143,15 +147,17 @@ export const RoiSimulator: React.FC = () => {
                     max={5000}
                     step={100}
                     value={monthlyBudget}
-                    onChange={(e) => setMonthlyBudget(Math.max(300, Math.min(5000, Number(e.target.value) || 0)))}
+                    onChange={(e) => setMonthlyBudget(Number(e.target.value) || 0)}
+                    onBlur={(e) => setMonthlyBudget(Math.max(300, Math.min(5000, Number(e.target.value) || 0)))}
                     className="w-20 bg-transparent text-right font-extrabold text-citron text-base sm:text-lg focus:outline-none"
                   />
-                  <span className="text-xs font-bold text-citron">€ / mois</span>
+                  <span className="text-sm font-bold text-citron">€ / mois</span>
                 </div>
               </div>
 
               <input
                 type="range"
+                style={{ touchAction: 'pan-y' }}
                 min={300}
                 max={5000}
                 step={100}
@@ -161,7 +167,7 @@ export const RoiSimulator: React.FC = () => {
                 aria-label="Curseur budget total mensuel"
               />
 
-              <div className="flex justify-between text-xs text-texteSombreSec mt-2">
+              <div className="flex justify-between text-sm text-texteSombreSec mt-2">
                 <span>300 €</span>
                 <span>5 000 €</span>
               </div>
@@ -179,21 +185,21 @@ export const RoiSimulator: React.FC = () => {
               </span>
 
               <p className="text-2xl sm:text-3xl font-extrabold leading-snug tracking-tight mb-6">
-                Il suffit d'environ <span className="underline decoration-encre/40 decoration-4">{poolsNeeded} bassin(s)</span> sur l'année pour couvrir 12 mois d'investissement.
+                Il faut environ <span className="underline decoration-encre/40 decoration-4">{poolsNeeded} bassin(s)</span> sur l'année pour couvrir 12 mois de dépenses.
               </p>
 
               <div className="pt-6 border-t border-encre/20">
                 <p className="text-base sm:text-lg font-bold leading-normal">
                   Chaque bassin en plus vous laisse environ <span className="text-xl sm:text-2xl font-black">{formatEuro(gainPerPool)} €</span>.
                 </p>
-                <p className="text-xs font-medium text-encre/75 mt-1">
+                <p className="text-sm font-medium text-encre/75 mt-1">
                   (Gain estimé par bassin supplémentaire au-delà du seuil de couverture)
                 </p>
               </div>
             </div>
 
             {/* Required Disclaimer */}
-            <p className="text-xs text-texteSombreSec leading-relaxed">
+            <p className="text-sm text-texteSombreSec leading-relaxed">
               Simulation indicative, basée uniquement sur vos chiffres. Les résultats dépendent de votre secteur, de la saison et de votre façon de rappeler les demandes.
             </p>
 

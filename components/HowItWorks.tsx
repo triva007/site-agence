@@ -106,7 +106,7 @@ export const HowItWorks: React.FC = () => {
                 </h4>
 
                 {/* Data Rows */}
-                <div className="space-y-2.5 text-xs sm:text-sm mb-5">
+                <div className="space-y-2.5 text-sm mb-5">
                   <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
                     <span className="text-texteClairSec font-medium">Secteur :</span>
                     <span className="font-bold text-texteClair">à 15 km</span>
@@ -134,7 +134,7 @@ export const HowItWorks: React.FC = () => {
                 </div>
 
                 {/* Citron Appointment Pill */}
-                <div className="bg-citron text-encre rounded-full py-2.5 px-4 text-xs font-extrabold flex items-center justify-center gap-2 shadow-xs">
+                <div className="bg-citron text-encre rounded-full py-2.5 px-4 text-sm font-extrabold flex items-center justify-center gap-2 shadow-xs">
                   <CalendarCheck size={14} className="stroke-[2.5]" />
                   <span>Appel réservé · mardi 17 h 30</span>
                 </div>
@@ -144,7 +144,7 @@ export const HowItWorks: React.FC = () => {
             </div>
 
             {/* Disclaimer under phone */}
-            <p className="mt-4 text-xs text-texteSombreSec text-center font-medium">
+            <p className="mt-4 text-sm text-texteSombreSec text-center font-medium">
               Exemple illustratif
             </p>
 
