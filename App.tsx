@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import MarketReality from './components/MarketReality';
-import AcquisitionSystem from './components/AcquisitionSystem';
-import RoiCalculator from './components/RoiCalculator';
-import ComparisonSection from './components/ComparisonSection';
-import QualificationCheck from './components/QualificationCheck';
-import Process from './components/Process';
-import Offer from './components/Offer';
-import AboutFounder from './components/AboutFounder';
+import TheProblem from './components/TheProblem';
+import HowItWorks from './components/HowItWorks';
+import RoleDistribution from './components/RoleDistribution';
+import HonestTalk from './components/HonestTalk';
+import ComparisonTable from './components/ComparisonTable';
+import RoiSimulator from './components/RoiSimulator';
+import OfferGuarantee from './components/OfferGuarantee';
+import AudienceFit from './components/AudienceFit';
+import FounderAaron from './components/FounderAaron';
+import StepByStep from './components/StepByStep';
 import BookingSection from './components/BookingSection';
-import FAQ from './components/FAQ';
-import FinalCTA from './components/FinalCTA';
+import FAQSection from './components/FAQSection';
+import FinalCall from './components/FinalCall';
 import Footer from './components/Footer';
-import FloatingWhatsApp from './components/FloatingWhatsApp';
+import MobileStickyBar from './components/MobileStickyBar';
+import TestimonialsHidden from './components/TestimonialsHidden';
 import LegalNotice from './components/LegalNotice';
 import PrivacyPolicy from './components/PrivacyPolicy';
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {
@@ -26,11 +29,16 @@ const App: React.FC = () => {
     };
 
     window.addEventListener('popstate', onLocationChange);
-
     return () => {
       window.removeEventListener('popstate', onLocationChange);
     };
   }, []);
+
+  const handleNavigate = (path: string) => {
+    window.history.pushState({}, '', path);
+    setCurrentPath(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const normalizedPath = currentPath.replace(/\/$/, '') || '/';
 
@@ -47,24 +55,62 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-brand-blue selection:text-white">
+    <div className="min-h-screen bg-encre text-texteSombre font-sans selection:bg-citron selection:text-encre">
+      {/* 0. En-tête collant */}
       <Header />
+
       <main>
+        {/* 1. Hero (fond encre) */}
         <Hero />
-        <MarketReality />
-        <AcquisitionSystem />
-        <RoiCalculator />
-        <ComparisonSection />
-        <QualificationCheck />
-        <Process />
-        <Offer />
-        <AboutFounder />
+
+        {/* 2. Le Constat (fond papier) */}
+        <TheProblem />
+
+        {/* 3. Comment ça marche (fond encre) */}
+        <HowItWorks />
+
+        {/* 4. Chacun son métier (fond papier) */}
+        <RoleDistribution />
+
+        {/* 5. Ce qu'on vous dit dès le départ (fond encre) */}
+        <HonestTalk />
+
+        {/* 6. Le Comparatif (fond papier) */}
+        <ComparisonTable />
+
+        {/* 7. Simulateur : Combien de bassins pour rentabiliser ? (fond encre) */}
+        <RoiSimulator />
+
+        {/* 8. L'offre et la garantie (fond papier) */}
+        <OfferGuarantee />
+
+        {/* 9. Pour qui (fond encre) */}
+        <AudienceFit />
+
+        {/* 10. Le fondateur (fond papier) */}
+        <FounderAaron />
+
+        {/* 11. Le déroulé (fond encre) */}
+        <StepByStep />
+
+        {/* 12. Prise de rendez-vous (fond papier, ancre #diagnostic) */}
         <BookingSection />
-        <FAQ />
-        <FinalCTA />
+
+        {/* 13. Questions fréquentes (fond encre, accordéon) */}
+        <FAQSection />
+
+        {/* 14. Appel final (fond encre, grand) */}
+        <FinalCall />
+
+        {/* Section Témoignages masquée/commentée en attente de vrais retours clients */}
+        <TestimonialsHidden />
       </main>
-      <Footer />
-      <FloatingWhatsApp />
+
+      {/* 15. Pied de page (fond #0A1F1B) */}
+      <Footer onNavigate={handleNavigate} />
+
+      {/* Barre collante en bas de l'écran sur mobile */}
+      <MobileStickyBar />
     </div>
   );
 };

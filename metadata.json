@@ -1,6 +1,6 @@
 {
   "name": "Triva Media",
-  "description": "Triva Media — Agence de publicité Meta Ads pour les professionnels du bâtiment à haut panier moyen (piscinistes, rénovation, menuiserie, extension)",
+  "description": "Vos réalisations diffusées sur Facebook et Instagram auprès des propriétaires de votre secteur. Des demandes triées, à votre nom. 1 pisciniste par secteur.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

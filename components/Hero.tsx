@@ -1,186 +1,151 @@
 import React, { useState } from 'react';
-import { Calendar, ArrowRight, ShieldCheck, CheckCircle2, MessageCircle, MapPin, User, Euro, Clock, Sparkles } from 'lucide-react';
-import { TRADE_PRESETS } from '../constants';
+import { Check, MessageCircle, Play } from 'lucide-react';
+import { CONTACT_INFO } from '../constants';
+import Logo from './Logo';
 
-const Hero: React.FC = () => {
-  const [activeTradeIndex, setActiveTradeIndex] = useState(0);
-  const activeTrade = TRADE_PRESETS[activeTradeIndex];
+export const Hero: React.FC = () => {
+  const [videoError, setVideoError] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlayClick = () => {
+    const video = document.getElementById('hero-presentation-video') as HTMLVideoElement | null;
+    if (video) {
+      video.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+  };
+
+  const assurances = [
+    '1 seul pisciniste par secteur',
+    'Budget pub sur votre propre compte',
+    'Mise en place remboursée si aucun rendez-vous qualifié en 30 jours',
+    'Sans engagement de durée',
+  ];
 
   return (
-    <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden bg-radial-gradient">
-      
-      {/* Background ambient accents */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-brand-blue/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
-      
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <section className="relative pt-32 pb-20 sm:pt-36 sm:pb-28 lg:pt-40 lg:pb-32 bg-encre text-texteSombre bg-grid-citron overflow-hidden">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
-        {/* Top Badges */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blueLight border border-brand-blue/20 text-brand-blue text-xs font-bold uppercase tracking-wider shadow-2xs">
-            <ShieldCheck size={14} />
-            <span>Spécialisé BTP Haut Panier Moyen</span>
-          </div>
-
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>1 seul artisan par secteur géographique</span>
-          </div>
-        </div>
-
-        {/* Main Headline */}
-        <div className="text-center max-w-4xl mx-auto space-y-6">
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-display font-black text-brand-dark tracking-tight leading-[1.12]">
-            Sécurisez un flux régulier de <br className="hidden sm:inline" />
-            <span className="text-brand-blue">chantiers à fort panier moyen</span> <br className="hidden sm:inline" />
-            sur votre secteur géographique.
-          </h1>
-
-          <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-normal">
-            Nous concevons et pilotons votre système publicitaire Meta Ads pour capter des propriétaires vérifiés qui ont un vrai projet et le budget adapté. <strong className="text-slate-900 font-semibold">Zéro mise en concurrence partagée, zéro temps perdu en devis inutiles.</strong>
-          </p>
-
-          {/* Primary CTA Buttons */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5 max-w-md mx-auto">
-            <a
-              href="#booking"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 bg-brand-blue hover:bg-brand-blueHover text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-brand-blue/25 hover:shadow-xl transition-all hover:-translate-y-0.5 active:scale-98"
-            >
-              <Calendar size={18} />
-              <span>Demander un diagnostic de zone</span>
-              <ArrowRight size={16} />
-            </a>
-
-            <a
-              href="https://wa.me/33767056066"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-4 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 rounded-full font-bold text-xs sm:text-sm shadow-2xs hover:border-slate-300 transition-colors"
-            >
-              <MessageCircle size={17} className="text-emerald-600" />
-              <span>Discuter avec Aaron</span>
-            </a>
-          </div>
-
-          {/* 3 Core Guarantees */}
-          <div className="pt-4 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs text-slate-500 font-medium">
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
-              <span>Demandes 100% exclusives</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
-              <span>Filtre budget strict anti-curieux</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
-              <span>Sans engagement contraignant</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Interactive Live Lead Preview Container */}
-        <div className="mt-14 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
           
-          {/* Trade Switcher Tabs */}
-          <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-3 mb-4 no-scrollbar">
-            {TRADE_PRESETS.map((trade, idx) => (
-              <button
-                key={trade.id}
-                onClick={() => setActiveTradeIndex(idx)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  activeTradeIndex === idx
-                    ? 'bg-brand-dark text-white border-brand-dark shadow-xs'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                {trade.name.split('(')[0].trim()}
-              </button>
-            ))}
-          </div>
-
-          {/* Interactive Phone / Card Display */}
-          <div className="bg-white rounded-3xl border border-slate-200/90 shadow-card p-6 sm:p-8 relative overflow-hidden">
+          {/* Left Column: Headline, subtext, actions, assurances (7 cols) */}
+          <div className="lg:col-span-7 flex flex-col items-start">
             
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                    Dossier Client Qualifié &amp; Transmis
-                  </span>
-                </div>
-                <h2 className="text-lg sm:text-xl font-bold text-brand-dark mt-2">
-                  Exemple de fiche reçue directement sur votre téléphone
-                </h2>
-              </div>
-
-              <div className="text-left md:text-right">
-                <span className="text-xs text-slate-400 font-medium">Panier moyen estimé</span>
-                <p className="text-xl sm:text-2xl font-black text-brand-blue">
-                  {activeTrade.defaultTicket.toLocaleString('fr-FR')} €
-                </p>
-              </div>
+            {/* Tagline */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-bordureSombre bg-encreDeep/70 text-xs sm:text-sm font-semibold text-texteSombre mb-6">
+              <span className="w-2 h-2 rounded-full bg-citron animate-pulse" aria-hidden="true" />
+              <span>Pour les piscinistes · 1 seul pisciniste par secteur</span>
             </div>
 
-            {/* Lead Breakdown Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-              
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase mb-1">
-                  <User size={14} className="text-brand-blue" />
-                  <span>Statut vérifié</span>
-                </div>
-                <p className="font-bold text-sm text-brand-dark">Propriétaire occupant</p>
-                <p className="text-xs text-slate-500">Maison individuelle (Villa)</p>
-              </div>
+            {/* H1 */}
+            <h1 className="text-[40px] sm:text-[48px] lg:text-[72px] xl:text-[80px] font-extrabold text-texteSombre leading-[1.08] tracking-[-0.03em] mb-6">
+              Remplissez votre carnet avec des projets de piscine{' '}
+              <span className="font-serif italic font-normal text-citron">
+                sérieux
+              </span>
+              .
+            </h1>
 
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase mb-1">
-                  <MapPin size={14} className="text-brand-blue" />
-                  <span>Localisation</span>
-                </div>
-                <p className="font-bold text-sm text-brand-dark">Dans votre rayon cible</p>
-                <p className="text-xs text-slate-500">À moins de 30 km du siège</p>
-              </div>
+            {/* Subtitle */}
+            <p className="text-lg sm:text-xl text-texteSombreSec leading-relaxed font-normal max-w-2xl mb-8">
+              On diffuse vos réalisations sur Facebook et Instagram, à votre nom, auprès des propriétaires de votre secteur. Avant de vous contacter, chacun indique son projet, son budget et son délai. Vous rappelez, vous chiffrez, vous vendez.
+            </p>
 
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase mb-1">
-                  <Euro size={14} className="text-brand-blue" />
-                  <span>Budget pré-validé</span>
-                </div>
-                <p className="font-bold text-sm text-emerald-700 font-mono">
-                  &gt; {Math.round(activeTrade.defaultTicket * 0.8 / 1000) * 1000} €
-                </p>
-                <p className="text-xs text-slate-500">Financement prévu validé</p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase mb-1">
-                  <Clock size={14} className="text-brand-blue" />
-                  <span>Délai d'exécution</span>
-                </div>
-                <p className="font-bold text-sm text-brand-dark">Prochains 3 à 6 mois</p>
-                <p className="text-xs text-slate-500">Prêt pour rendez-vous technique</p>
-              </div>
-
-            </div>
-
-            {/* Note bar */}
-            <div className="mt-5 p-3.5 rounded-xl bg-brand-blueLight/50 border border-brand-blue/15 flex items-center justify-between gap-3 text-xs text-slate-700">
-              <div className="flex items-center gap-2">
-                <Sparkles size={16} className="text-brand-blue shrink-0" />
-                <span>
-                  <strong>Exclusivité totale :</strong> Ce prospect n'est envoyé à aucun autre artisan. Vous êtes le seul professionnel qu'il attend au téléphone.
-                </span>
-              </div>
+            {/* Primary & Secondary Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-10">
               <a
-                href="#simulator"
-                className="hidden sm:inline-flex items-center gap-1 font-bold text-brand-blue hover:underline shrink-0"
+                href="#diagnostic"
+                data-cta="hero_reserver"
+                className="h-14 px-8 rounded-full bg-citron text-encre text-base font-bold flex items-center justify-center tracking-tight hover:bg-white transition-all shadow-md active:scale-98"
               >
-                Calculer vos retours
-                <ArrowRight size={13} />
+                Vérifier si mon secteur est libre
+              </a>
+
+              <a
+                href={CONTACT_INFO.whatsAppHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cta="hero_whatsapp"
+                className="h-14 px-7 rounded-full border border-bordureSombre hover:border-citron text-texteSombre hover:text-citron text-sm font-semibold flex items-center justify-center gap-2.5 transition-all"
+              >
+                <MessageCircle size={18} className="text-citron" />
+                <span>Poser une question sur WhatsApp</span>
               </a>
             </div>
+
+            {/* 4 Assurances with citron bullets */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full pt-6 border-t border-bordureSombre">
+              {assurances.map((item) => (
+                <div key={item} className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-citron text-encre flex items-center justify-center shrink-0 mt-0.5" aria-hidden="true">
+                    <Check size={12} strokeWidth={3} />
+                  </span>
+                  <span className="text-xs sm:text-sm font-medium text-texteSombre leading-tight">
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+          </div>
+
+          {/* Right Column: Video presentation (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col items-center">
+            
+            <div className="w-full max-w-lg relative rounded-[24px] overflow-hidden border border-citron/30 bg-[#16413A] shadow-2xl aspect-[4/5] sm:aspect-square flex flex-col">
+              
+              {!videoError ? (
+                <div className="relative w-full h-full flex items-center justify-center bg-encreDeep">
+                  <video
+                    id="hero-presentation-video"
+                    controls
+                    playsInline
+                    preload="metadata"
+                    poster="/video/triva-presentation-poster.jpg"
+                    className="w-full h-full object-cover"
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                    onError={() => setVideoError(true)}
+                  >
+                    <source src="/video/triva-presentation.mp4" type="video/mp4" />
+                  </video>
+
+                  {/* Big citron play button overlay when not playing */}
+                  {!isPlaying && (
+                    <button
+                      onClick={handlePlayClick}
+                      className="absolute inset-0 flex items-center justify-center bg-encre/40 hover:bg-encre/20 transition-all group focus:outline-none"
+                      aria-label="Lancer la vidéo de présentation"
+                    >
+                      <span className="w-20 h-20 rounded-full bg-citron text-encre flex items-center justify-center shadow-xl transition-transform group-hover:scale-110">
+                        <Play size={32} className="fill-encre ml-1" />
+                      </span>
+                    </button>
+                  )}
+                </div>
+              ) : (
+                /* Fallback frame if video file is missing - pristine artisanal aesthetic */
+                <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-encreDeep">
+                  <div className="p-4 rounded-2xl bg-[#16413A] border border-bordureSombre mb-4">
+                    <Logo />
+                  </div>
+                  <span className="text-citron text-xs font-bold uppercase tracking-widest mb-2">
+                    Présentation Triva Media
+                  </span>
+                  <p className="text-base font-bold text-texteSombre mb-1">
+                    Vidéo à venir
+                  </p>
+                  <p className="text-xs text-texteSombreSec max-w-xs">
+                    Découvrez en 45 secondes le fonctionnement du système pour les piscinistes.
+                  </p>
+                </div>
+              )}
+
+            </div>
+
+            {/* Legend below video */}
+            <p className="mt-3.5 text-xs text-texteSombreSec text-center font-medium">
+              Comment ça marche, en 45 secondes
+            </p>
 
           </div>
 
