@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Reveal from './Reveal';
 import { Check, MessageCircle, ExternalLink, Loader2, Phone } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 
@@ -43,13 +44,13 @@ export const BookingSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5 mb-6 sm:mb-8">
           <ol className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
             {steps.map((s) => (
-              <li key={s.n} className="flex sm:flex-col items-start gap-3 sm:gap-3 bg-blanc rounded-2xl border border-bordureClair p-4 sm:p-5">
+              <Reveal as="li" key={s.n} delay={(Number(s.n) - 1) * 100} className="flex sm:flex-col items-start gap-3 sm:gap-3 bg-blanc rounded-2xl border border-bordureClair p-4 sm:p-5">
                 <span className="w-9 h-9 rounded-full bg-encre text-citron grid place-items-center font-extrabold shrink-0">{s.n}</span>
                 <span>
                   <span className="block text-base font-bold leading-snug">{s.t}</span>
                   <span className="block text-sm text-texteClairSec mt-1 leading-snug">{s.d}</span>
                 </span>
-              </li>
+              </Reveal>
             ))}
           </ol>
           <div className="lg:col-span-2 rounded-2xl bg-encre text-texteSombre p-5 sm:p-6">
@@ -72,7 +73,7 @@ export const BookingSection: React.FC = () => {
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-b border-bordureClair bg-blanc">
             <div className="flex items-center gap-2.5 text-sm font-semibold text-texteClair">
               <span className="relative flex w-2.5 h-2.5">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60 animate-ping" />
+                <span className="pulse-dot absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
                 <span className="relative inline-flex w-2.5 h-2.5 rounded-full bg-emerald-500" />
               </span>
               Agenda d’Aaron en direct

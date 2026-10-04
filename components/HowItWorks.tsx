@@ -1,5 +1,7 @@
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
 import React from 'react';
-import { Smartphone, MapPin, Layers, Clock, Shield, CalendarCheck } from 'lucide-react';
+import { CalendarCheck } from 'lucide-react';
 
 export const HowItWorks: React.FC = () => {
   const steps = [
@@ -30,18 +32,10 @@ export const HowItWorks: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-16 sm:mb-20">
-          <span className="text-xs font-bold uppercase tracking-widest text-citron mb-3 inline-block">
-            Comment ça marche
-          </span>
-          <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteSombre leading-[1.12] tracking-[-0.03em]">
-            De votre piscine à son projet, en{' '}
-            <span className="font-serif italic font-normal text-citron">
-              4 étapes
-            </span>
-            .
-          </h2>
-        </div>
+        <SectionHeading eyebrow="Comment ça marche" tone="dark">
+          De votre piscine à son projet, en{' '}
+          <span className="font-serif italic font-normal text-citron">4 étapes</span>.
+        </SectionHeading>
 
         {/* Grid: 4 Steps on left, Phone Mockup on right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -56,8 +50,8 @@ export const HowItWorks: React.FC = () => {
             />
 
             <div className="space-y-10 sm:space-y-12">
-              {steps.map((step) => (
-                <div key={step.num} className="relative flex items-start gap-5 sm:gap-6 group">
+              {steps.map((step, i) => (
+                <Reveal as="div" key={step.num} delay={i * 110} variant="left" className="relative flex items-start gap-5 sm:gap-6 group">
                   {/* Step circle */}
                   <div className="w-12 h-12 rounded-full bg-citron text-encre flex items-center justify-center font-extrabold text-lg shrink-0 shadow-md relative z-10 transition-transform group-hover:scale-110">
                     {step.num}
@@ -72,7 +66,7 @@ export const HowItWorks: React.FC = () => {
                       {step.text}
                     </p>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
 
@@ -81,7 +75,7 @@ export const HowItWorks: React.FC = () => {
           {/* Phone Mockup column (5 cols) */}
           <div className="lg:col-span-5 flex flex-col items-center">
             
-            <div className="w-full max-w-[340px] sm:max-w-[360px] bg-encreDeep rounded-[36px] p-3 border-2 border-citron/30 shadow-2xl relative">
+            <div className="float-soft w-full max-w-[340px] sm:max-w-[360px] bg-encreDeep rounded-[36px] p-3 border-2 border-citron/30 shadow-2xl relative">
               
               {/* Phone speaker notch */}
               <div className="w-24 h-4 bg-encre rounded-full mx-auto mb-3" />

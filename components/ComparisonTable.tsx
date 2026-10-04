@@ -1,5 +1,6 @@
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
 import React from 'react';
-import { Check, X, Minus } from 'lucide-react';
 
 export const ComparisonTable: React.FC = () => {
   const rows = [
@@ -52,21 +53,13 @@ export const ComparisonTable: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-14 sm:mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-vertProfond mb-3 inline-block">
-            Comparatif clair
-          </span>
-          <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteClair leading-[1.12] tracking-[-0.03em]">
-            Pourquoi ce modèle est{' '}
-            <span className="font-serif italic font-normal text-vertProfond">
-              différent
-            </span>
-            .
-          </h2>
-        </div>
+        <SectionHeading eyebrow="Comparatif clair" tone="light">
+          Pourquoi ce modèle est{' '}
+          <span className="font-serif italic font-normal text-vertProfond">différent</span>.
+        </SectionHeading>
 
         {/* Desktop Table View */}
-        <div className="hidden lg:block overflow-x-auto">
+        <Reveal variant="scale" className="hidden lg:block overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-bordureClair">
@@ -117,7 +110,7 @@ export const ComparisonTable: React.FC = () => {
               ))}
             </tbody>
           </table>
-        </div>
+        </Reveal>
 
         {/* Mobile View: Suite of cards, one per criterion, with Triva Media first */}
         <div className="lg:hidden space-y-5">

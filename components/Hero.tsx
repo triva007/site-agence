@@ -78,7 +78,7 @@ export const Hero: React.FC = () => {
               <a
                 href="#diagnostic"
                 data-cta="hero_reserver"
-                className="h-14 px-8 rounded-full bg-citron text-encre text-base font-bold flex items-center justify-center tracking-tight hover:bg-white transition-all shadow-md active:scale-98"
+                className="btn-shine h-14 px-8 rounded-full bg-citron text-encre text-base font-bold flex items-center justify-center tracking-tight hover:bg-white transition-all shadow-md active:scale-98"
               >
                 Vérifier si mon secteur est libre
               </a>

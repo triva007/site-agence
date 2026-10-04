@@ -1,3 +1,5 @@
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
 import React from 'react';
 import AmbientVideo from './AmbientVideo';
 
@@ -31,18 +33,10 @@ export const StepByStep: React.FC = () => {
         
         {/* Section Header */}
 <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-16 sm:mb-20">
-                  <div className="max-w-3xl">
-          <span className="text-xs font-bold uppercase tracking-widest text-citron mb-3 inline-block">
-            Processus
-          </span>
-          <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteSombre leading-[1.12] tracking-[-0.03em]">
+                  <SectionHeading eyebrow="Processus" tone="dark" className="mb-0">
             Comment on{' '}
-            <span className="font-serif italic font-normal text-citron">
-              démarre
-            </span>
-            .
-          </h2>
-        </div>
+            <span className="font-serif italic font-normal text-citron">démarre</span>.
+          </SectionHeading>
           <p className="text-lg text-texteSombreSec leading-relaxed max-w-md">
             De l’appel de diagnostic au premier bilan : vous savez à chaque étape ce qui se passe et ce qu’on attend de vous.
           </p>
@@ -64,10 +58,12 @@ export const StepByStep: React.FC = () => {
             aria-hidden="true" 
           />
 
-          {steps.map((step) => (
-            <div
+          {steps.map((step, i) => (
+            <Reveal
+              as="div"
               key={step.num}
-              className="bg-encreCard rounded-[24px] p-7 border border-bordureSombre relative z-10 flex flex-col justify-between hover:border-citron/40 transition-colors"
+              delay={i * 110}
+              className="card card-dark bg-encreCard rounded-[24px] p-7 border border-bordureSombre relative z-10 flex flex-col justify-between"
             >
               <div>
                 {/* Numbered Citron Circle */}
@@ -83,7 +79,7 @@ export const StepByStep: React.FC = () => {
                   {step.text}
                 </p>
               </div>
-            </div>
+            </Reveal>
           ))}
 
         </div>

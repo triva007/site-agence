@@ -1,4 +1,6 @@
 import React from 'react';
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
 
 export const TheProblem: React.FC = () => {
   const cards = [
@@ -29,29 +31,21 @@ export const TheProblem: React.FC = () => {
     <section className="py-20 sm:py-28 lg:py-32 bg-papier text-texteClair">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
-        {/* Section Header */}
-        <div className="max-w-3xl mb-14 sm:mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-vertProfond mb-3 inline-block">
-            Le constat
-          </span>
-          <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteClair leading-[1.12] tracking-[-0.03em]">
-            Le bouche-à-oreille fait votre réputation. Il ne remplit pas votre{' '}
-            <span className="font-serif italic font-normal text-vertProfond">
-              carnet
-            </span>
-            .
-          </h2>
-        </div>
+        <SectionHeading eyebrow="Le constat">
+          Le bouche-à-oreille fait votre réputation. Il ne remplit pas votre{' '}
+          <span className="font-serif italic font-normal text-vertProfond">carnet</span>.
+        </SectionHeading>
 
         {/* 3 Problem Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
-          {cards.map((card) => (
-            <div
+          {cards.map((card, i) => (
+            <Reveal
               key={card.title}
-              className="bg-blanc rounded-[24px] overflow-hidden border border-bordureClair shadow-sm flex flex-col"
+              delay={i * 110}
+              className="card bg-blanc rounded-[24px] overflow-hidden border border-bordureClair shadow-sm flex flex-col"
             >
               <div className="aspect-[16/10] overflow-hidden bg-encre">
-                <img src={card.img} alt={card.alt} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 hover:scale-105" />
+                <img src={card.img} alt={card.alt} loading="lazy" className="zoomable h-full w-full object-cover" />
               </div>
               <div className="p-6 sm:p-8">
                 <span className="text-xs font-bold text-texteClairSec tracking-wider uppercase mb-4 inline-block">
@@ -64,16 +58,16 @@ export const TheProblem: React.FC = () => {
                   {card.text}
                 </p>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
 
         {/* Transition statement */}
-        <div className="max-w-3xl border-l-2 border-vertProfond pl-6 py-2">
+        <Reveal variant="left" className="max-w-3xl border-l-2 border-vertProfond pl-6 py-2">
           <p className="text-lg sm:text-xl font-semibold text-texteClair leading-relaxed">
             Il vous faut un canal à vous : des propriétaires de votre secteur qui découvrent vos réalisations et qui vous contactent, vous.
           </p>
-        </div>
+        </Reveal>
 
       </div>
     </section>

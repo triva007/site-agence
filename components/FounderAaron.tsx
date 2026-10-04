@@ -1,5 +1,6 @@
+import Reveal from './Reveal';
 import React, { useState } from 'react';
-import { MessageCircle, Phone, Check } from 'lucide-react';
+import { MessageCircle, Check } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 
 export const FounderAaron: React.FC = () => {
@@ -94,15 +95,15 @@ export const FounderAaron: React.FC = () => {
 
             {/* 4 Pillars with checkmarks */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-6 border-t border-bordureClair">
-              {pillars.map((pillar) => (
-                <div key={pillar} className="flex items-center gap-3">
+              {pillars.map((pillar, i) => (
+                <Reveal as="div" key={pillar} delay={i * 80} className="flex items-center gap-3">
                   <span className="w-5 h-5 rounded-full bg-vertProfond text-blanc flex items-center justify-center shrink-0" aria-hidden="true">
                     <Check size={12} strokeWidth={3} />
                   </span>
                   <span className="text-sm sm:text-base font-bold text-texteClair">
                     {pillar}
                   </span>
-                </div>
+                </Reveal>
               ))}
             </div>
 

@@ -34,7 +34,7 @@ export const FinalCall: React.FC = () => {
           <a
             href="#diagnostic"
             data-cta="final_reserver"
-            className="w-full sm:w-auto h-14 px-8 rounded-full bg-citron text-encre text-base font-bold flex items-center justify-center gap-2 tracking-tight hover:bg-white transition-all shadow-lg active:scale-98"
+            className="btn-shine w-full sm:w-auto h-14 px-8 rounded-full bg-citron text-encre text-base font-bold flex items-center justify-center gap-2 tracking-tight hover:bg-white transition-all shadow-lg active:scale-98"
           >
             <Calendar size={18} />
             <span>Réserver mon diagnostic (30 min)</span>

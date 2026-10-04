@@ -1,5 +1,7 @@
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
 import React from 'react';
-import { ShieldCheck, Check } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export const OfferGuarantee: React.FC = () => {
   const blocks = [
@@ -25,25 +27,19 @@ export const OfferGuarantee: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-14 sm:mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-vertProfond mb-3 inline-block">
-            L'offre
-          </span>
-          <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteClair leading-[1.12] tracking-[-0.03em]">
-            Vous payez à la{' '}
-            <span className="font-serif italic font-normal text-vertProfond">
-              performance
-            </span>
-            .
-          </h2>
-        </div>
+        <SectionHeading eyebrow="L'offre" tone="light">
+          Vous payez à la{' '}
+          <span className="font-serif italic font-normal text-vertProfond">performance</span>.
+        </SectionHeading>
 
         {/* 3 Pillars Blocks */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
-          {blocks.map((block) => (
-            <div
+          {blocks.map((block, i) => (
+            <Reveal
+              as="div"
               key={block.num}
-              className="bg-blanc rounded-[24px] p-8 border border-bordureClair shadow-sm flex flex-col justify-between"
+              delay={i * 110}
+              className="card bg-blanc rounded-[24px] p-8 border border-bordureClair shadow-sm flex flex-col justify-between"
             >
               <div>
                 <span className="text-xs font-extrabold text-vertProfond tracking-wider uppercase mb-4 inline-block">
@@ -56,7 +52,7 @@ export const OfferGuarantee: React.FC = () => {
                   {block.text}
                 </p>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
 

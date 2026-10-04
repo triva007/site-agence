@@ -1,5 +1,6 @@
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
 import React, { useState } from 'react';
-import { Euro, Percent, HelpCircle } from 'lucide-react';
 
 export const RoiSimulator: React.FC = () => {
   const [avgTicket, setAvgTicket] = useState<number>(25000);
@@ -13,10 +14,8 @@ export const RoiSimulator: React.FC = () => {
   // coût sur 12 mois = budget mensuel × 12
   const cost12Months = monthlyBudget * 12;
 
-  // bassins nécessaires pour couvrir 12 mois = coût sur 12 mois ÷ gain par bassin, arrondi au dixième
-  const poolsNeeded = gainPerPool > 0 
-    ? (cost12Months / gainPerPool).toFixed(1).replace('.', ',')
-    : '0,0';
+  // bassins nécessaires pour couvrir 12 mois : on arrondit au bassin entier supérieur
+  const poolsNeeded = gainPerPool > 0 ? Math.ceil(cost12Months / gainPerPool) : 0;
 
   const formatEuro = (val: number) => {
     return new Intl.NumberFormat('fr-FR').format(val);
@@ -27,21 +26,11 @@ export const RoiSimulator: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-14 sm:mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-citron mb-3 inline-block">
-            Simulation indicative
-          </span>
-          <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteSombre leading-[1.12] tracking-[-0.03em] mb-4">
-            Combien de bassins faut-il pour que ce soit{' '}
-            <span className="font-serif italic font-normal text-citron">
-              rentable
-            </span>
-            {' '}?
-          </h2>
-          <p className="text-base sm:text-lg text-texteSombreSec leading-relaxed">
-            Une simulation simple, avec vos propres chiffres. Elle ne promet aucun résultat : elle montre seulement à partir de quand l'investissement est couvert.
-          </p>
-        </div>
+        <SectionHeading eyebrow="Simulation indicative" tone="dark"
+          lead={<>Une simulation simple, avec vos propres chiffres. Elle ne promet aucun résultat : elle montre seulement à partir de quand l'investissement est couvert.</>}>
+          Combien de bassins faut-il pour que ce soit{' '}
+          <span className="font-serif italic font-normal text-citron">rentable</span>{' '}?
+        </SectionHeading>
 
         {/* Simulator Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
@@ -179,24 +168,24 @@ export const RoiSimulator: React.FC = () => {
           <div className="lg:col-span-5 flex flex-col space-y-6">
             
             {/* Big Citron Card */}
-            <div className="bg-citron text-encre rounded-[24px] p-8 sm:p-10 shadow-xl border border-citron">
+            <Reveal variant="scale" className="bg-citron text-encre rounded-[24px] p-8 sm:p-10 shadow-xl border border-citron">
               <span className="text-xs font-extrabold uppercase tracking-widest text-encre/70 mb-4 inline-block">
                 Point d'équilibre annuel
               </span>
 
               <p className="text-2xl sm:text-3xl font-extrabold leading-snug tracking-tight mb-6">
-                Il faut environ <span className="underline decoration-encre/40 decoration-4">{poolsNeeded} bassin(s)</span> sur l'année pour couvrir 12 mois de dépenses.
+                Il faut environ <span className="underline decoration-encre/40 decoration-4 tabular">{poolsNeeded} bassin{poolsNeeded > 1 ? 's' : ''}</span> sur l'année pour couvrir 12 mois de dépenses.
               </p>
 
               <div className="pt-6 border-t border-encre/20">
                 <p className="text-base sm:text-lg font-bold leading-normal">
-                  Chaque bassin en plus vous laisse environ <span className="text-xl sm:text-2xl font-black">{formatEuro(gainPerPool)} €</span>.
+                  Chaque bassin en plus vous laisse environ <span className="text-xl sm:text-2xl font-black tabular">{formatEuro(gainPerPool)} €</span>.
                 </p>
                 <p className="text-sm font-medium text-encre/75 mt-1">
                   (Gain estimé par bassin supplémentaire au-delà du seuil de couverture)
                 </p>
               </div>
-            </div>
+            </Reveal>
 
             {/* Required Disclaimer */}
             <p className="text-sm text-texteSombreSec leading-relaxed">

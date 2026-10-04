@@ -1,3 +1,5 @@
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
 import React, { useState } from 'react';
 import { ChevronDown, MessageCircle } from 'lucide-react';
 import { FAQ_ITEMS, CONTACT_INFO } from '../constants';
@@ -15,26 +17,20 @@ export const FAQSection: React.FC = () => {
       <div className="max-w-4xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
-          <span className="text-xs font-bold uppercase tracking-widest text-citron mb-3 inline-block">
-            FAQ
-          </span>
-          <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteSombre leading-[1.12] tracking-[-0.03em]">
-            Vos questions, nos réponses{' '}
-            <span className="font-serif italic font-normal text-citron">
-              franches
-            </span>
-            .
-          </h2>
-        </div>
+        <SectionHeading eyebrow="FAQ" tone="dark" align="center" className="max-w-2xl">
+          Vos questions, nos réponses{' '}
+          <span className="font-serif italic font-normal text-citron">franches</span>.
+        </SectionHeading>
 
         {/* Accordion list */}
         <div className="space-y-4 mb-14">
-          {FAQ_ITEMS.map((item) => {
+          {FAQ_ITEMS.map((item, i) => {
             const isOpen = openId === item.id;
             return (
-              <div
+              <Reveal
+                as="div"
                 key={item.id}
+                delay={Math.min(i, 5) * 70}
                 className="bg-encreCard rounded-[20px] border border-bordureSombre overflow-hidden transition-colors hover:border-citron/30"
               >
                 <button
@@ -60,7 +56,7 @@ export const FAQSection: React.FC = () => {
                     {item.answer}
                   </div>
                 )}
-              </div>
+              </Reveal>
             );
           })}
         </div>

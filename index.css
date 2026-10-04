@@ -55,3 +55,62 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   background-image: linear-gradient(rgba(243, 238, 230, 0.86), rgba(243, 238, 230, 0.86)), url('/media/pierre.jpg');
   background-size: auto, 768px 768px;
 }
+
+/* ===== Harmonie et animations du site ===== */
+
+/* Cartes : même profondeur, même réaction au survol partout */
+.card {
+  transition: transform .5s cubic-bezier(.22,.8,.3,1), box-shadow .5s cubic-bezier(.22,.8,.3,1), border-color .4s ease;
+}
+@media (hover: hover) {
+  .card:hover { transform: translateY(-6px); box-shadow: 0 28px 60px rgba(11,42,58,.14); }
+  .card-dark:hover { box-shadow: 0 28px 60px rgba(3,18,28,.5); border-color: rgba(63,198,217,.4); }
+}
+
+/* Boutons pleins : un reflet passe au survol */
+.btn-shine { position: relative; overflow: hidden; }
+.btn-shine::after {
+  content: ""; position: absolute; top: -60%; bottom: -60%; left: -40%; width: 35%;
+  background: linear-gradient(100deg, rgba(255,255,255,0), rgba(255,255,255,.55), rgba(255,255,255,0));
+  transform: translateX(-220%) skewX(-18deg); pointer-events: none;
+}
+@media (hover: hover) {
+  .btn-shine:hover::after { transition: transform .75s ease; transform: translateX(420%) skewX(-18deg); }
+}
+
+/* Liens de navigation : trait qui se déploie */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
+  background: #3FC6D9; transform: scaleX(0); transform-origin: left center;
+  transition: transform .35s cubic-bezier(.22,.8,.3,1);
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* Jauge de lecture en haut de page */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; height: 2px; z-index: 60;
+  background: linear-gradient(90deg, #0B6E7D, #3FC6D9, #7FDCE8);
+  transform-origin: left center; will-change: transform;
+}
+
+/* Pastille vivante (agenda en direct, secteur libre) */
+@keyframes soft-pulse { 0%,100% { opacity: .55; transform: scale(1); } 50% { opacity: .15; transform: scale(1.9); } }
+.pulse-dot { animation: soft-pulse 2.4s ease-in-out infinite; }
+
+/* Flottement très lent des cartes mises en avant */
+@keyframes float-soft { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+.float-soft { animation: float-soft 7s ease-in-out infinite; }
+
+/* Séparateur d'eau entre deux sections de même teinte */
+.rule-water {
+  height: 1px; border: 0;
+  background: linear-gradient(90deg, transparent, rgba(63,198,217,.45), transparent);
+}
+
+/* Image qui s'approche doucement au survol de sa carte */
+.card .zoomable { transition: transform .9s cubic-bezier(.22,.8,.3,1); }
+@media (hover: hover) { .card:hover .zoomable { transform: scale(1.06); } }
+
+/* Chiffres : pas de sautillement pendant le comptage */
+.tabular { font-variant-numeric: tabular-nums; }

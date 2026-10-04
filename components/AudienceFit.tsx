@@ -1,3 +1,5 @@
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
 import React from 'react';
 import { Check, X } from 'lucide-react';
 
@@ -17,28 +19,20 @@ export const AudienceFit: React.FC = () => {
   ];
 
   return (
-    <section id="pour-qui" className="py-20 sm:py-28 lg:py-32 bg-encre text-texteSombre bg-grid-citron relative">
+    <section id="pour-qui" className="py-20 sm:py-28 lg:py-32 bg-encreDeep text-texteSombre bg-grid-citron relative">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-14 sm:mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-citron mb-3 inline-block">
-            Qualification
-          </span>
-          <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteSombre leading-[1.12] tracking-[-0.03em]">
-            Pour qui c'est fait, et pour qui ça ne l'est{' '}
-            <span className="font-serif italic font-normal text-citron">
-              pas
-            </span>
-            .
-          </h2>
-        </div>
+        <SectionHeading eyebrow="Qualification" tone="dark">
+          Pour qui c'est fait, et pour qui ça ne l'est{' '}
+          <span className="font-serif italic font-normal text-citron">pas</span>.
+        </SectionHeading>
 
         {/* 2 Comparison Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           
           {/* C'est pour vous si */}
-          <div className="bg-encreCard rounded-[24px] p-8 sm:p-10 border border-citron/25 shadow-md flex flex-col justify-between">
+          <Reveal variant="left" className="card card-dark bg-encreCard rounded-[24px] p-8 sm:p-10 border border-citron/25 shadow-md flex flex-col justify-between">
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-citron mb-3 inline-block">
                 Profils cibles
@@ -63,10 +57,10 @@ export const AudienceFit: React.FC = () => {
                 ))}
               </ul>
             </div>
-          </div>
+          </Reveal>
 
           {/* Ce n'est pas pour vous si */}
-          <div className="bg-encreDeep rounded-[24px] p-8 sm:p-10 border border-bordureSombre shadow-sm flex flex-col justify-between">
+          <Reveal variant="right" delay={90} className="card card-dark bg-encreDeep rounded-[24px] p-8 sm:p-10 border border-bordureSombre shadow-sm flex flex-col justify-between">
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-texteSombreSec mb-3 inline-block">
                 Non éligible
@@ -91,7 +85,7 @@ export const AudienceFit: React.FC = () => {
                 ))}
               </ul>
             </div>
-          </div>
+          </Reveal>
 
         </div>
 

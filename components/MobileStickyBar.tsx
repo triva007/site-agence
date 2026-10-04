@@ -13,7 +13,7 @@ export const MobileStickyBar: React.FC = () => {
       <a
         href="#diagnostic"
         data-cta="mobile_bottom_reserver"
-        className="flex-1 h-14 bg-citron text-encre rounded-full font-bold text-sm flex items-center justify-center gap-2 tracking-tight active:scale-98 shadow-md"
+        className="btn-shine flex-1 h-14 bg-citron text-encre rounded-full font-bold text-sm flex items-center justify-center gap-2 tracking-tight active:scale-98 shadow-md"
       >
         <Calendar size={17} className="text-encre" />
         <span>Réserver 30 min</span>

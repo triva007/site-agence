@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, MessageCircle } from 'lucide-react';
 import Logo from './Logo';
+import ScrollProgress from './ScrollProgress';
 import { CONTACT_INFO } from '../constants';
 
 export const Header: React.FC = () => {
@@ -67,7 +68,7 @@ export const Header: React.FC = () => {
                   e.preventDefault();
                   handleNavClick(link.href);
                 }}
-                className="text-texteSombreSec hover:text-citron text-sm font-semibold tracking-tight transition-colors py-1"
+                className="nav-link text-texteSombreSec hover:text-citron text-sm font-semibold tracking-tight transition-colors py-1"
               >
                 {link.label}
               </a>
@@ -94,7 +95,7 @@ export const Header: React.FC = () => {
                 handleNavClick('#diagnostic');
               }}
               data-cta="header_verifier"
-              className="inline-flex items-center justify-center h-11 px-6 rounded-full bg-citron text-encre hover:bg-white text-sm font-bold tracking-tight transition-all active:scale-95 shadow-sm"
+              className="btn-shine inline-flex items-center justify-center h-11 px-6 rounded-full bg-citron text-encre hover:bg-white text-sm font-bold tracking-tight transition-all active:scale-95 shadow-sm"
             >
               Vérifier mon secteur
             </a>
@@ -113,6 +114,7 @@ export const Header: React.FC = () => {
           </div>
 
         </div>
+        <ScrollProgress />
       </header>
 
       {/* Mobile Drawer Navigation */}
