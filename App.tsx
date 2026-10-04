@@ -18,6 +18,7 @@ import Footer from './components/Footer';
 import MobileStickyBar from './components/MobileStickyBar';
 import TestimonialsHidden from './components/TestimonialsHidden';
 import LegalNotice from './components/LegalNotice';
+import VideoBand from './components/VideoBand';
 import PrivacyPolicy from './components/PrivacyPolicy';
 
 export const App: React.FC = () => {
@@ -66,6 +67,12 @@ export const App: React.FC = () => {
         {/* 2. Le Constat (fond papier) */}
         <TheProblem />
 
+        {/* Bandeau vidéo d'ambiance */}
+        <VideoBand video="/media/secteur.mp4" eyebrow="Votre secteur">
+          Vos futurs clients habitent déjà autour de chez vous.{' '}
+          <span className="font-serif italic font-normal text-citron">Ils ne vous connaissent pas encore.</span>
+        </VideoBand>
+
         {/* 3. Comment ça marche (fond encre) */}
         <HowItWorks />
 
@@ -82,6 +89,11 @@ export const App: React.FC = () => {
         <RoiSimulator />
 
         {/* 8. L'offre et la garantie (fond papier) */}
+        <VideoBand video="/media/bassin.mp4" eyebrow="Vos réalisations" align="center">
+          Ils rêvent de leur piscine.{' '}
+          <span className="font-serif italic font-normal text-citron">Montrez-leur ce que vous savez faire.</span>
+        </VideoBand>
+
         <OfferGuarantee />
 
         {/* 9. Pour qui (fond encre) */}
@@ -106,7 +118,7 @@ export const App: React.FC = () => {
         <TestimonialsHidden />
       </main>
 
-      {/* 15. Pied de page (fond #0A1F1B) */}
+      {/* 15. Pied de page (fond #071D29) */}
       <Footer onNavigate={handleNavigate} />
 
       {/* Barre collante en bas de l'écran sur mobile */}

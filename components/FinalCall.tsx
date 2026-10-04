@@ -1,10 +1,18 @@
 import React from 'react';
 import { MessageCircle, Calendar } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
+import WaterSurface from './WaterSurface';
+import AmbientVideo from './AmbientVideo';
 
 export const FinalCall: React.FC = () => {
   return (
-    <section className="py-24 sm:py-32 lg:py-40 bg-encre text-texteSombre bg-grid-citron relative overflow-hidden text-center">
+    <section className="py-28 sm:py-36 lg:py-44 bg-encreDeep text-texteSombre relative isolate overflow-hidden text-center">
+      {/* Surface d'eau : passez la souris dessus pour faire des ronds dans l'eau */}
+      <div className="absolute inset-0 -z-10">
+        <WaterSurface intensity={1.15} />
+        <AmbientVideo src="/media/final.mp4" className="opacity-50 mix-blend-luminosity" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,rgba(7,29,41,.35),rgba(7,29,41,.85))]" />
+      </div>
       <div className="max-w-4xl mx-auto px-5 sm:px-8 relative z-10">
         
         {/* H2 */}

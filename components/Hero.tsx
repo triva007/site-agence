@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import WaterSurface from './WaterSurface';
+import AmbientVideo from './AmbientVideo';
 import { Check, MessageCircle, Play } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import Logo from './Logo';
@@ -6,6 +8,13 @@ import Logo from './Logo';
 export const Hero: React.FC = () => {
   const [videoError, setVideoError] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // Si la vidéo de présentation n'est pas encore en ligne, on affiche un cadre propre
+  useEffect(() => {
+    fetch('/video/triva-presentation.mp4', { method: 'HEAD' })
+      .then((r) => { if (!r.ok || !(r.headers.get('content-type') || '').includes('video')) setVideoError(true); })
+      .catch(() => setVideoError(true));
+  }, []);
 
   const handlePlayClick = () => {
     const video = document.getElementById('hero-presentation-video') as HTMLVideoElement | null;
@@ -22,7 +31,14 @@ export const Hero: React.FC = () => {
   ];
 
   return (
-    <section className="relative pt-32 pb-20 sm:pt-36 sm:pb-28 lg:pt-40 lg:pb-32 bg-encre text-texteSombre bg-grid-citron overflow-hidden">
+    <section className="relative isolate pt-32 pb-20 sm:pt-36 sm:pb-28 lg:pt-44 lg:pb-36 bg-encreDeep text-texteSombre overflow-hidden">
+      {/* Arrière-plan : eau animée en code, puis vidéo d'ambiance Omni par-dessus si elle existe */}
+      <div className="absolute inset-0 -z-10">
+        <WaterSurface />
+        <AmbientVideo src="/media/hero.mp4" eager className="opacity-60 mix-blend-luminosity" />
+        <div className="absolute inset-0 bg-gradient-to-r from-encreDeep via-encreDeep/80 to-encreDeep/20" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-encreDeep to-transparent" />
+      </div>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
@@ -91,10 +107,10 @@ export const Hero: React.FC = () => {
           {/* Right Column: Video presentation (5 cols) */}
           <div className="lg:col-span-5 flex flex-col items-center">
             
-            <div className="w-full max-w-lg relative rounded-[24px] overflow-hidden border border-citron/30 bg-[#16413A] shadow-2xl aspect-[4/5] sm:aspect-square flex flex-col">
+            <div className="glass w-full max-w-xl relative rounded-[24px] overflow-hidden border border-white/15 p-2 aspect-video flex flex-col">
               
               {!videoError ? (
-                <div className="relative w-full h-full flex items-center justify-center bg-encreDeep">
+                <div className="relative w-full h-full flex items-center justify-center bg-encreDeep rounded-[18px] overflow-hidden">
                   <video
                     id="hero-presentation-video"
                     controls
@@ -124,8 +140,8 @@ export const Hero: React.FC = () => {
                 </div>
               ) : (
                 /* Fallback frame if video file is missing - pristine artisanal aesthetic */
-                <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-encreDeep">
-                  <div className="p-4 rounded-2xl bg-[#16413A] border border-bordureSombre mb-4">
+                <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center rounded-[18px] bg-encreDeep/60">
+                  <div className="p-4 rounded-2xl bg-[#123A4D] border border-bordureSombre mb-4">
                     <Logo />
                   </div>
                   <span className="text-citron text-xs font-bold uppercase tracking-widest mb-2">
