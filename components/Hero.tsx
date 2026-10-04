@@ -172,7 +172,7 @@ export const Hero: React.FC = () => {
 
             {/* Legend below video */}
             <p className="mt-3.5 text-sm text-texteSombreSec text-center font-medium">
-              {videoError ? 'Exemple de publicité diffusée à votre nom' : 'Comment ça marche, en 1 minute'}
+              {videoError ? 'Exemple de publicité diffusée à votre nom' : 'Découvrez Triva Media en 30 secondes'}
             </p>
 
           </div>
