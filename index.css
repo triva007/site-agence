@@ -49,3 +49,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   -webkit-backdrop-filter: blur(14px) saturate(1.15);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 30px 80px rgba(3, 18, 28, .45);
 }
+
+/* Texture pierre très légère sur les sections claires */
+.bg-papier {
+  background-image: linear-gradient(rgba(243, 238, 230, 0.86), rgba(243, 238, 230, 0.86)), url('/media/pierre.jpg');
+  background-size: auto, 768px 768px;
+}

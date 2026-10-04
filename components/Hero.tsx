@@ -153,7 +153,7 @@ export const Hero: React.FC = () => {
                     </div>
                   </div>
                   <p className="px-4 pb-3 text-[15px] leading-snug">Un projet de piscine ? Découvrez nos réalisations près de chez vous.</p>
-                  <img src="/media/piscine.jpg" alt="Exemple de visuel de publicité pour un pisciniste" className="w-full aspect-[4/3] object-cover" />
+                  <img src="/media/realisation-pub.jpg" alt="Exemple de visuel de publicité pour un pisciniste" className="w-full aspect-[4/3] object-cover" />
                   <div className="flex items-center justify-between gap-3 px-4 py-3 bg-[#F3EEE6]">
                     <span className="text-[13px] text-[#5B6B73] leading-tight">Décrivez votre projet,<br />on vous rappelle.</span>
                     <span className="shrink-0 rounded-lg bg-encre text-citron text-sm font-bold px-3.5 py-2.5">Décrire mon projet</span>
