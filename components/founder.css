@@ -1,0 +1,44 @@
+/* Section fondateur (#pour-qui) */
+
+/* Lumière d'eau discrète derrière la photo, pour la détacher du fond sombre */
+.founder-section {
+  background-image:
+    radial-gradient(45% 55% at 18% 30%, rgba(63, 198, 217, 0.10), transparent 70%),
+    radial-gradient(40% 40% at 90% 90%, rgba(127, 220, 232, 0.05), transparent 70%);
+}
+
+/* La photo : cadre arrondi, filet clair et halo turquoise.
+   Le fond de la photo est bleu nuit, comme la section : le filet évite l'effet « rond vide ». */
+.founder-photo {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #123A4D;
+  box-shadow:
+    0 0 0 1px rgba(127, 220, 232, 0.28),
+    0 24px 60px -18px rgba(63, 198, 217, 0.35),
+    0 18px 40px rgba(0, 0, 0, 0.35);
+}
+@media (min-width: 1024px) {
+  .founder-photo { border-radius: 28px; }
+}
+
+/* Recadrage resserré sur le visage (la photo d'origine est carrée et large) */
+.founder-photo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+  transform: scale(1.12);
+  transform-origin: 50% 40%;
+}
+
+/* Léger dégradé en bas de photo : donne du volume sans masquer le visage */
+.founder-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 29, 41, 0) 65%, rgba(7, 29, 41, 0.35) 100%);
+  pointer-events: none;
+}

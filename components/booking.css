@@ -1,0 +1,153 @@
+/* Réservation (#diagnostic) et visuel du secteur */
+
+.booking-section {
+  background-image:
+    radial-gradient(55% 45% at 85% 12%, rgba(63, 198, 217, 0.12), transparent 70%),
+    radial-gradient(45% 40% at 8% 60%, rgba(127, 220, 232, 0.06), transparent 70%);
+}
+
+/* ---------- Le secteur ---------- */
+.sector {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+.sector-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Éléments qui bougent : origine au centre de chaque forme */
+.sector-ring, .sector-ripple, .sector-zone, .sector-halo, .sector-comp, .sector-radius {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Le cercle : tracé au trait (longueur normalisée à 1) */
+.sector-ring {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  transform: rotate(-90deg); /* le trait part du haut */
+}
+.sector.is-on .sector-ring {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--trace) cubic-bezier(.37, 0, .63, 1) var(--trace-delay);
+}
+
+/* L'onde de départ */
+.sector-ripple { opacity: 0; transform: scale(.08); }
+.sector.is-on .sector-ripple { animation: sector-ripple 1.5s cubic-bezier(.22, .8, .3, 1) both; }
+.sector.is-on .sector-ripple-2 { animation-delay: .28s; }
+@keyframes sector-ripple {
+  0% { opacity: .75; transform: scale(.08); }
+  100% { opacity: 0; transform: scale(1.06); }
+}
+
+/* La zone se remplit à la fin du tracé */
+.sector-zone { opacity: 0; transform: scale(.96); }
+.sector.is-on .sector-zone {
+  opacity: 1;
+  transform: none;
+  transition: opacity .9s ease 1.65s, transform 1.1s cubic-bezier(.22, .8, .3, 1) 1.65s;
+}
+
+/* Les autres piscinistes */
+.sector-comp { fill: #A9C1CB; }
+.sector-comp-out { opacity: .5; }
+.sector-comp-in { opacity: .85; }
+.sector.is-on .sector-comp-out {
+  opacity: .3;
+  transition: opacity 1s ease 1.4s;
+}
+.sector.is-on .sector-comp-in {
+  opacity: .3;
+  transform: translate(var(--tx), var(--ty)) scale(.85);
+  transition:
+    transform .95s cubic-bezier(.22, .8, .3, 1) var(--d),
+    opacity .95s ease var(--d);
+}
+
+/* Le rayon et les étiquettes arrivent en dernier */
+.sector-radius { opacity: 0; transform: scaleX(0); transform-origin: left center; }
+.sector.is-on .sector-radius {
+  opacity: .9;
+  transform: none;
+  transition: transform .7s cubic-bezier(.22, .8, .3, 1) 1.9s, opacity .3s ease 1.9s;
+}
+
+/* Votre entreprise : un halo qui respire, une fois le secteur réservé */
+.sector-halo { opacity: .22; }
+.sector.is-on .sector-halo { animation: sector-breathe 3.2s ease-in-out 2.4s infinite; }
+@keyframes sector-breathe {
+  0%, 100% { opacity: .22; transform: scale(1); }
+  50% { opacity: .06; transform: scale(1.7); }
+}
+
+/* Étiquettes */
+.sector-label {
+  position: absolute;
+  transform: translate(-50%, 0);
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 1;
+  pointer-events: none;
+}
+.sector-label-you {
+  left: 50%;
+  top: calc(50% + 16px);
+  font-weight: 700;
+  color: #F3EEE6;
+  text-shadow: 0 1px 8px rgba(7, 29, 41, .9);
+}
+.sector-label-km {
+  left: 62.5%;
+  top: calc(50% - 22px);
+  font-weight: 700;
+  color: #3FC6D9;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+}
+.sector.is-on .sector-label-km {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  transition: opacity .4s ease 2.15s, transform .5s cubic-bezier(.22, .8, .3, 1) 2.15s;
+}
+.sector-label-tag {
+  left: 50%;
+  top: 16.667%; /* haut du cercle : (150 - 100) / 300 */
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #3FC6D9;
+  color: #0B2A3A;
+  font-weight: 800;
+  font-size: 12.5px;
+  letter-spacing: -.01em;
+  box-shadow: 0 8px 24px rgba(63, 198, 217, .28);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.9);
+}
+.sector.is-on .sector-label-tag {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  transition: opacity .4s ease 2.25s, transform .55s cubic-bezier(.34, 1.4, .5, 1) 2.25s;
+}
+
+/* Moins d'animations : on montre directement le secteur réservé */
+.sector.is-still *,
+.sector.is-still {
+  transition: none !important;
+  animation: none !important;
+}
+.sector.is-still .sector-ripple { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .sector *, .sector { transition-delay: 0s !important; animation: none !important; }
+  .sector-ripple { opacity: 0 !important; }
+}
+
+/* ---------- L'agenda ---------- */
+.booking-agenda {
+  box-shadow: 0 0 0 1px rgba(127, 220, 232, .18), 0 30px 80px rgba(3, 18, 28, .45);
+}

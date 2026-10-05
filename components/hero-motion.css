@@ -1,0 +1,62 @@
+/* Hero : un seul moment orchestré au chargement (< 1,1 s).
+   Le titre remonte mot à mot comme d'une eau qui se calme (flou léger qui s'efface),
+   puis le sous-titre, puis les boutons, puis la vidéo se pose. */
+
+.hero-w {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, .38em, 0);
+  filter: blur(6px);
+  animation: hero-rise .56s cubic-bezier(.2, .7, .2, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 32ms);
+}
+@keyframes hero-rise {
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+.hero-in {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  animation: hero-in .48s cubic-bezier(.2, .7, .2, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes hero-in {
+  to { opacity: 1; transform: none; }
+}
+
+/* La vidéo se pose : elle descend un peu, se stabilise, son ombre apparaît dessous */
+.hero-land {
+  position: relative;
+  opacity: 0;
+  transform: translate3d(0, 26px, 0) scale(.965);
+  animation: hero-land .6s cubic-bezier(.18, 1.12, .32, 1) forwards;
+  animation-delay: 470ms;
+}
+.hero-land::before {
+  content: "";
+  position: absolute;
+  left: 8%; right: 8%; bottom: -18px; height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(3, 14, 21, .7), transparent);
+  filter: blur(6px);
+  opacity: 0;
+  z-index: -1;
+  animation: hero-shadow .5s ease-out forwards;
+  animation-delay: 640ms;
+}
+@keyframes hero-land {
+  to { opacity: 1; transform: none; }
+}
+@keyframes hero-shadow {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-w, .hero-in, .hero-land {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .hero-land::before { animation: none !important; opacity: 1 !important; }
+}

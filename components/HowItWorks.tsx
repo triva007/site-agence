@@ -1,151 +1,220 @@
-import Reveal from './Reveal';
-import SectionHeading from './SectionHeading';
-import React from 'react';
-import { CalendarCheck } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import HowItWorksDemande from './howitworks-demande';
+import './howitworks-motion.css';
+
+type Step = 1 | 2 | 3 | 4;
+type Mode = 'desk' | 'mob' | 'static';
+
+const STEPS = [
+  {
+    title: 'Vos réalisations, à votre nom',
+    text: 'Des publicités avec vos photos de chantiers et le nom de votre entreprise, diffusées sur Facebook et Instagram uniquement dans la zone où vous travaillez.',
+  },
+  {
+    title: '4 questions avant de vous contacter',
+    text: 'Où se situe le projet, quel type de piscine, quel budget, pour quand. Les projets hors de vos critères sont écartés avant de vous parvenir.',
+  },
+  {
+    title: 'La demande arrive sur votre téléphone',
+    text: 'Vous recevez les coordonnées et les réponses du propriétaire. Il a fait la démarche : il attend votre appel.',
+  },
+  {
+    title: 'Vous rappelez, vous vendez',
+    text: 'Vous rappelez sous 48 h, vous faites la visite et le devis. Chaque semaine, on fait le point avec vous sur les demandes, et on ajuste.',
+  },
+];
+
+// Téléphone : durée d'affichage de chaque état pendant la lecture automatique (ms)
+const HOLD = [1500, 2500, 2000];
+
+const getMode = (): Mode => {
+  if (typeof window === 'undefined') return 'mob';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'static';
+  return window.matchMedia('(min-width: 1024px)').matches ? 'desk' : 'mob';
+};
 
 export const HowItWorks: React.FC = () => {
-  const steps = [
-    {
-      num: '1',
-      title: 'Vos réalisations, à votre nom',
-      text: 'On crée des publicités avec vos photos de chantiers et le nom de votre entreprise. Elles sont diffusées sur Facebook et Instagram, uniquement dans la zone où vous travaillez.'
-    },
-    {
-      num: '2',
-      title: '4 questions avant de vous contacter',
-      text: 'Où se situe le projet ? Quel type de piscine ? Quel budget ? Pour quand ? Les projets hors de vos critères sont écartés avant d\'arriver jusqu\'à vous.'
-    },
-    {
-      num: '3',
-      title: 'La demande arrive sur votre téléphone',
-      text: 'Vous recevez les coordonnées et les réponses du propriétaire. Il a fait la démarche : il attend votre appel.'
-    },
-    {
-      num: '4',
-      title: 'Vous rappelez, vous vendez',
-      text: 'Vous rappelez sous 48 h, vous faites la visite et le devis. On regarde avec vous chaque semaine ce que deviennent les demandes, et on ajuste.'
-    },
-  ];
+  const [mode, setMode] = useState<Mode>(getMode);
+  const [step, setStep] = useState<Step>(() => (getMode() === 'static' ? 4 : 1));
+  const [phase, setPhase] = useState<'idle' | 'playing' | 'done'>('idle');
+
+  const stageRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const stepRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const timers = useRef<number[]>([]);
+
+  const clearTimers = () => { timers.current.forEach((t) => window.clearTimeout(t)); timers.current = []; };
+
+  // Lecture automatique (téléphone) : pub, questions, notification, appel réservé
+  const play = useCallback(() => {
+    clearTimers();
+    setStep(1);
+    setPhase('playing');
+    let at = 0;
+    ([2, 3, 4] as Step[]).forEach((s, i) => {
+      at += HOLD[i];
+      timers.current.push(window.setTimeout(() => {
+        setStep(s);
+        if (s === 4) setPhase('done');
+      }, at));
+    });
+  }, []);
+
+  // Suivre les changements de largeur ou de préférence d'animation
+  useEffect(() => {
+    const mqs = [window.matchMedia('(min-width: 1024px)'), window.matchMedia('(prefers-reduced-motion: reduce)')];
+    const onChange = () => {
+      const m = getMode();
+      clearTimers();
+      setMode(m);
+      setPhase(m === 'mob' ? 'idle' : 'done');
+      setStep(m === 'static' ? 4 : 1);
+    };
+    mqs.forEach((mq) => mq.addEventListener('change', onChange));
+    return () => { mqs.forEach((mq) => mq.removeEventListener('change', onChange)); clearTimers(); };
+  }, []);
+
+  // Ordinateur : l'étape dont le haut a passé 60 % de la hauteur d'écran est l'étape active.
+  // L'objet reste collé à droite (position: sticky). Si un parent empêche le sticky
+  // (ex. overflow sur <body>), on le fait suivre par translation, calculée au défilement.
+  useEffect(() => {
+    if (mode !== 'desk') return;
+    const stage = stageRef.current;
+    const inner = innerRef.current;
+    let follow = false;
+    if (stage && inner) {
+      for (let el = stage.parentElement; el && el !== document.documentElement; el = el.parentElement) {
+        const oy = getComputedStyle(el).overflowY;
+        if (oy !== 'visible' && oy !== 'clip') { follow = true; break; }
+      }
+      inner.classList.toggle('is-follow', follow);
+    }
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const vh = window.innerHeight;
+      const line = vh * 0.6;
+      let active: Step = 1;
+      stepRefs.current.forEach((el, i) => {
+        if (el && el.getBoundingClientRect().top < line) active = (i + 1) as Step;
+      });
+      setStep(active);
+      if (follow && stage && inner) {
+        const top = Math.max(100, vh / 2 - 256);
+        const r = stage.getBoundingClientRect();
+        const max = Math.max(0, r.height - inner.offsetHeight);
+        const y = Math.min(max, Math.max(0, top - r.top));
+        inner.style.transform = `translate3d(0, ${Math.round(y)}px, 0)`;
+      }
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+      if (inner) { inner.style.transform = ''; inner.classList.remove('is-follow'); }
+    };
+  }, [mode]);
+
+  // Téléphone : la séquence se joue une fois, quand l'objet est bien visible
+  useEffect(() => {
+    if (mode !== 'mob' || phase !== 'idle') return;
+    const el = stageRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { io.disconnect(); play(); } },
+      { threshold: 0.6 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [mode, phase, play]);
+
+  const pick = (s: Step) => { clearTimers(); setPhase('done'); setStep(s); };
 
   return (
-    <section id="comment-ca-marche" className="py-20 sm:py-28 lg:py-32 bg-encre text-texteSombre bg-grid-citron relative">
+    <section id="comment-ca-marche" className="relative py-14 sm:py-20 lg:py-24 bg-encre text-texteSombre bg-grid-citron overflow-x-clip">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
-        
-        {/* Section Header */}
-        <SectionHeading eyebrow="Comment ça marche" tone="dark">
-          Comment une demande arrive sur votre téléphone, en{' '}
-          <span className="font-serif italic font-normal text-citron">4 étapes</span>.
-        </SectionHeading>
+        <div className="hw-grid">
 
-        {/* Grid: 4 Steps on left, Phone Mockup on right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          
-          {/* Steps column (7 cols) */}
-          <div className="lg:col-span-7 relative">
-            
-            {/* Vertical connector line */}
-            <div 
-              className="absolute left-6 top-8 bottom-8 w-[2px] bg-citron/25 hidden sm:block" 
-              aria-hidden="true" 
-            />
+          <h2 className="hw-head text-[31px] sm:text-[38px] lg:text-[46px] font-extrabold leading-[1.1] tracking-[-0.03em] text-texteSombre max-w-[18ch]">
+            Comment une demande arrive sur votre téléphone.
+          </h2>
 
-            <div className="space-y-10 sm:space-y-12">
-              {steps.map((step, i) => (
-                <Reveal as="div" key={step.num} delay={i * 110} variant="left" className="relative flex items-start gap-5 sm:gap-6 group">
-                  {/* Step circle */}
-                  <div className="w-12 h-12 rounded-full bg-citron text-encre flex items-center justify-center font-extrabold text-lg shrink-0 shadow-md relative z-10 transition-transform group-hover:scale-110">
-                    {step.num}
+          {/* L'objet : la demande qui se construit */}
+          <div className="hw-stage mt-7 lg:mt-0" ref={stageRef}>
+            <div className="hw-stage-inner" ref={innerRef}>
+              <HowItWorksDemande step={step} />
+
+              {/* Téléphone : où en est la séquence, et revoir */}
+              {mode === 'mob' && (
+                <div className="mx-auto mt-2.5 w-full max-w-[304px]">
+                  <div className="flex gap-1.5">
+                    {([1, 2, 3, 4] as Step[]).map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => pick(s)}
+                        aria-label={`Voir l'étape ${s} : ${STEPS[s - 1].title}`}
+                        className={`hw-seg ${phase !== 'idle' && s < step ? 'is-past' : ''} ${phase !== 'idle' && s === step ? 'is-now' : ''} ${phase === 'done' || s === 4 ? 'is-still' : ''}`}
+                        style={{ '--hw-dur': `${HOLD[Math.min(step, 3) - 1]}ms` } as React.CSSProperties}
+                      >
+                        <span />
+                      </button>
+                    ))}
                   </div>
-
-                  {/* Step content */}
-                  <div className="pt-1">
-                    <h3 className="text-xl sm:text-2xl font-bold text-texteSombre tracking-tight mb-2">
-                      {step.title}
-                    </h3>
-                    <p className="text-base sm:text-lg text-texteSombreSec leading-relaxed">
-                      {step.text}
+                  <div className="mt-0.5 flex items-start justify-between gap-3 text-[13.5px] leading-snug">
+                    <p className="hw-caption text-texteSombre" aria-live="polite">
+                      <span className="font-bold text-citron">{step}.</span> {STEPS[step - 1].title}
                     </p>
+                    {phase === 'done' ? (
+                      <button type="button" onClick={play} className="shrink-0 font-semibold text-citron underline underline-offset-4 decoration-citron/40">
+                        Revoir
+                      </button>
+                    ) : null}
                   </div>
-                </Reveal>
-              ))}
-            </div>
+                </div>
+              )}
 
+              <p className={`mt-2 text-[13px] text-texteSombreSec ${mode === 'mob' ? 'mx-auto max-w-[304px]' : 'text-center'}`}>
+                Exemple illustratif
+              </p>
+            </div>
           </div>
 
-          {/* Phone Mockup column (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col items-center">
-            
-            <div className="float-soft w-full max-w-[340px] sm:max-w-[360px] bg-encreDeep rounded-[36px] p-3 border-2 border-citron/30 shadow-2xl relative">
-              
-              {/* Phone speaker notch */}
-              <div className="w-24 h-4 bg-encre rounded-full mx-auto mb-3" />
-
-              {/* Écran : Fiche de la demande */}
-              <div className="bg-blanc text-texteClair rounded-[26px] p-5 sm:p-6 shadow-inner">
-                
-                {/* Notification header */}
-                <div className="flex items-center justify-between border-b border-bordureClair pb-3 mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-xs font-bold text-texteClairSec uppercase tracking-wider">
-                      Nouvelle demande
-                    </span>
+          {/* Les 4 étapes */}
+          <div className={`hw-list hw-steps mt-9 lg:mt-14 ${mode === 'desk' ? 'is-sync' : ''}`}>
+            <ol>
+            {STEPS.map((s, i) => {
+              const n = (i + 1) as Step;
+              const reached = mode === 'static' || n <= step;
+              const active = mode !== 'static' && n === step;
+              const passed = mode === 'static' || n < step;
+              return (
+                <li
+                  key={s.title}
+                  ref={(el) => { stepRefs.current[i] = el; }}
+                  className={`hw-step ${reached ? 'is-reached' : ''} ${active ? 'is-active' : ''} ${passed ? 'is-passed' : ''} ${i < STEPS.length - 1 ? 'pb-6 lg:pb-0' : ''}`}
+                  aria-current={active ? 'step' : undefined}
+                >
+                  <span className="hw-num" aria-hidden="true">{n}</span>
+                  <div className="pt-1 max-w-[34rem]">
+                    <h3 className="text-[18.5px] sm:text-[21px] lg:text-[24px] font-bold tracking-tight leading-snug text-texteSombre">
+                      <span className="sr-only">Étape {n} : </span>{s.title}
+                    </h3>
+                    <p className="mt-1.5 text-[16px] lg:text-[17px] leading-relaxed text-texteSombreSec">
+                      {s.text}
+                    </p>
                   </div>
-                  <span className="text-[11px] text-texteClairSec">Il y a 4 min</span>
-                </div>
-
-                {/* Prospect Name */}
-                <h4 className="text-2xl font-extrabold text-texteClair tracking-tight mb-4">
-                  Claire D.
-                </h4>
-
-                {/* Data Rows */}
-                <div className="space-y-2.5 text-sm mb-5">
-                  <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                    <span className="text-texteClairSec font-medium">Secteur :</span>
-                    <span className="font-bold text-texteClair">à 15 km</span>
-                  </div>
-
-                  <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                    <span className="text-texteClairSec font-medium">Projet :</span>
-                    <span className="font-bold text-texteClair">piscine 8 × 4</span>
-                  </div>
-
-                  <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                    <span className="text-texteClairSec font-medium">Budget annoncé :</span>
-                    <span className="font-bold text-texteClair">35 000 à 45 000 €</span>
-                  </div>
-
-                  <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                    <span className="text-texteClairSec font-medium">Démarrage souhaité :</span>
-                    <span className="font-bold text-texteClair">dans 3 à 6 mois</span>
-                  </div>
-
-                  <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                    <span className="text-texteClairSec font-medium">Statut déclaré :</span>
-                    <span className="font-bold text-texteClair">propriétaire</span>
-                  </div>
-                </div>
-
-                {/* Citron Appointment Pill */}
-                <div className="bg-citron text-encre rounded-full py-2.5 px-4 text-sm font-extrabold flex items-center justify-center gap-2 shadow-xs">
-                  <CalendarCheck size={14} className="stroke-[2.5]" />
-                  <span>Appel réservé · mardi 17 h 30</span>
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* Disclaimer under phone */}
-            <p className="mt-4 text-sm text-texteSombreSec text-center font-medium">
-              Exemple illustratif
-            </p>
-
+                </li>
+              );
+            })}
+            </ol>
           </div>
 
         </div>
-
       </div>
     </section>
   );

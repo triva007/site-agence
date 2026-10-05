@@ -3,16 +3,10 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import TheProblem from './components/TheProblem';
 import HowItWorks from './components/HowItWorks';
-import HonestTalk from './components/HonestTalk';
-import ComparisonTable from './components/ComparisonTable';
 import OfferGuarantee from './components/OfferGuarantee';
-import QualifiedLead from './components/QualifiedLead';
-import AudienceFit from './components/AudienceFit';
 import FounderAaron from './components/FounderAaron';
-import StepByStep from './components/StepByStep';
 import BookingSection from './components/BookingSection';
 import FAQSection from './components/FAQSection';
-import FinalCall from './components/FinalCall';
 import Footer from './components/Footer';
 import TestimonialsHidden from './components/TestimonialsHidden';
 import LegalNotice from './components/LegalNotice';
@@ -58,19 +52,14 @@ export const App: React.FC = () => {
       <Header />
 
       <main>
-        <Hero />
-        <TheProblem />
-        <HowItWorks />
-        <OfferGuarantee />
-        <QualifiedLead />
-        <HonestTalk />
-        <ComparisonTable />
-        <AudienceFit />
-        <FounderAaron />
-        <FAQSection />
-        <StepByStep />
-        <BookingSection />
-        <FinalCall />
+        {/* Structure courte : 7 sections, une idée chacune */}
+        <Hero />            {/* 1. promesse + vidéo */}
+        <TheProblem />      {/* 2. le constat */}
+        <HowItWorks />      {/* 3. comment une demande arrive (la demande se construit au défilement) */}
+        <OfferGuarantee />  {/* 4. le mois test : facturation, garantie, ce qu'on ne promet pas */}
+        <FounderAaron />    {/* 5. un seul interlocuteur + pour qui c'est fait */}
+        <FAQSection />      {/* 6. les questions, dont la différence avec les plateformes */}
+        <BookingSection />  {/* 7. réservation : votre secteur est-il libre ? */}
         {/* Section Témoignages masquée en attente de vrais retours clients */}
         <TestimonialsHidden />
       </main>

@@ -1,0 +1,82 @@
+/* Questions (#faq) : accordéon à filets, une question ouverte à la fois */
+
+/* La compensation de défilement est faite à la main (voir FAQSection) :
+   on coupe l'ancrage automatique du navigateur pour ne pas compenser deux fois. */
+.faq-section { overflow-anchor: none; }
+
+.faq-item { position: relative; }
+
+/* Filet turquoise qui se trace le long de la question ouverte */
+.faq-item::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  border-radius: 2px;
+  background: #0B6E7D;
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  transition: transform .45s cubic-bezier(.22, .8, .3, 1);
+}
+.faq-item.is-open::before { transform: scaleY(1); }
+
+.faq-q { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.faq-q > span:first-child { transition: color .25s ease; }
+@media (hover: hover) {
+  .faq-q:hover > span:first-child { color: #0B6E7D; }
+  .faq-q:hover .faq-icon { border-color: #0B6E7D; }
+}
+
+/* Plus qui devient moins */
+.faq-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid #D5CAB8;
+  background: rgba(255, 255, 255, .55);
+  transition: background-color .3s ease, border-color .3s ease, transform .45s cubic-bezier(.22, .8, .3, 1);
+}
+.faq-icon-h, .faq-icon-v {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 2px;
+  border-radius: 2px;
+  background: #0B6E7D;
+  transform: translate(-50%, -50%);
+  transition: transform .45s cubic-bezier(.22, .8, .3, 1), background-color .3s ease;
+}
+.faq-icon-v { transform: translate(-50%, -50%) rotate(90deg); }
+.is-open .faq-icon { background: #0B6E7D; border-color: #0B6E7D; transform: rotate(180deg); }
+.is-open .faq-icon-h, .is-open .faq-icon-v { background: #FFFFFF; }
+.is-open .faq-icon-v { transform: translate(-50%, -50%) rotate(90deg) scaleX(0); }
+
+/* Ouverture fluide : la réponse se déplie, le texte arrive juste derrière */
+.faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .45s cubic-bezier(.22, .8, .3, 1);
+}
+.is-open .faq-a { grid-template-rows: 1fr; }
+.faq-a-inner { overflow: hidden; min-height: 0; }
+.faq-a-text {
+  margin: 0;
+  opacity: 0;
+  transform: translate3d(0, -6px, 0);
+  transition: opacity .25s ease, transform .45s cubic-bezier(.22, .8, .3, 1);
+}
+.is-open .faq-a-text {
+  opacity: 1;
+  transform: none;
+  transition: opacity .35s ease .1s, transform .45s cubic-bezier(.22, .8, .3, 1) .05s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::before, .faq-icon, .faq-icon-h, .faq-icon-v, .faq-a, .faq-a-text,
+  .is-open .faq-a-text { transition: none !important; }
+}

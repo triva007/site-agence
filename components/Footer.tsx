@@ -21,9 +21,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
   const navLinks = [
     { label: 'Comment ça marche', href: '#comment-ca-marche' },
-    { label: 'L\'offre & Garantie', href: '#offre' },
-    { label: 'Pour qui', href: '#pour-qui' },
-    { label: 'Questions fréquentes', href: '#faq' },
+    { label: 'Le mois test', href: '#offre' },
+    { label: 'Qui on est', href: '#pour-qui' },
+    { label: 'Questions', href: '#faq' },
     { label: 'Vérifier mon secteur', href: '#diagnostic' },
   ];
 
@@ -47,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Col 2: Navigation (3 cols) */}
           <div className="md:col-span-3 space-y-3">
-            <p className="text-xs font-bold uppercase tracking-widest text-citron mb-4">
+            <p className="text-sm font-semibold text-citron mb-4">
               Navigation
             </p>
             <ul className="space-y-2.5 text-sm">
@@ -66,7 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Col 3: Direct Contact (4 cols) */}
           <div className="md:col-span-4 space-y-3">
-            <p className="text-xs font-bold uppercase tracking-widest text-citron mb-4">
+            <p className="text-sm font-semibold text-citron mb-4">
               Contact direct
             </p>
             <div className="space-y-3 text-sm text-texteSombreSec">

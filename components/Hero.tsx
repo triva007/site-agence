@@ -1,8 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import WaterSurface from './WaterSurface';
 import AmbientVideo from './AmbientVideo';
-import { Check, MessageCircle, Play } from 'lucide-react';
+import { MessageCircle, Play } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
+import './hero-motion.css';
+
+// Titre découpé en mots pour la montée au chargement (l'ordre donne le délai)
+const TITLE_WORDS = ['Des', 'propriétaires', 'de', 'votre', 'secteur', 'qui', 'appellent'];
+
+const GARANTIES = [
+  'Un seul pisciniste par secteur',
+  'Sans engagement de durée',
+  'Aucun rendez-vous qualifié et tenu en 30 jours : mise en place remboursée',
+];
+
+const CheckMark: React.FC = () => (
+  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" className="shrink-0 mt-[3px] text-citron">
+    <path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 export const Hero: React.FC = () => {
   const [videoError, setVideoError] = useState(false);
@@ -22,16 +38,9 @@ export const Hero: React.FC = () => {
     }
   };
 
-  const assurances = [
-    '1 seul pisciniste par secteur',
-    'Budget pub sur votre propre compte',
-    'Aucun rendez-vous tenu en 30 jours : mise en place remboursée',
-    'Sans engagement de durée',
-  ];
-
   return (
-    <section className="relative isolate pt-32 pb-20 sm:pt-36 sm:pb-28 lg:pt-44 lg:pb-36 bg-encreDeep text-texteSombre overflow-hidden">
-      {/* Arrière-plan : eau animée en code, puis vidéo d'ambiance Omni par-dessus si elle existe */}
+    <section className="relative isolate pt-28 pb-14 sm:pt-32 sm:pb-20 lg:pt-32 lg:pb-20 bg-encreDeep text-texteSombre overflow-hidden">
+      {/* Arrière-plan : eau animée en code, puis vidéo d'ambiance par-dessus si elle existe */}
       <div className="absolute inset-0 -z-10">
         <WaterSurface />
         {/* Ordinateur : vidéo horizontale ; téléphone : vidéo verticale */}
@@ -44,41 +53,42 @@ export const Hero: React.FC = () => {
           <AmbientVideo src="/media/hero-mobile.mp4" className="opacity-50" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-encreDeep/90 via-encreDeep/75 to-encreDeep/30" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-encreDeep to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-encreDeep to-transparent" />
       </div>
-      <div className="max-w-7xl mx-auto px-5 sm:px-8">
-        
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
-          
-          {/* Left Column: Headline, subtext, actions, assurances (7 cols) */}
-          <div className="lg:col-span-7 flex flex-col items-start">
-            
-            {/* Tagline */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-bordureSombre bg-encreDeep/70 text-xs sm:text-sm font-semibold text-texteSombre mb-6">
-              <span className="w-2 h-2 rounded-full bg-citron animate-pulse" aria-hidden="true" />
-              <span>Pour les piscinistes · 1 seul pisciniste par secteur</span>
-            </div>
 
-            {/* H1 */}
-            <h1 className="text-[40px] sm:text-[48px] lg:text-[72px] xl:text-[80px] font-extrabold text-texteSombre leading-[1.08] tracking-[-0.03em] mb-6">
-              Des propriétaires de votre secteur qui appellent{' '}
-              <span className="font-serif italic font-normal text-citron">
-                votre entreprise
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+
+          {/* Promesse, accroche, boutons, garanties */}
+          <div className="lg:col-span-7 flex flex-col items-start">
+
+            <h1 className="text-[36px] sm:text-[48px] lg:text-[60px] xl:text-[66px] font-extrabold text-texteSombre leading-[1.06] tracking-[-0.03em]">
+              {TITLE_WORDS.map((w, i) => (
+                <React.Fragment key={i}>
+                  <span className="hero-w" style={{ '--i': i } as React.CSSProperties}>{w}</span>{' '}
+                </React.Fragment>
+              ))}
+              <span className="hero-w font-serif italic font-normal text-citron" style={{ '--i': 7 } as React.CSSProperties}>votre</span>{' '}
+              <span className="hero-w" style={{ '--i': 8 } as React.CSSProperties}>
+                <span className="font-serif italic font-normal text-citron">entreprise</span>.
               </span>
-              .
             </h1>
 
-            {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-texteSombreSec leading-relaxed font-normal max-w-2xl mb-8">
-              On diffuse vos réalisations sur Facebook et Instagram, à votre nom, auprès des propriétaires de votre secteur. Avant de vous contacter, chacun indique son projet, son budget et son délai. Vous rappelez, vous chiffrez, vous vendez.
+            <p
+              className="hero-in mt-4 sm:mt-6 text-[16.5px] sm:text-lg lg:text-[19px] text-texteSombreSec leading-[1.55] max-w-[34rem]"
+              style={{ '--d': '230ms' } as React.CSSProperties}
+            >
+              On diffuse vos réalisations sur Facebook et Instagram, à votre nom, auprès des propriétaires de votre secteur. Avant de vous contacter, chacun indique son projet, son budget et son délai.
             </p>
 
-            {/* Primary & Secondary Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-10">
+            <div
+              className="hero-in mt-6 sm:mt-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3.5 w-full sm:w-auto"
+              style={{ '--d': '340ms' } as React.CSSProperties}
+            >
               <a
                 href="#diagnostic"
                 data-cta="hero_reserver"
-                className="btn-shine h-14 px-8 rounded-full bg-citron text-encre text-base font-bold flex items-center justify-center tracking-tight hover:bg-white transition-all shadow-md active:scale-98"
+                className="btn-shine h-14 px-8 rounded-full bg-citron text-encre text-base font-bold whitespace-nowrap flex items-center justify-center tracking-tight hover:bg-white transition-colors shadow-md"
               >
                 Vérifier si mon secteur est libre
               </a>
@@ -88,97 +98,97 @@ export const Hero: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cta="hero_whatsapp"
-                className="h-14 px-7 rounded-full border border-bordureSombre hover:border-citron text-texteSombre hover:text-citron text-sm font-semibold flex items-center justify-center gap-2.5 transition-all"
+                className="h-14 px-5 sm:px-7 rounded-full border border-white/20 bg-encreDeep/40 hover:border-citron text-texteSombre hover:text-citron text-[14.5px] sm:text-[15px] font-semibold whitespace-nowrap flex items-center justify-center gap-2.5 transition-colors"
               >
-                <MessageCircle size={18} className="text-citron" />
+                <MessageCircle size={18} className="text-citron" aria-hidden="true" />
                 <span>Poser une question sur WhatsApp</span>
               </a>
             </div>
 
-            <p className="-mt-6 mb-8 text-sm text-texteSombreSec">
+            <p
+              className="hero-in mt-3 text-[13.5px] sm:text-sm text-texteSombreSec"
+              style={{ '--d': '380ms' } as React.CSSProperties}
+            >
               Appel de 30 minutes, gratuit. Les prix vous sont donnés pendant l'appel.
             </p>
 
-            {/* 4 Assurances with citron bullets */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full pt-6 border-t border-bordureSombre">
-              {assurances.map((item) => (
-                <div key={item} className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-citron text-encre flex items-center justify-center shrink-0 mt-0.5" aria-hidden="true">
-                    <Check size={12} strokeWidth={3} />
-                  </span>
-                  <span className="text-sm font-medium text-texteSombre leading-snug">
-                    {item}
-                  </span>
-                </div>
+            {/* Trois garanties, en liste simple */}
+            <ul
+              className="hero-in mt-7 sm:mt-9 w-full max-w-[38rem] grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5 pt-5 border-t border-white/10"
+              style={{ '--d': '430ms' } as React.CSSProperties}
+            >
+              {GARANTIES.map((g, i) => (
+                <li key={g} className={`flex items-start gap-2 text-[14px] leading-snug text-texteSombre/90 ${i === 2 ? 'sm:col-span-2' : ''}`}>
+                  <CheckMark />
+                  <span>{g}</span>
+                </li>
               ))}
-            </div>
-
+            </ul>
           </div>
 
-          {/* Right Column: Video presentation (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col items-center">
-            
-            <div className={`glass w-full relative rounded-[24px] overflow-hidden border border-white/15 p-2 flex flex-col ${videoError ? 'max-w-sm' : 'max-w-xl aspect-video'}`}>
-              
-              {!videoError ? (
-                <div className="relative w-full h-full flex items-center justify-center bg-encreDeep rounded-[18px] overflow-hidden">
-                  <video
-                    id="hero-presentation-video"
-                    controls
-                    playsInline
-                    preload="metadata"
-                    poster="/video/triva-presentation-poster.jpg"
-                    className="w-full h-full object-cover"
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                    onError={() => setVideoError(true)}
-                  >
-                    <source src="/video/triva-presentation.mp4" type="video/mp4" />
-                  </video>
+          {/* Vidéo de présentation */}
+          <div className="lg:col-span-5 w-full flex flex-col items-center lg:items-end">
+            <div className="hero-land w-full max-w-xl">
+              <div className="glass relative w-full aspect-video rounded-[20px] overflow-hidden border border-white/15 p-1.5">
 
-                  {/* Big citron play button overlay when not playing */}
-                  {!isPlaying && (
-                    <button
-                      onClick={handlePlayClick}
-                      className="absolute inset-0 flex items-center justify-center bg-encre/40 hover:bg-encre/20 transition-all group focus:outline-none"
-                      aria-label="Lancer la vidéo de présentation"
+                {!videoError ? (
+                  <div className="relative w-full h-full bg-encreDeep rounded-[15px] overflow-hidden">
+                    <video
+                      id="hero-presentation-video"
+                      controls
+                      playsInline
+                      preload="metadata"
+                      poster="/video/triva-presentation-poster.jpg"
+                      className="w-full h-full object-cover"
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
+                      onError={() => setVideoError(true)}
                     >
-                      <span className="w-20 h-20 rounded-full bg-citron text-encre flex items-center justify-center shadow-xl transition-transform group-hover:scale-110">
-                        <Play size={32} className="fill-encre ml-1" />
-                      </span>
-                    </button>
-                  )}
-                </div>
-              ) : (
-                /* Pas encore de vidéo : exemple de publicité diffusée au nom du pisciniste */
-                <div className="rounded-[18px] bg-white text-[#1c2b33] overflow-hidden">
-                  <div className="flex items-center gap-3 px-4 pt-4 pb-3">
-                    <span className="w-10 h-10 rounded-full bg-encre text-citron grid place-items-center text-sm font-extrabold">VE</span>
-                    <div className="leading-tight">
-                      <p className="text-[15px] font-bold">Votre entreprise de piscines</p>
-                      <p className="text-xs text-[#6b7a82]">Sponsorisé · votre secteur</p>
-                    </div>
-                  </div>
-                  <p className="px-4 pb-3 text-[15px] leading-snug">Un projet de piscine ? Découvrez nos réalisations près de chez vous.</p>
-                  <img src="/media/realisation-pub.jpg" alt="Exemple de visuel de publicité pour un pisciniste" className="w-full aspect-[4/3] object-cover" />
-                  <div className="flex items-center justify-between gap-3 px-4 py-3 bg-[#F3EEE6]">
-                    <span className="text-[13px] text-[#5B6B73] leading-tight">Décrivez votre projet,<br />on vous rappelle.</span>
-                    <span className="shrink-0 rounded-lg bg-encre text-citron text-sm font-bold px-3.5 py-2.5">Décrire mon projet</span>
-                  </div>
-                </div>
-              )}
+                      <source src="/video/triva-presentation.mp4" type="video/mp4" />
+                    </video>
 
+                    {/* Bouton de lecture tant que la vidéo n'a pas démarré */}
+                    {!isPlaying && (
+                      <button
+                        onClick={handlePlayClick}
+                        className="absolute inset-0 flex items-center justify-center bg-encre/25 hover:bg-encre/10 transition-colors group focus:outline-none"
+                        aria-label="Lancer la vidéo de présentation"
+                      >
+                        <span className="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-full bg-citron text-encre flex items-center justify-center shadow-xl transition-transform group-hover:scale-105">
+                          <Play size={28} className="fill-encre ml-1" />
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  /* Vidéo indisponible : exemple de publicité diffusée au nom du pisciniste, même cadre */
+                  <div className="relative w-full h-full rounded-[15px] overflow-hidden bg-white">
+                    <img
+                      src="/media/realisation-pub.jpg"
+                      alt="Exemple de visuel de publicité pour un pisciniste"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className="absolute left-2.5 top-2.5 flex items-center gap-2 rounded-xl bg-white/95 pl-1.5 pr-3 py-1.5 text-[#1c2b33] shadow-sm">
+                      <span className="w-7 h-7 rounded-full bg-encre text-citron grid place-items-center text-[11px] font-extrabold">VE</span>
+                      <span className="leading-tight">
+                        <span className="block text-[12.5px] font-bold">Votre entreprise de piscines</span>
+                        <span className="block text-[11px] text-[#6b7a82]">Sponsorisé</span>
+                      </span>
+                    </div>
+                    <span className="absolute right-2.5 bottom-2.5 rounded-lg bg-encre text-citron text-[12.5px] font-bold px-3 py-2">
+                      Décrire mon projet
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Legend below video */}
-            <p className="mt-3.5 text-sm text-texteSombreSec text-center font-medium">
-              {videoError ? 'Exemple de publicité diffusée à votre nom' : 'Triva Media en 40 secondes, chrono'}
+            <p className="hero-in mt-3 text-[13.5px] text-texteSombreSec text-center lg:text-right w-full max-w-xl" style={{ '--d': '700ms' } as React.CSSProperties}>
+              {videoError ? 'Exemple de publicité diffusée à votre nom' : 'Triva Media expliqué en 40 secondes'}
             </p>
-
           </div>
 
         </div>
-
       </div>
     </section>
   );

@@ -29,8 +29,8 @@ export const Header: React.FC = () => {
 
   const navLinks = [
     { label: 'Comment ça marche', href: '#comment-ca-marche' },
-    { label: 'L\'offre', href: '#offre' },
-    { label: 'Pour qui', href: '#pour-qui' },
+    { label: 'Le mois test', href: '#offre' },
+    { label: 'Qui on est', href: '#pour-qui' },
     { label: 'Questions', href: '#faq' },
   ];
 

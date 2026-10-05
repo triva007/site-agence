@@ -1,0 +1,81 @@
+/* ===== Le mois test : la frise des 30 jours =====
+   Un trait d'eau parcourt le mois au rythme du défilement. Chaque étape s'allume
+   quand le trait l'atteint ; au jour 30, la garantie s'allume à son tour.
+   Seuls transform et opacity bougent (le trait est mis à l'échelle, jamais redimensionné). */
+
+.ofr { position: relative; }
+
+.ofr-track {
+  position: absolute;
+  background: #DCCFBB;
+  border-radius: 2px;
+  pointer-events: none;
+  /* position et longueur posées par le script selon l'orientation */
+}
+.ofr-fill {
+  position: absolute; inset: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #0B6E7D, #3FC6D9);
+  transform-origin: top center;
+  transform: scaleY(0);
+  will-change: transform;
+}
+.ofr-tip {
+  position: absolute; left: 50%; top: 0;
+  width: 12px; height: 12px; margin: -6px 0 0 -6px;
+  border-radius: 999px;
+  background: #3FC6D9;
+  box-shadow: 0 0 0 5px rgba(63, 198, 217, .22), 0 0 18px rgba(63, 198, 217, .55);
+  opacity: 0;
+  transition: opacity .3s ease;
+  will-change: transform;
+}
+.ofr.is-moving .ofr-tip { opacity: 1; }
+
+@media (min-width: 1024px) {
+  .ofr-fill { background: linear-gradient(90deg, #0B6E7D, #3FC6D9); transform-origin: left center; transform: scaleX(0); }
+  .ofr-tip { left: 0; top: 50%; }
+}
+
+/* Point d'étape */
+.ofr-dot {
+  position: relative; z-index: 1;
+  width: 18px; height: 18px; border-radius: 999px;
+  background: #F3EEE6;
+  border: 2px solid #CDBFA9;
+  transition: background-color .35s ease, border-color .35s ease, transform .45s cubic-bezier(.3, 1.6, .5, 1);
+}
+.ofr-dot::after {
+  content: ""; position: absolute; inset: -2px; border-radius: 999px;
+  border: 2px solid #3FC6D9; opacity: 0; transform: scale(1);
+}
+.ofr-item.is-on .ofr-dot { background: #3FC6D9; border-color: #3FC6D9; transform: scale(1.12); }
+.ofr-item.is-on .ofr-dot::after { animation: ofr-ring .9s ease-out 1; }
+@keyframes ofr-ring {
+  0% { opacity: .9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(2.6); }
+}
+
+.ofr-when { color: #5B6B73; transition: color .35s ease; }
+.ofr-item.is-on .ofr-when { color: #0B6E7D; }
+
+/* La carte du jour 30 : la garantie s'allume quand le trait arrive au bout */
+.ofr-card {
+  border: 1px solid rgba(63, 198, 217, .22);
+  transition: border-color .5s ease, box-shadow .6s ease;
+}
+.ofr-item.is-on .ofr-card {
+  border-color: #3FC6D9;
+  box-shadow: 0 24px 60px rgba(11, 42, 58, .22), 0 0 0 4px rgba(63, 198, 217, .14);
+}
+.ofr-shield {
+  opacity: .35; transform: scale(.7);
+  transition: opacity .4s ease .15s, transform .55s cubic-bezier(.3, 1.6, .5, 1) .15s;
+}
+.ofr-item.is-on .ofr-shield { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ofr-fill { transform: none !important; }
+  .ofr-tip { display: none; }
+  .ofr-dot::after { display: none; }
+}

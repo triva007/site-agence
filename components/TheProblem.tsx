@@ -1,74 +1,92 @@
-import React from 'react';
-import Reveal from './Reveal';
-import SectionHeading from './SectionHeading';
+import React, { useEffect, useRef } from 'react';
+import './problem.css';
+
+/**
+ * Le constat : trois douleurs que le pisciniste reconnaît, en lecture rapide.
+ * Pas de cartes ni de numéros (ce ne sont pas des étapes) : une liste à filets.
+ * Mouvement : le filet se trace et la phrase clé se surligne quand la ligne arrive à l'écran.
+ */
+const PAINS = [
+  {
+    key: 'Un mois sous l’eau, puis plus rien.',
+    text: 'Le bouche-à-oreille ne se pilote pas : vous ne savez pas ce que vous ferez dans trois mois, et vos gars doivent tourner.',
+  },
+  {
+    key: 'La même demande, revendue à 4 ou 5 piscinistes.',
+    text: 'Sur les plateformes, le client compare les prix, et le chantier se perd pour 300 €.',
+  },
+  {
+    key: 'Des devis pour rien.',
+    text: 'Des soirées et des samedis à chiffrer pour des gens qui voulaient juste un prix, ou qui feront leur piscine dans trois ans.',
+  },
+];
 
 export const TheProblem: React.FC = () => {
-  const cards = [
-    {
-      title: 'Les montagnes russes',
-      text: 'Un mois sous l\'eau, puis plus rien. Le bouche-à-oreille ne se pilote pas : vous ne savez jamais ce que vous ferez dans trois mois, et vos gars doivent tourner.',
-      step: '01',
-      img: '/media/constat-carnet.jpg',
-      alt: 'Planning de chantiers rempli quelques semaines puis vide',
-    },
-    {
-      title: 'Les demandes partagées',
-      text: 'Les plateformes revendent la même demande à 4 ou 5 piscinistes. Le client compare les prix, et vous perdez un chantier pour 300 €.',
-      step: '02',
-      img: '/media/constat-telephone.jpg',
-      alt: 'Téléphone posé dans une camionnette devant un chantier de piscine',
-    },
-    {
-      title: 'Les devis pour rien',
-      text: 'Des soirées et des samedis à métrer et chiffrer pour des gens qui voulaient juste un prix, ou qui feront leur piscine dans trois ans.',
-      step: '03',
-      img: '/media/constat-devis.jpg',
-      alt: 'Bloc-notes de devis et mètre ruban posés dans un jardin',
-    },
-  ];
+  const listRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const items = Array.from(list.querySelectorAll<HTMLElement>('.pb-item'));
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      items.forEach((it) => it.classList.add('is-in'));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-in');
+            io.unobserve(e.target);
+          }
+        });
+      },
+      // la ligne se déclenche quand elle a franchi le bas de l'écran d'un bon cinquième
+      { threshold: 0.6, rootMargin: '0px 0px -18% 0px' }
+    );
+    items.forEach((it) => io.observe(it));
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <section className="py-20 sm:py-28 lg:py-32 bg-papier text-texteClair">
+    <section id="constat" className="py-16 lg:py-24 bg-papier text-texteClair">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
-        
-        <SectionHeading eyebrow="Le constat">
-          Le bouche-à-oreille fait votre réputation. Il ne remplit pas votre{' '}
-          <span className="font-serif italic font-normal text-vertProfond">carnet</span>.
-        </SectionHeading>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+          {/* Titre + une seule photo (ordinateur) : le carnet rempli à moitié */}
+          <div className="lg:col-span-5">
+            <h2 className="text-balance text-[30px] sm:text-[36px] lg:text-[46px] font-extrabold leading-[1.1] tracking-[-0.03em] text-texteClair">
+              <span className="block">Le bouche-à-oreille fait votre réputation.</span>
+              <span className="block text-vertProfond">Il ne remplit pas votre carnet.</span>
+            </h2>
+            <img
+              src="/media/constat-carnet.jpg"
+              alt="Planning de chantiers au mur, rempli sur quelques semaines puis vide"
+              loading="lazy"
+              width={900}
+              height={672}
+              className="hidden lg:block mt-10 w-full aspect-[16/10] object-cover object-left rounded-2xl"
+            />
+          </div>
 
-        {/* 3 Problem Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
-          {cards.map((card, i) => (
-            <Reveal
-              key={card.title}
-              delay={i * 110}
-              className="card bg-blanc rounded-[24px] overflow-hidden border border-bordureClair shadow-sm flex flex-col"
-            >
-              <div className="aspect-[16/10] overflow-hidden bg-encre">
-                <img src={card.img} alt={card.alt} loading="lazy" className="zoomable h-full w-full object-cover" />
-              </div>
-              <div className="p-6 sm:p-8">
-                <span className="text-xs font-bold text-texteClairSec tracking-wider uppercase mb-4 inline-block">
-                  {card.step}
-                </span>
-                <h3 className="text-xl sm:text-2xl font-bold text-texteClair tracking-tight mb-3">
-                  {card.title}
-                </h3>
-                <p className="text-base sm:text-lg text-texteClairSec leading-relaxed">
-                  {card.text}
-                </p>
-              </div>
-            </Reveal>
-          ))}
+          {/* Les trois douleurs, en liste à filets */}
+          <div className="lg:col-span-7 lg:pt-2">
+            <ul ref={listRef} className="max-w-[640px]">
+              {PAINS.map((p) => (
+                <li key={p.key} className="pb-item">
+                  <div className="pb-rule" aria-hidden="true" />
+                  <p className="py-5 lg:py-6 text-base sm:text-lg leading-relaxed text-texteClairSec">
+                    <strong className="pb-mark font-bold text-texteClair">{p.key}</strong>{' '}
+                    {p.text}
+                  </p>
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-2 lg:mt-4 pt-6 border-t-2 border-vertProfond max-w-[640px] text-lg sm:text-xl font-semibold leading-snug text-texteClair">
+              Il vous faut un canal à vous : des propriétaires de votre secteur qui vous contactent, vous.
+            </p>
+          </div>
         </div>
-
-        {/* Transition statement */}
-        <Reveal variant="left" className="max-w-3xl border-l-2 border-vertProfond pl-6 py-2">
-          <p className="text-lg sm:text-xl font-semibold text-texteClair leading-relaxed">
-            Il vous faut un canal à vous : des propriétaires de votre secteur qui découvrent vos réalisations et qui vous contactent, vous.
-          </p>
-        </Reveal>
-
       </div>
     </section>
   );
