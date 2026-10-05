@@ -129,17 +129,17 @@ export const Hero: React.FC = () => {
           {/* Vidéo de présentation */}
           <div className="lg:col-span-5 w-full flex flex-col items-center lg:items-end">
             <div className="hero-land w-full max-w-xl">
-              <div className="glass relative w-full aspect-video rounded-[20px] overflow-hidden border border-white/15 p-1.5">
+              <div className="glass relative w-full rounded-[20px] overflow-hidden border border-white/15 p-1 sm:p-1.5">
 
                 {!videoError ? (
-                  <div className="relative w-full h-full bg-encreDeep rounded-[15px] overflow-hidden">
+                  <div className="relative w-full aspect-video bg-encreDeep rounded-[15px] overflow-hidden">
                     <video
                       id="hero-presentation-video"
                       controls
                       playsInline
                       preload="metadata"
                       poster="/video/triva-presentation-poster.jpg"
-                      className="w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-contain"
                       onPlay={() => setIsPlaying(true)}
                       onPause={() => setIsPlaying(false)}
                       onError={() => setVideoError(true)}
@@ -162,7 +162,7 @@ export const Hero: React.FC = () => {
                   </div>
                 ) : (
                   /* Vidéo indisponible : exemple de publicité diffusée au nom du pisciniste, même cadre */
-                  <div className="relative w-full h-full rounded-[15px] overflow-hidden bg-white">
+                  <div className="relative w-full aspect-video rounded-[15px] overflow-hidden bg-white">
                     <img
                       src="/media/realisation-pub.jpg"
                       alt="Exemple de visuel de publicité pour un pisciniste"
