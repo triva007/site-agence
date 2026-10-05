@@ -68,7 +68,7 @@ export const FAQSection: React.FC = () => {
               Une autre question ?
             </p>
             <p className="text-xs sm:text-sm text-texteSombreSec">
-              Écrivez directement à Aaron sur WhatsApp.
+              Écrivez-nous sur WhatsApp, on répond nous-mêmes.
             </p>
           </div>
 

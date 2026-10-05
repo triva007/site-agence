@@ -23,7 +23,7 @@ export const AudienceFit: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <SectionHeading eyebrow="Qualification" tone="dark">
+        <SectionHeading eyebrow="On ne prend pas tout le monde" tone="dark">
           Pour qui c'est fait, et pour qui ça ne l'est{' '}
           <span className="font-serif italic font-normal text-citron">pas</span>.
         </SectionHeading>
@@ -35,7 +35,7 @@ export const AudienceFit: React.FC = () => {
           <Reveal variant="left" className="card card-dark bg-encreCard rounded-[24px] p-8 sm:p-10 border border-citron/25 shadow-md flex flex-col justify-between">
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-citron mb-3 inline-block">
-                Profils cibles
+                On travaille avec vous si
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-texteSombre tracking-tight mb-8">
                 C'est pour vous si
@@ -63,7 +63,7 @@ export const AudienceFit: React.FC = () => {
           <Reveal variant="right" delay={90} className="card card-dark bg-encreDeep rounded-[24px] p-8 sm:p-10 border border-bordureSombre shadow-sm flex flex-col justify-between">
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-texteSombreSec mb-3 inline-block">
-                Non éligible
+                On vous le dit franchement
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-texteSombreSec tracking-tight mb-8">
                 Ce n'est pas pour vous si
@@ -106,7 +106,7 @@ export const AudienceFit: React.FC = () => {
             data-cta="pourqui_verifier"
             className="h-12 px-7 rounded-full bg-citron text-encre text-sm font-bold flex items-center justify-center tracking-tight hover:bg-white transition-all shrink-0 active:scale-95"
           >
-            Vérifier mon secteur
+            Vérifier si mon secteur est libre
           </a>
         </div>
 

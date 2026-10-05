@@ -7,10 +7,10 @@ export const FounderAaron: React.FC = () => {
   const [imgError, setImgError] = useState(false);
 
   const pillars = [
-    'Ligne directe WhatsApp avec Aaron',
-    'Pas de jargon',
-    'Chiffres transparents',
-    'Exclusivité respectée'
+    'Ligne WhatsApp directe, pas de standard',
+    'Un point chaque semaine',
+    'Le compte publicitaire est à votre nom',
+    'Un seul pisciniste par secteur'
   ];
 
   return (
@@ -74,9 +74,9 @@ export const FounderAaron: React.FC = () => {
             </span>
 
             <h2 className="text-[32px] sm:text-[36px] lg:text-[52px] font-extrabold text-texteClair leading-[1.12] tracking-[-0.03em] mb-6">
-              Un seul interlocuteur :{' '}
+              Un seul interlocuteur,{' '}
               <span className="font-serif italic font-normal text-vertProfond">
-                moi
+                pas un service client
               </span>
               .
             </h2>
@@ -86,10 +86,10 @@ export const FounderAaron: React.FC = () => {
                 Votre temps est sur les chantiers : les équipes, les livraisons, les finitions. Vous n'avez ni le temps ni l'envie de gérer des publicités, ni de parler à trois chefs de projet différents.
               </p>
               <p>
-                Je travaille avec un petit nombre de piscinistes, un par secteur. Je rédige, je lance et je surveille chaque campagne moi-même. Quand vous m'écrivez, c'est moi qui réponds.
+                On travaille avec un petit nombre de piscinistes, un par secteur. Les publicités sont écrites, lancées et suivies en interne. Quand vous écrivez sur WhatsApp, c'est Aaron qui répond, pas un chargé de compte.
               </p>
               <p className="font-semibold text-texteClair">
-                Je ne vous promettrai pas de chantiers signés : ça, c'est votre métier. Je m'engage sur des demandes sérieuses, sur un suivi chaque semaine et sur des chiffres clairs.
+                On ne vous promettra pas de chantiers signés : ça, c'est votre métier. On s'engage sur des demandes dans vos critères, sur un point chaque semaine, et sur un compte publicitaire que vous regardez quand vous voulez.
               </p>
             </div>
 

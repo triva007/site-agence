@@ -37,7 +37,7 @@ export const FinalCall: React.FC = () => {
             className="btn-shine w-full sm:w-auto h-14 px-8 rounded-full bg-citron text-encre text-base font-bold flex items-center justify-center gap-2 tracking-tight hover:bg-white transition-all shadow-lg active:scale-98"
           >
             <Calendar size={18} />
-            <span>Réserver mon diagnostic (30 min)</span>
+            <span>Vérifier si mon secteur est libre</span>
           </a>
 
           <a
@@ -54,7 +54,7 @@ export const FinalCall: React.FC = () => {
 
         {/* Reassurance line */}
         <p className="text-sm text-texteSombreSec font-medium max-w-xl mx-auto">
-          1 pisciniste par secteur · Budget pub sur votre compte · Garantie 30 jours · Sans engagement de durée
+          1 pisciniste par secteur · Budget pub sur votre compte · Mise en place remboursée à 30 jours · Sans engagement de durée
         </p>
 
       </div>

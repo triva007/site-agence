@@ -6,22 +6,22 @@ import AmbientVideo from './AmbientVideo';
 export const StepByStep: React.FC = () => {
   const steps = [
     {
-      num: '1',
-      title: 'Le diagnostic (30 min)',
+      num: 'J1',
+      title: 'L’appel de 30 minutes',
       text: 'On regarde votre secteur, vos chantiers cibles et vos disponibilités. On vérifie que votre zone est libre.'
     },
     {
-      num: '2',
+      num: 'S1',
       title: 'La préparation',
       text: 'Vous nous envoyez vos photos et vos critères. On prépare les publicités et les questions. Vous validez tout avant la diffusion.'
     },
     {
-      num: '3',
+      num: 'S2',
       title: '30 jours de diffusion',
       text: 'Les demandes arrivent sur votre téléphone. Vous rappelez. On fait le point chaque semaine et on ajuste.'
     },
     {
-      num: '4',
+      num: 'J30',
       title: 'Le bilan',
       text: 'On regarde les mêmes chiffres : demandes, appels, devis, signés ou perdus. On continue, ou on s\'arrête.'
     },
@@ -33,7 +33,7 @@ export const StepByStep: React.FC = () => {
         
         {/* Section Header */}
 <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-16 sm:mb-20">
-                  <SectionHeading eyebrow="Processus" tone="dark" className="mb-0">
+                  <SectionHeading eyebrow="Le démarrage, semaine par semaine" tone="dark" className="mb-0">
             Comment on{' '}
             <span className="font-serif italic font-normal text-citron">démarre</span>.
           </SectionHeading>
@@ -45,7 +45,6 @@ export const StepByStep: React.FC = () => {
               <img src="/media/chantier.jpg" alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
               <AmbientVideo src="/media/chantier.mp4" />
             </div>
-            <figcaption className="absolute bottom-3 left-0 right-0 text-center text-[11px] uppercase tracking-[0.18em] text-white/70">Images d’ambiance</figcaption>
           </figure>
         </div>
 

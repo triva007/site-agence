@@ -33,7 +33,7 @@ export const HowItWorks: React.FC = () => {
         
         {/* Section Header */}
         <SectionHeading eyebrow="Comment ça marche" tone="dark">
-          De votre piscine à son projet, en{' '}
+          Comment une demande arrive sur votre téléphone, en{' '}
           <span className="font-serif italic font-normal text-citron">4 étapes</span>.
         </SectionHeading>
 

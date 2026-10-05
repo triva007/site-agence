@@ -13,7 +13,7 @@ export const ComparisonTable: React.FC = () => {
     },
     {
       label: 'Mise en concurrence',
-      triva: 'Réduite : il vous contacte avant d’avoir comparé',
+      triva: 'Il vous appelle avant d’avoir demandé quatre devis',
       plateformes: 'Forte, guerre des prix',
       boucheAOreille: 'Faible',
       siteWeb: 'Il compare plusieurs sites',
@@ -34,7 +34,7 @@ export const ComparisonTable: React.FC = () => {
     },
     {
       label: 'Prévisible',
-      triva: 'Pilotable : on accélère ou on ralentit',
+      triva: 'Vous dites stop ou plus fort, on ajuste la semaine suivante',
       plateformes: 'Variable',
       boucheAOreille: 'Non',
       siteWeb: 'Non, il faut qu\'on vous cherche',
@@ -53,9 +53,9 @@ export const ComparisonTable: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <SectionHeading eyebrow="Comparatif clair" tone="light">
-          Pourquoi ce modèle est{' '}
-          <span className="font-serif italic font-normal text-vertProfond">différent</span>.
+        <SectionHeading eyebrow="Face à ce que vous avez déjà" tone="light">
+          Plateformes, bouche-à-oreille, site internet, et{' '}
+          <span className="font-serif italic font-normal text-vertProfond">nous</span>.
         </SectionHeading>
 
         {/* Desktop Table View */}

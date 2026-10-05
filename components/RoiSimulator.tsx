@@ -198,7 +198,7 @@ export const RoiSimulator: React.FC = () => {
               data-cta="simulator_verifier"
               className="h-14 px-8 rounded-full bg-blanc text-encre text-base font-bold flex items-center justify-center tracking-tight hover:bg-citron transition-all shadow-md active:scale-98"
             >
-              Vérifier le potentiel de mon secteur
+              Vérifier si mon secteur est libre
             </a>
 
           </div>

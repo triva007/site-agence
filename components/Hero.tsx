@@ -25,7 +25,7 @@ export const Hero: React.FC = () => {
   const assurances = [
     '1 seul pisciniste par secteur',
     'Budget pub sur votre propre compte',
-    'Mise en place remboursée si aucun rendez-vous qualifié et tenu en 30 jours de diffusion',
+    'Aucun rendez-vous tenu en 30 jours : mise en place remboursée',
     'Sans engagement de durée',
   ];
 
@@ -61,9 +61,9 @@ export const Hero: React.FC = () => {
 
             {/* H1 */}
             <h1 className="text-[40px] sm:text-[48px] lg:text-[72px] xl:text-[80px] font-extrabold text-texteSombre leading-[1.08] tracking-[-0.03em] mb-6">
-              Remplissez votre carnet avec des projets de piscine{' '}
+              Des propriétaires de votre secteur qui appellent{' '}
               <span className="font-serif italic font-normal text-citron">
-                sérieux
+                votre entreprise
               </span>
               .
             </h1>
@@ -96,7 +96,7 @@ export const Hero: React.FC = () => {
             </div>
 
             <p className="-mt-6 mb-8 text-sm text-texteSombreSec">
-              Appel gratuit de 30 min avec Aaron. Sans engagement.
+              Appel de 30 minutes, gratuit. Les prix vous sont donnés pendant l'appel.
             </p>
 
             {/* 4 Assurances with citron bullets */}

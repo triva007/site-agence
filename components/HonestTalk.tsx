@@ -27,7 +27,7 @@ export const HonestTalk: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <SectionHeading eyebrow="Transparence totale" tone="dark">
+        <SectionHeading eyebrow="Ce qu'on ne vous promet pas" tone="dark">
           Pas de belles promesses. Voici ce qui se passe{' '}
           <span className="font-serif italic font-normal text-citron">vraiment</span>.
         </SectionHeading>

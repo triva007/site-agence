@@ -6,21 +6,22 @@ import { CONTACT_INFO } from '../constants';
 // Couleurs de l'agenda alignées sur le site (appliquées par Calendly si l'offre le permet)
 const CALENDLY_EMBED =
   CONTACT_INFO.calendlyUrl +
-  '&hide_landing_page_details=1&primary_color=0b6e7d&text_color=0b2a3a&background_color=ffffff';
+  '&hide_landing_page_details=1&hide_gdpr_banner=1&primary_color=0b6e7d&text_color=0b2a3a&background_color=ffffff';
 
 export const BookingSection: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const steps = [
-    { n: '1', t: 'Choisissez un jour et une heure', d: 'Les créneaux affichés sont ceux d’Aaron, en direct.' },
+    { n: '1', t: 'Choisissez un jour et une heure', d: 'Ce sont nos disponibilités réelles.' },
     { n: '2', t: 'Laissez votre nom et votre numéro', d: 'Une minute, rien d’autre à préparer.' },
-    { n: '3', t: 'Aaron vous appelle à l’heure dite', d: '30 minutes, gratuit, sans engagement.' },
+    { n: '3', t: 'On vous appelle à l’heure dite', d: '30 minutes, gratuit, sans engagement.' },
   ];
 
   const checks = [
-    'Votre secteur est-il encore libre ?',
-    'Combien de propriétaires dans votre zone ?',
-    'Ce qu’on peut raisonnablement en attendre',
+    'Si votre secteur est encore libre',
+    'Combien de propriétaires dans votre zone',
+    'Ce que ça coûte, annoncé par écrit',
+    'Ce qui se passe si ça ne marche pas',
   ];
 
   return (
@@ -36,7 +37,7 @@ export const BookingSection: React.FC = () => {
             <span className="font-serif italic font-normal text-vertProfond">libre</span> ?
           </h2>
           <p className="text-lg text-texteClairSec leading-relaxed">
-            Réservez un appel avec Aaron. On regarde ensemble votre zone, et vous savez tout de suite si c’est pour vous.
+            Réservez un appel avec nous. On regarde votre zone ensemble, et vous repartez avec les prix par écrit, même si vous ne donnez pas suite.
           </p>
         </div>
 
@@ -76,7 +77,7 @@ export const BookingSection: React.FC = () => {
                 <span className="pulse-dot absolute inline-flex h-full w-full rounded-full bg-emerald-400" />
                 <span className="relative inline-flex w-2.5 h-2.5 rounded-full bg-emerald-500" />
               </span>
-              Agenda d’Aaron en direct
+              Nos disponibilités en direct
             </div>
             <a
               href={CONTACT_INFO.calendlyUrl}
@@ -99,7 +100,7 @@ export const BookingSection: React.FC = () => {
             )}
             <iframe
               src={CALENDLY_EMBED}
-              title="Réserver un diagnostic de 30 minutes avec Aaron"
+              title="Réserver un appel de 30 minutes avec Triva Media"
               className="absolute inset-0 w-full h-full border-0"
               loading="lazy"
               onLoad={() => setIsLoading(false)}
@@ -107,7 +108,7 @@ export const BookingSection: React.FC = () => {
           </div>
 
           <div className="px-4 sm:px-6 py-5 border-t border-bordureClair flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#FBF9F5]">
-            <p className="text-base text-texteClairSec">Pas le temps maintenant ? Écrivez ou appelez directement Aaron.</p>
+            <p className="text-base text-texteClairSec">Pas le temps maintenant ? Écrivez-nous ou appelez-nous.</p>
             <div className="flex flex-col sm:flex-row gap-2.5">
               <a
                 href={CONTACT_INFO.whatsAppHref}

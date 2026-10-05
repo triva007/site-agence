@@ -163,7 +163,7 @@ export const Header: React.FC = () => {
               className="w-full h-14 rounded-full border border-bordureSombre text-texteSombre text-sm font-semibold flex items-center justify-center gap-2"
             >
               <MessageCircle size={18} className="text-citron" />
-              <span>Contacter Aaron sur WhatsApp</span>
+              <span>Nous écrire sur WhatsApp</span>
             </a>
           </div>
         </div>

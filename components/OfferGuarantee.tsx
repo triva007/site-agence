@@ -7,18 +7,18 @@ export const OfferGuarantee: React.FC = () => {
   const blocks = [
     {
       num: '01',
-      title: 'Une mise en place unique',
-      text: 'On prépare tout : publicités, questions, réception des demandes sur votre téléphone.'
+      title: 'Une mise en place, une seule fois',
+      text: 'On prépare tout avant de lancer : les publicités, les questions posées au propriétaire, la réception des demandes sur votre téléphone.'
     },
     {
       num: '02',
-      title: 'Puis uniquement les rendez-vous qualifiés et tenus',
-      text: 'Un vrai projet, dans vos critères, et l\'appel a eu lieu. Pas tenu ou hors critères : pas facturé.'
+      title: 'Puis seulement les rendez-vous que vous avez eus',
+      text: 'Un vrai projet, dans vos critères, et vous avez eu la personne. Pas eu, ou hors critères : pas facturé.'
     },
     {
       num: '03',
       title: 'Le budget pub, sur votre compte',
-      text: 'Vous le payez directement à Meta. Il ne passe jamais par nous.'
+      text: 'Vous le payez directement à Meta, avec votre carte. Il ne passe jamais par nous, et vous voyez chaque euro dépensé.'
     },
   ];
 
@@ -27,9 +27,9 @@ export const OfferGuarantee: React.FC = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <SectionHeading eyebrow="L'offre" tone="light">
-          Vous payez à la{' '}
-          <span className="font-serif italic font-normal text-vertProfond">performance</span>.
+        <SectionHeading eyebrow="Le mois test" tone="light">
+          On commence toujours par{' '}
+          <span className="font-serif italic font-normal text-vertProfond">30 jours de test</span>.
         </SectionHeading>
 
         {/* 3 Pillars Blocks */}
@@ -79,10 +79,6 @@ export const OfferGuarantee: React.FC = () => {
           <p className="text-base sm:text-lg text-texteClairSec leading-relaxed">
             Aucun engagement de durée. À 30 jours, on fait un premier bilan : demandes, appels, devis en cours. Une construction se signe en 2 à 4 mois : vous jugez sur la durée, et vous pouvez arrêter quand vous voulez.
           </p>
-
-          <p className="text-2xl sm:text-3xl font-serif italic text-vertProfond font-normal">
-            « Je gagne quand vous gagnez. »
-          </p>
         </div>
 
         {/* Action Button */}
@@ -92,7 +88,7 @@ export const OfferGuarantee: React.FC = () => {
             data-cta="offre_reserver"
             className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-encre text-citron text-base font-bold tracking-tight hover:bg-vertProfond hover:text-white transition-all shadow-md active:scale-98"
           >
-            Réserver mon diagnostic de 30 min
+            Vérifier si mon secteur est libre
           </a>
         </div>
 
