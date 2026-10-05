@@ -28,6 +28,9 @@ export const Reveal: React.FC<Props> = ({
 }) => {
   const ref = useRef<HTMLElement>(null);
   const [shown, setShown] = useState(false);
+  // Sur téléphone, pas d'arrivée par le côté : l'élément hors écran élargissait la page.
+  const [narrow] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches);
+  const v: Variant = narrow && (variant === 'left' || variant === 'right') ? 'up' : variant;
 
   useEffect(() => {
     const el = ref.current;
@@ -48,7 +51,7 @@ export const Reveal: React.FC<Props> = ({
       className={className}
       style={{
         opacity: shown ? 1 : 0,
-        transform: shown ? 'none' : START[variant],
+        transform: shown ? 'none' : START[v],
         transition: `opacity .7s cubic-bezier(.22,.8,.3,1) ${delay}ms, transform .7s cubic-bezier(.22,.8,.3,1) ${delay}ms`,
         willChange: shown ? 'auto' : 'opacity, transform',
       }}
