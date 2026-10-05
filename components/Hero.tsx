@@ -6,7 +6,7 @@ import { CONTACT_INFO } from '../constants';
 import './hero-motion.css';
 
 // Titre découpé en mots pour la montée au chargement (l'ordre donne le délai)
-const TITLE_WORDS = ['Des', 'propriétaires', 'de', 'votre', 'secteur', 'qui', 'appellent'];
+const TITLE_WORDS = ['Des', 'propriétaires', 'de', 'votre', 'secteur', 'qui', 'veulent', 'une', 'piscine', 'et', 'contactent'];
 
 const GARANTIES = [
   'Un seul pisciniste par secteur',
@@ -62,14 +62,14 @@ export const Hero: React.FC = () => {
           {/* Promesse, accroche, boutons, garanties */}
           <div className="lg:col-span-7 flex flex-col items-start">
 
-            <h1 className="text-[36px] sm:text-[48px] lg:text-[60px] xl:text-[66px] font-extrabold text-texteSombre leading-[1.06] tracking-[-0.03em]">
+            <h1 className="text-[31px] min-[375px]:text-[36px] sm:text-[48px] lg:text-[60px] xl:text-[66px] font-extrabold text-texteSombre leading-[1.06] tracking-[-0.03em]">
               {TITLE_WORDS.map((w, i) => (
                 <React.Fragment key={i}>
                   <span className="hero-w" style={{ '--i': i } as React.CSSProperties}>{w}</span>{' '}
                 </React.Fragment>
               ))}
-              <span className="hero-w font-serif italic font-normal text-citron" style={{ '--i': 7 } as React.CSSProperties}>votre</span>{' '}
-              <span className="hero-w" style={{ '--i': 8 } as React.CSSProperties}>
+              <span className="hero-w font-serif italic font-normal text-citron" style={{ '--i': 11 } as React.CSSProperties}>votre</span>{' '}
+              <span className="hero-w" style={{ '--i': 12 } as React.CSSProperties}>
                 <span className="font-serif italic font-normal text-citron">entreprise</span>.
               </span>
             </h1>

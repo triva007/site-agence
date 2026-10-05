@@ -47,7 +47,7 @@ export const FAQSection: React.FC = () => {
         {/* Titre + question libre */}
         <div className="lg:col-span-4 lg:sticky lg:top-28">
           <h2 className="text-[32px] sm:text-[38px] lg:text-[42px] font-extrabold leading-[1.08] tracking-[-0.03em] text-texteClair">
-            Les questions qu'on nous pose.
+            Les questions que vous vous posez.
           </h2>
           <p className="mt-3 text-base sm:text-lg text-texteClairSec leading-relaxed max-w-[34ch]">
             Réponses courtes. Les prix exacts, on vous les donne par écrit pendant l'appel.
@@ -55,7 +55,7 @@ export const FAQSection: React.FC = () => {
 
           <div className="hidden lg:block mt-8 pt-6 border-t border-bordureClair">
             <p className="text-base font-bold text-texteClair">Une autre question&nbsp;?</p>
-            <p className="text-sm text-texteClairSec mt-1 mb-4">Aaron répond lui-même sur WhatsApp.</p>
+            <p className="text-sm text-texteClairSec mt-1 mb-4">On vous répond directement sur WhatsApp.</p>
             <a
               href={CONTACT_INFO.whatsAppHref}
               target="_blank"
@@ -116,7 +116,7 @@ export const FAQSection: React.FC = () => {
           <div className="lg:hidden mt-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <p className="text-base text-texteClair">
               <span className="font-bold">Une autre question&nbsp;?</span>{' '}
-              <span className="text-texteClairSec">Aaron répond lui-même sur WhatsApp.</span>
+              <span className="text-texteClairSec">On vous répond directement sur WhatsApp.</span>
             </p>
             <a
               href={CONTACT_INFO.whatsAppHref}

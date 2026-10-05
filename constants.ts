@@ -24,7 +24,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     id: 'prix',
     question: 'Combien ça coûte ?',
-    answer: 'Une mise en place payée une fois, puis uniquement les rendez-vous qualifiés et tenus. Pas d\'abonnement, pas de frais cachés. Les montants exacts vous sont donnés par écrit pendant l\'appel, avant tout paiement.'
+    answer: 'Pendant le mois test : une mise en place payée une fois, puis uniquement les rendez-vous qualifiés et tenus. Pas de frais cachés. Les montants exacts vous sont donnés par écrit pendant l\'appel, avant tout paiement. Au bilan des 30 jours, on vous propose la suite, et vous décidez.'
   },
   {
     id: 'references',
@@ -39,7 +39,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     id: 'plateformes',
     question: 'Quelle différence avec les plateformes de demandes ?',
-    answer: 'Une plateforme revend la même demande à 4 ou 5 concurrents : le propriétaire compare, et ça finit en guerre des prix. Chez nous, la demande est à vous seul, elle vient d\'une publicité à votre nom, elle est triée par 4 questions avant d\'arriver, et il n\'y a pas d\'abonnement.'
+    answer: 'Une plateforme revend la même demande à 4 ou 5 concurrents : le propriétaire compare, et ça finit en guerre des prix. Chez nous, la demande est à vous seul, elle vient d\'une publicité à votre nom, et elle est triée par 4 questions avant d\'arriver.'
   },
   {
     id: 'acces-compte',

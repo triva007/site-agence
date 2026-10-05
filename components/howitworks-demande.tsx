@@ -19,7 +19,7 @@ const LABEL =
   "Exemple illustratif d'une demande : une publicité à votre nom sur Facebook ou Instagram, " +
   'puis les 4 réponses du propriétaire (secteur à 15 km, piscine 8 × 4, budget annoncé 35 000 à 45 000 €, ' +
   'délai de 3 à 6 mois), la notification Nouvelle demande de Claire D., propriétaire, ' +
-  'et enfin un appel réservé mardi à 17 h 30.';
+  'et enfin une visite prévue mardi à 17 h 30.';
 
 const Tick: React.FC<{ className?: string }> = ({ className = '' }) => (
   <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" className={className}>
@@ -97,7 +97,7 @@ export const HowItWorksDemande: React.FC<Props> = ({ step }) => {
               <div className="hw-pill hw-pill-wait">À rappeler sous 48 h</div>
               <div className="hw-pill hw-pill-ok">
                 <Tick className="hw-check" />
-                <span>Appel réservé · mardi 17 h 30</span>
+                <span>Visite prévue · mardi 17 h 30</span>
               </div>
             </div>
           </div>

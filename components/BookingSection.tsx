@@ -18,7 +18,7 @@ export const BookingSection: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const checks = [
-    'Si votre secteur est encore libre',
+    'Si votre secteur est libre',
     'Ce que ça coûte, annoncé par écrit',
     'Ce qui se passe si ça ne marche pas',
   ];
@@ -31,7 +31,7 @@ export const BookingSection: React.FC = () => {
           {/* Titre */}
           <div className="lg:col-span-7 lg:row-start-1">
             <h2 className="text-[34px] sm:text-[42px] lg:text-[48px] font-extrabold leading-[1.05] tracking-[-0.03em] text-texteSombre">
-              Votre secteur est-il encore{' '}
+              Votre secteur est-il{' '}
               <span className="font-serif italic font-normal text-citron tracking-normal">libre</span>&nbsp;?
             </h2>
             <p className="mt-4 text-base sm:text-lg text-texteSombreSec leading-relaxed max-w-[52ch]">
@@ -107,7 +107,7 @@ export const BookingSection: React.FC = () => {
 
           <div className="px-4 sm:px-6 py-4 border-t border-bordureClair flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#FBF9F5]">
             <p className="text-[15px] sm:text-base text-texteClairSec">
-              Pas le temps maintenant&nbsp;? Aaron répond lui-même sur WhatsApp.
+              Pas le temps maintenant&nbsp;? On vous répond directement sur WhatsApp.
             </p>
             <div className="grid grid-cols-1 min-[380px]:grid-cols-2 sm:flex gap-2">
               <a

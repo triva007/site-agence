@@ -12,7 +12,7 @@ const STEPS = [
   },
   {
     title: '4 questions avant de vous contacter',
-    text: 'Où se situe le projet, quel type de piscine, quel budget, pour quand. Les projets hors de vos critères sont écartés avant de vous parvenir.',
+    text: 'Où se situe le projet, quel type de piscine, quel budget, pour quand. La plupart des projets hors de vos critères sont écartés avant de vous parvenir.',
   },
   {
     title: 'La demande arrive sur votre téléphone',

@@ -13,7 +13,7 @@ const PAINS = [
   },
   {
     key: 'La même demande, revendue à 4 ou 5 piscinistes.',
-    text: 'Sur les plateformes, le client compare les prix, et le chantier se perd pour 300 €.',
+    text: 'Sur les plateformes, le client compare les prix, et le chantier se perd pour quelques centaines d’euros.',
   },
   {
     key: 'Des devis pour rien.',
