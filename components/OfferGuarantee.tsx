@@ -33,7 +33,7 @@ export const OfferGuarantee: React.FC = () => {
             On commence toujours par 30&nbsp;jours de test.
           </h2>
           <p className="lg:col-span-5 text-base sm:text-lg leading-relaxed text-texteClairSec max-w-[46ch]">
-            Un mois test sans engagement de durée : à la fin, vous continuez ou vous arrêtez.
+            Un mois test sans engagement de durée : à la fin, vous continuez ou vous arrêtez. Carnet plein ? On met en pause.
           </p>
         </div>
 
@@ -107,7 +107,7 @@ export const OfferGuarantee: React.FC = () => {
             Vérifier si mon secteur est libre
           </a>
           <p className="text-sm leading-snug text-texteClairSec max-w-[42ch]">
-            Appel gratuit de 30 minutes. Les prix vous sont donnés par écrit pendant l’appel.
+            Appel gratuit de 20 minutes. Les prix vous sont donnés par écrit pendant l’appel.
           </p>
         </div>
       </div>

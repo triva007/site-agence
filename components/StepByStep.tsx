@@ -7,7 +7,7 @@ export const StepByStep: React.FC = () => {
   const steps = [
     {
       num: 'J1',
-      title: 'L’appel de 30 minutes',
+      title: 'L’appel de 20 minutes',
       text: 'On regarde votre secteur, vos chantiers cibles et vos disponibilités. On vérifie que votre zone est libre.'
     },
     {

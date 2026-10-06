@@ -109,7 +109,7 @@ export const Hero: React.FC = () => {
               className="hero-in mt-3 text-[13.5px] sm:text-sm text-texteSombreSec"
               style={{ '--d': '380ms' } as React.CSSProperties}
             >
-              Appel de 30 minutes, gratuit. Les prix vous sont donnés pendant l'appel.
+              Appel de 20 minutes, gratuit. Les prix vous sont donnés pendant l'appel.
             </p>
 
             {/* Trois garanties, en liste simple */}

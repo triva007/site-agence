@@ -9,14 +9,14 @@ export const MobileStickyBar: React.FC = () => {
       role="region"
       aria-label="Actions rapides mobiles"
     >
-      {/* Réserver 30 min Button */}
+      {/* Réserver 20 min Button */}
       <a
         href="#diagnostic"
         data-cta="mobile_bottom_reserver"
         className="btn-shine flex-1 h-14 bg-citron text-encre rounded-full font-bold text-sm flex items-center justify-center gap-2 tracking-tight active:scale-98 shadow-md"
       >
         <Calendar size={17} className="text-encre" />
-        <span>Réserver 30 min</span>
+        <span>Réserver 20 min</span>
       </a>
 
       {/* WhatsApp Button */}

@@ -26,7 +26,7 @@ export const FinalCall: React.FC = () => {
 
         {/* Subtext */}
         <p className="text-lg sm:text-xl text-texteSombreSec leading-relaxed max-w-2xl mx-auto mb-10">
-          Prenez 30 minutes pour vérifier s'il est encore libre. Sans engagement.
+          Les piscines du printemps se signent cet automne. Prenez 20 minutes pour vérifier si votre secteur est encore libre. Sans engagement.
         </p>
 
         {/* Actions buttons */}
