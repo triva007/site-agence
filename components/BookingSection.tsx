@@ -35,7 +35,7 @@ export const BookingSection: React.FC = () => {
               <span className="font-serif italic font-normal text-citron tracking-normal">libre</span>&nbsp;?
             </h2>
             <p className="mt-4 text-base sm:text-lg text-texteSombreSec leading-relaxed max-w-[52ch]">
-              Un appel de 20 minutes, gratuit. On regarde votre zone ensemble, et vous repartez avec les prix par écrit, même si vous ne donnez pas suite.
+              Les piscines du printemps se signent cet automne. Un appel de 20 minutes, gratuit. On regarde votre zone ensemble, et vous repartez avec les prix par écrit, même si vous ne donnez pas suite.
             </p>
           </div>
 
