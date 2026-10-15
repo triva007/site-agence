@@ -48,6 +48,7 @@ const LegalNotice: React.FC = () => {
               <h2 className="text-base sm:text-lg font-bold text-texteClair">1. Éditeur du site</h2>
               <p><strong>Dénomination commerciale :</strong> Triva Media</p>
               <p><strong>Activité :</strong> Agence de diffusion publicitaire et d'acquisition de demandes de projets pour les piscinistes.</p>
+              <p><strong>SIRET :</strong> 106 951 197 000 24</p>
               <p><strong>Directeur de la publication :</strong> Aaron, Fondateur</p>
               <p><strong>Contact e-mail :</strong> <a href="mailto:aaron@triva-media.com" className="text-vertProfond hover:underline font-semibold">aaron@triva-media.com</a></p>
               <p><strong>Contact téléphonique / WhatsApp :</strong> 07 67 05 60 66</p>
