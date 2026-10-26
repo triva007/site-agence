@@ -11,7 +11,7 @@ const TITLE_WORDS = ['Des', 'propriétaires', 'de', 'votre', 'secteur', 'qui', '
 const GARANTIES = [
   'Un seul pisciniste par secteur',
   'Demandes exclusives, jamais revendues',
-  'Au moins 5\u00a0000\u00a0€ de chantiers signés en 45 jours, sinon honoraires remboursés (sous conditions)',
+  'Au moins 5\u00a0000\u00a0€ de chantiers signés en 45 jours, sinon remboursé',
 ];
 
 const CheckMark: React.FC = () => (

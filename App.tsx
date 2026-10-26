@@ -56,7 +56,7 @@ export const App: React.FC = () => {
         <Hero />            {/* 1. promesse + vidéo */}
         <TheProblem />      {/* 2. le constat */}
         <HowItWorks />      {/* 3. comment une demande arrive (la demande se construit au défilement) */}
-        <OfferGuarantee />  {/* 4. l'offre : 3 étapes de paiement, garantie 45 jours, votre part */}
+        <OfferGuarantee />  {/* 4. la garantie, en une phrase forte */}
         <FounderAaron />    {/* 5. un seul interlocuteur + pour qui c'est fait */}
         <FAQSection />      {/* 6. les questions, dont la différence avec les plateformes */}
         <BookingSection />  {/* 7. réservation : votre secteur est-il libre ? */}
