@@ -10,8 +10,8 @@ const TITLE_WORDS = ['Des', 'propriétaires', 'de', 'votre', 'secteur', 'qui', '
 
 const GARANTIES = [
   'Un seul pisciniste par secteur',
-  'Sans engagement de durée',
-  'Aucun rendez-vous qualifié et tenu en 30 jours : mise en place remboursée',
+  'Demandes exclusives, jamais revendues',
+  'Au moins 5\u00a0000\u00a0€ de chantiers signés en 45 jours, sinon honoraires remboursés (sous conditions)',
 ];
 
 const CheckMark: React.FC = () => (
@@ -78,7 +78,7 @@ export const Hero: React.FC = () => {
               className="hero-in mt-4 sm:mt-6 text-[16.5px] sm:text-lg lg:text-[19px] text-texteSombreSec leading-[1.55] max-w-[34rem]"
               style={{ '--d': '230ms' } as React.CSSProperties}
             >
-              On diffuse vos réalisations sur Facebook et Instagram, à votre nom, auprès des propriétaires de votre secteur. Avant de vous contacter, chacun indique son projet, son budget et son délai.
+              On diffuse vos rénovations et vos piscines coques sur Facebook et Instagram, à votre nom et avec le prix indiqué, auprès des propriétaires de votre secteur. Chaque demande est rappelée&nbsp;: seuls les rendez-vous qualifiés selon vos critères arrivent dans votre agenda.
             </p>
 
             <div
@@ -109,7 +109,7 @@ export const Hero: React.FC = () => {
               className="hero-in mt-3 text-[13.5px] sm:text-sm text-texteSombreSec"
               style={{ '--d': '380ms' } as React.CSSProperties}
             >
-              Appel de 20 minutes, gratuit. Les prix vous sont donnés pendant l'appel.
+              Diagnostic offert de 30&nbsp;minutes. Les prix vous sont donnés pendant l'appel.
             </p>
 
             {/* Trois garanties, en liste simple */}

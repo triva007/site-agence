@@ -20,7 +20,7 @@ export const BookingSection: React.FC = () => {
   const checks = [
     'Si votre secteur est libre',
     'Ce que ça coûte, annoncé par écrit',
-    'Ce qui se passe si ça ne marche pas',
+    'Comment fonctionne la garantie à 45 jours',
   ];
 
   return (
@@ -35,7 +35,7 @@ export const BookingSection: React.FC = () => {
               <span className="font-serif italic font-normal text-citron tracking-normal">libre</span>&nbsp;?
             </h2>
             <p className="mt-4 text-base sm:text-lg text-texteSombreSec leading-relaxed max-w-[52ch]">
-              Les piscines du printemps se signent cet automne. Un appel de 20 minutes, gratuit. On regarde votre zone ensemble, et vous repartez avec les prix par écrit, même si vous ne donnez pas suite.
+              Les piscines du printemps se signent cet automne. Un diagnostic chantiers piscine de 30&nbsp;minutes, offert. On regarde votre zone ensemble, et vous repartez avec les prix par écrit, même si vous ne donnez pas suite.
             </p>
           </div>
 
@@ -98,7 +98,7 @@ export const BookingSection: React.FC = () => {
             )}
             <iframe
               src={CALENDLY_EMBED}
-              title="Réserver un appel de 20 minutes avec Triva Media"
+              title="Réserver un diagnostic chantiers piscine de 30 minutes, offert, avec Triva Media"
               className="absolute inset-0 w-full h-full border-0"
               loading="lazy"
               onLoad={() => setIsLoading(false)}

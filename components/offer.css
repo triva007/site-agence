@@ -1,6 +1,6 @@
-/* ===== Le mois test : la frise des 30 jours =====
-   Un trait d'eau parcourt le mois au rythme du défilement. Chaque étape s'allume
-   quand le trait l'atteint ; au jour 30, la garantie s'allume à son tour.
+/* ===== L'offre : la frise des 3 étapes de paiement, puis la garantie à 45 jours =====
+   Un trait d'eau parcourt la frise au rythme du défilement. Chaque étape s'allume
+   quand le trait l'atteint ; au bout, la garantie s'allume à son tour.
    Seuls transform et opacity bougent (le trait est mis à l'échelle, jamais redimensionné). */
 
 .ofr { position: relative; }

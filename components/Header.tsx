@@ -29,7 +29,7 @@ export const Header: React.FC = () => {
 
   const navLinks = [
     { label: 'Comment ça marche', href: '#comment-ca-marche' },
-    { label: 'Le mois test', href: '#offre' },
+    { label: 'La garantie', href: '#offre' },
     { label: 'Qui on est', href: '#pour-qui' },
     { label: 'Questions', href: '#faq' },
   ];

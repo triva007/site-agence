@@ -41,7 +41,7 @@ export const ComparisonTable: React.FC = () => {
     },
     {
       label: 'Engagement',
-      triva: 'Aucun engagement de durée',
+      triva: '3 mois pour démarrer, garantie à 45 jours',
       plateformes: 'Souvent un abonnement',
       boucheAOreille: 'Aucun',
       siteWeb: 'Paiement unique, souvent élevé',

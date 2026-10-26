@@ -8,19 +8,19 @@ type Mode = 'desk' | 'mob' | 'static';
 const STEPS = [
   {
     title: 'Vos réalisations, à votre nom',
-    text: 'Des publicités avec vos photos de chantiers et le nom de votre entreprise, diffusées sur Facebook et Instagram uniquement dans la zone où vous travaillez.',
+    text: 'Des publicités avec vos photos de chantiers, le nom de votre entreprise et le prix indiqué, diffusées sur Facebook et Instagram uniquement dans la zone où vous travaillez. Le prix affiché écarte les curieux.',
   },
   {
     title: '4 questions avant de vous contacter',
     text: 'Où se situe le projet, quel type de piscine, quel budget, pour quand. La plupart des projets hors de vos critères sont écartés avant de vous parvenir.',
   },
   {
-    title: 'La demande arrive sur votre téléphone',
-    text: 'Vous recevez les coordonnées et les réponses du propriétaire. Il a fait la démarche : il attend votre appel.',
+    title: 'Chaque demande est rappelée',
+    text: 'Un SMS automatique part aussitôt, avec un lien pour réserver un créneau, et la demande est rappelée pour vérifier le projet. Elle n’est jamais revendue.',
   },
   {
-    title: 'Vous rappelez, vous vendez',
-    text: 'Vous rappelez sous 48 h, vous faites la visite et le devis. Chaque semaine, on fait le point avec vous sur les demandes, et on ajuste.',
+    title: 'Le rendez-vous arrive dans votre agenda',
+    text: 'Seuls les rendez-vous qualifiés selon vos critères y arrivent. Vous faites la visite, vous envoyez le devis, vous vendez. Chaque semaine, on fait le point avec vous, et on ajuste.',
   },
 ];
 
@@ -140,7 +140,7 @@ export const HowItWorks: React.FC = () => {
         <div className="hw-grid">
 
           <h2 className="hw-head text-[31px] sm:text-[38px] lg:text-[46px] font-extrabold leading-[1.1] tracking-[-0.03em] text-texteSombre max-w-[18ch]">
-            Comment une demande arrive sur votre téléphone.
+            Comment un rendez-vous arrive dans votre agenda.
           </h2>
 
           {/* L'objet : la demande qui se construit */}

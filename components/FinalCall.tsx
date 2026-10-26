@@ -26,7 +26,7 @@ export const FinalCall: React.FC = () => {
 
         {/* Subtext */}
         <p className="text-lg sm:text-xl text-texteSombreSec leading-relaxed max-w-2xl mx-auto mb-10">
-          Les piscines du printemps se signent cet automne. Prenez 20 minutes pour vérifier si votre secteur est encore libre. Sans engagement.
+          Les piscines du printemps se signent cet automne. Prenez 30 minutes, offertes, pour vérifier si votre secteur est encore libre.
         </p>
 
         {/* Actions buttons */}
@@ -54,7 +54,7 @@ export const FinalCall: React.FC = () => {
 
         {/* Reassurance line */}
         <p className="text-sm text-texteSombreSec font-medium max-w-xl mx-auto">
-          1 pisciniste par secteur · Budget pub sur votre compte · Mise en place remboursée à 30 jours · Sans engagement de durée
+          1 pisciniste par secteur · Budget pub sur votre compte · Au moins 5 000 € de chantiers signés en 45 jours, ou honoraires remboursés
         </p>
 
       </div>

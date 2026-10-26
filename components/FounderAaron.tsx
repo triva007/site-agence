@@ -20,9 +20,9 @@ export const FounderAaron: React.FC = () => {
   ];
 
   const forYou = [
-    'Vous construisez ou rénovez des piscines.',
+    'Vous rénovez des piscines ou posez des piscines coques.',
     'Vous avez des chantiers à montrer et une décennale à jour.',
-    'Vous pouvez rappeler une demande sous 48\u00a0h.',
+    'Vous pouvez envoyer vos devis sous 48 à 72\u00a0h.',
   ];
 
   const notForYou = [
@@ -81,7 +81,7 @@ export const FounderAaron: React.FC = () => {
             Les publicités sont écrites, lancées et suivies en interne. Quand vous écrivez sur WhatsApp, c'est Aaron qui répond, pas un chargé de compte.
           </p>
           <p className="mt-3 text-base sm:text-lg font-semibold text-texteSombre leading-relaxed max-w-[60ch]">
-            On ne vous promettra pas de chantiers signés&nbsp;: ça, c'est votre métier. On s'engage sur des demandes dans vos critères.
+            On s'engage sur ce qui compte pour vous&nbsp;: des chantiers signés. Au moins 5&nbsp;000&nbsp;€ en 45&nbsp;jours après le lancement, ou nos honoraires vous sont remboursés.
           </p>
 
           <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 border-t border-white/10 pt-5">

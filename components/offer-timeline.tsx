@@ -3,29 +3,30 @@ import { ShieldCheck } from 'lucide-react';
 import './offer.css';
 
 /**
- * La frise du mois test : ce qui se passe, et ce que vous payez, du lancement au jour 30.
+ * La frise de l'offre : les 3 étapes de paiement des 3 premiers mois, puis la garantie à 45 jours.
+ * Aucun montant ici : les prix sont donnés par écrit pendant l'appel.
  * Le trait se remplit au défilement (vertical sur téléphone, horizontal sur ordinateur),
  * chaque étape s'allume quand il l'atteint, la garantie s'allume au bout.
  * prefers-reduced-motion : tout est affiché allumé, sans mouvement.
  */
 const STEPS = [
   {
-    when: 'Avant le lancement',
-    title: 'On fixe vos critères ensemble et on prépare vos publicités.',
-    payLabel: 'La mise en place',
-    pay: 'payée une seule fois.',
+    when: 'Au démarrage',
+    title: 'On fixe vos critères ensemble, on prépare vos publicités et on les lance dans votre secteur.',
+    payLabel: 'Une première partie',
+    pay: 'réglée au démarrage.',
   },
   {
-    when: 'Jour 1',
-    title: 'Vos publicités tournent, uniquement dans votre zone.',
-    payLabel: 'Le budget pub',
-    pay: 'payé à Meta, avec votre carte.',
+    when: 'Après 2 visites qualifiées',
+    title: 'Les rendez-vous qualifiés selon vos critères arrivent dans votre agenda.',
+    payLabel: 'Une deuxième partie',
+    pay: 'réglée après 2 visites qualifiées selon vos critères.',
   },
   {
-    when: 'Jours 1 à 30',
-    title: 'Les demandes arrivent. On fait le point chaque semaine.',
-    payLabel: 'Les rendez-vous',
-    pay: 'facturés seulement s’ils sont qualifiés et tenus.',
+    when: 'Au premier chantier signé',
+    title: 'Vous signez un premier chantier venu des publicités.',
+    payLabel: 'Le reste',
+    pay: 'réglé à ce moment-là, pas avant.',
   },
 ];
 
@@ -158,9 +159,9 @@ export const OfferTimeline: React.FC = () => {
         <div className="ofr-card bg-encre text-texteSombre rounded-2xl p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold leading-5 text-citron">Jour 30</p>
+              <p className="text-sm font-semibold leading-5 text-citron">Jour 45 après le lancement</p>
               <h3 className="mt-1 text-[17px] sm:text-lg font-bold leading-snug">
-                Le bilan : demandes, appels, devis en cours.
+                La garantie : au moins 5&nbsp;000&nbsp;€ de chantiers signés.
               </h3>
             </div>
             <span className="ofr-shield w-9 h-9 rounded-full bg-citron text-encre grid place-items-center shrink-0" aria-hidden="true">
@@ -168,10 +169,10 @@ export const OfferTimeline: React.FC = () => {
             </span>
           </div>
           <p className="mt-3 pt-3 border-t border-dashed border-citron/30 text-base leading-snug text-texteSombre">
-            <strong className="font-bold text-citron">Aucun rendez-vous qualifié et tenu en 30 jours de diffusion ?</strong>{' '}
-            La mise en place vous est remboursée.
+            <strong className="font-bold text-citron">Moins de 5&nbsp;000&nbsp;€ signés en 45&nbsp;jours&nbsp;?</strong>{' '}
+            Nos honoraires vous sont remboursés.
           </p>
-          <p className="mt-2 text-sm leading-snug text-texteSombreSec">Le budget Meta n’est pas concerné.</p>
+          <p className="mt-2 text-sm leading-snug text-texteSombreSec">Le budget publicitaire, payé directement à Facebook, n’est jamais remboursable.</p>
         </div>
       </li>
       </ol>

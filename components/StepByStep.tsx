@@ -7,7 +7,7 @@ export const StepByStep: React.FC = () => {
   const steps = [
     {
       num: 'J1',
-      title: 'L’appel de 20 minutes',
+      title: 'Le diagnostic de 30 minutes',
       text: 'On regarde votre secteur, vos chantiers cibles et vos disponibilités. On vérifie que votre zone est libre.'
     },
     {
@@ -17,13 +17,13 @@ export const StepByStep: React.FC = () => {
     },
     {
       num: 'S2',
-      title: '30 jours de diffusion',
-      text: 'Les demandes arrivent sur votre téléphone. Vous rappelez. On fait le point chaque semaine et on ajuste.'
+      title: 'Le lancement',
+      text: 'Chaque demande est rappelée, un SMS de réservation part, et seuls les rendez-vous qualifiés selon vos critères arrivent dans votre agenda. On fait le point chaque semaine et on ajuste.'
     },
     {
-      num: 'J30',
-      title: 'Le bilan',
-      text: 'On regarde les mêmes chiffres : demandes, appels, devis, signés ou perdus. On continue, ou on s\'arrête.'
+      num: 'J45',
+      title: 'La garantie',
+      text: 'Au moins 5\u00a0000\u00a0€ de chantiers signés en 45 jours après le lancement, sinon nos honoraires vous sont remboursés. Le budget publicitaire n\'est jamais remboursable.'
     },
   ];
 

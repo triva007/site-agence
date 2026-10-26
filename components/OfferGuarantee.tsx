@@ -4,8 +4,8 @@ import Reveal from './Reveal';
 import OfferTimeline from './offer-timeline';
 
 /**
- * Le mois test : comment vous payez (frise des 30 jours), ce qui compte comme un rendez-vous
- * facturé, la garantie, et ce qu'on ne vous promet pas.
+ * L'offre : comment vous payez (frise des 3 étapes, sans montant), la garantie à 45 jours,
+ * ce qui compte comme une visite qualifiée, et ce qu'on vous demande pour que la garantie s'applique.
  * Fusion des anciennes sections OfferGuarantee, QualifiedLead et HonestTalk.
  */
 const CRITERES: [string, string][] = [
@@ -13,14 +13,14 @@ const CRITERES: [string, string][] = [
   ['Dans votre zone', 'Hors zone'],
   ['Budget au-dessus de votre minimum', 'Budget sous votre plancher'],
   ['A dit quand il veut faire les travaux', 'Ne sait pas quand'],
-  ['Vous l’avez eu au téléphone', 'Jamais réussi à l’avoir'],
+  ['La visite a bien eu lieu', 'Rendez-vous non honoré par le propriétaire'],
 ];
 
-const PAS_PROMIS = [
-  { key: 'Une demande n’est pas une vente.', text: 'Le devis et la signature restent votre métier.' },
-  { key: 'Une construction se signe en 2 à 4 mois.', text: 'Le propriétaire réfléchit et compare.' },
-  { key: 'On ne filtre pas 100 % des curieux.', text: 'Les 4 questions en écartent la plupart.' },
-  { key: 'Vous gardez la main.', text: 'Le compte pub est à votre nom.' },
+const VOTRE_PART = [
+  { key: 'Vous honorez les rendez-vous', text: 'qui arrivent dans votre agenda.' },
+  { key: 'Vous envoyez vos devis sous 48 à 72\u00a0h', text: 'après chaque visite.' },
+  { key: 'Vous gardez la publicité active', text: 'pendant toute la durée de la garantie.' },
+  { key: 'Vous répondez vite', text: 'aux propriétaires comme à nous.' },
 ];
 
 export const OfferGuarantee: React.FC = () => {
@@ -30,31 +30,31 @@ export const OfferGuarantee: React.FC = () => {
         {/* Titre */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12 lg:items-end mb-10 lg:mb-14">
           <h2 className="lg:col-span-7 text-balance text-[30px] sm:text-[36px] lg:text-[46px] font-extrabold leading-[1.1] tracking-[-0.03em] text-texteClair">
-            On commence toujours par 30&nbsp;jours de test.
+            Au moins 5&nbsp;000&nbsp;€ de chantiers signés en 45&nbsp;jours, ou nos honoraires remboursés.
           </h2>
           <p className="lg:col-span-5 text-base sm:text-lg leading-relaxed text-texteClairSec max-w-[46ch]">
-            Un mois test sans engagement de durée : à la fin, vous continuez ou vous arrêtez. Carnet plein ? On met en pause.
+            On démarre par un engagement de 3&nbsp;mois, payé en 3&nbsp;étapes&nbsp;: vous réglez la suite au fil des résultats. Ensuite, on continue ensemble.
           </p>
         </div>
 
-        {/* L'effet fort : la frise des 30 jours, et ce que vous payez à chaque étape */}
+        {/* L'effet fort : la frise des 3 étapes de paiement, puis la garantie à 45 jours */}
         <OfferTimeline />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 mt-12 lg:mt-20">
-          {/* Ce qui compte comme un rendez-vous facturé */}
+          {/* Ce qui compte comme une visite qualifiée */}
           <Reveal className="lg:col-span-7">
             <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-texteClair">
-              Ce qui compte comme un <span className="whitespace-nowrap">rendez-vous facturé</span>
+              Ce qui compte comme une <span className="whitespace-nowrap">visite qualifiée</span>
             </h3>
             <p className="mt-2 text-base leading-relaxed text-texteClairSec">
-              Critères fixés avec vous avant le lancement. En cas de doute, c’est vous qui tranchez.
+              Seuls ces rendez-vous arrivent dans votre agenda. Critères fixés avec vous avant le lancement&nbsp;; en cas de doute, c’est vous qui tranchez.
             </p>
 
             <table className="mt-5 w-full table-fixed border-collapse text-left">
               <thead>
                 <tr className="border-b-2 border-texteClair/80">
-                  <th scope="col" className="w-1/2 pb-2 pr-3 text-sm font-semibold text-vertProfond">On vous le facture si</th>
-                  <th scope="col" className="w-1/2 pb-2 pl-3 text-sm font-semibold text-texteClairSec">Pas facturé si</th>
+                  <th scope="col" className="w-1/2 pb-2 pr-3 text-sm font-semibold text-vertProfond">Qualifiée si</th>
+                  <th scope="col" className="w-1/2 pb-2 pl-3 text-sm font-semibold text-texteClairSec">Pas qualifiée si</th>
                 </tr>
               </thead>
               <tbody>
@@ -82,13 +82,13 @@ export const OfferGuarantee: React.FC = () => {
             </table>
           </Reveal>
 
-          {/* Ce qu'on ne vous promet pas */}
+          {/* Votre part : les conditions de la garantie */}
           <Reveal delay={100} className="lg:col-span-5 lg:border-l lg:border-bordureClair lg:pl-12">
             <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-texteClair">
-              Ce qu’on ne vous promet pas
+              Votre part pour que la garantie s’applique
             </h3>
             <ul className="mt-4 space-y-3">
-              {PAS_PROMIS.map((p) => (
+              {VOTRE_PART.map((p) => (
                 <li key={p.key} className="text-base leading-snug text-texteClairSec">
                   <strong className="font-semibold text-texteClair">{p.key}</strong> {p.text}
                 </li>
@@ -107,7 +107,7 @@ export const OfferGuarantee: React.FC = () => {
             Vérifier si mon secteur est libre
           </a>
           <p className="text-sm leading-snug text-texteClairSec max-w-[42ch]">
-            Appel gratuit de 20 minutes. Les prix vous sont donnés par écrit pendant l’appel.
+            Diagnostic offert de 30&nbsp;minutes. Les prix vous sont donnés par écrit pendant l’appel.
           </p>
         </div>
       </div>

@@ -21,7 +21,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
   const navLinks = [
     { label: 'Comment ça marche', href: '#comment-ca-marche' },
-    { label: 'Le mois test', href: '#offre' },
+    { label: 'La garantie', href: '#offre' },
     { label: 'Qui on est', href: '#pour-qui' },
     { label: 'Questions', href: '#faq' },
     { label: 'Vérifier mon secteur', href: '#diagnostic' },
