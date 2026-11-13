@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Point de chute</title>
+  <meta name="description" content="On te dépose quelque part sur Terre. Balade-toi, observe, et retrouve où tu es sur la carte.">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800;900&family=Overpass+Mono:wght@600&display=swap">
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Accueil -->
+  <div id="home" class="screen">
+    <div id="homeMap" aria-hidden="true"></div>
+    <main class="sign home-sign">
+      <p class="kicker">Jeu de géographie</p>
+      <h1>Point de chute</h1>
+      <p class="lede">On te dépose quelque part sur Terre, au bord d'une route. Balade-toi, observe les panneaux, les plaques, le paysage. Puis place ton point sur la carte.</p>
+
+      <fieldset class="choice">
+        <legend>Zone</legend>
+        <div class="seg" id="zoneSeg">
+          <label><input type="radio" name="zone" value="monde" checked><span>Monde</span></label>
+          <label><input type="radio" name="zone" value="europe"><span>Europe</span></label>
+          <label><input type="radio" name="zone" value="france"><span>France</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="choice">
+        <legend>Temps par manche</legend>
+        <div class="seg" id="timeSeg">
+          <label><input type="radio" name="time" value="0" checked><span>Libre</span></label>
+          <label><input type="radio" name="time" value="180"><span>3 min</span></label>
+          <label><input type="radio" name="time" value="90"><span>1 min 30</span></label>
+          <label><input type="radio" name="time" value="30"><span>30 s</span></label>
+        </div>
+      </fieldset>
+
+      <button id="startBtn" class="btn btn-go" type="button">Partir <kbd>Espace</kbd></button>
+      <p class="meta"><span id="poolLine"></span><span id="bestLine"></span></p>
+    </main>
+  </div>
+
+  <!-- Partie -->
+  <div id="play" class="screen" hidden>
+    <div id="svWrap"></div>
+    <div id="logoShield" aria-hidden="true"></div>
+    <div id="svLoading"><div class="drop"></div><p>Largage en cours…</p></div>
+
+    <div class="hud sign" role="status">
+      <div class="cell"><span class="lab">Manche</span><span class="val" id="hudRound">1/5</span></div>
+      <div class="cell"><span class="lab">Score</span><span class="val" id="hudScore">0</span></div>
+      <div class="cell" id="hudTimeCell" hidden><span class="lab">Temps</span><span class="val" id="hudTime">0:00</span></div>
+    </div>
+
+    <div class="tools">
+      <button id="resetBtn" class="tool" type="button" title="Revenir à l'endroit où tu as été déposé">Retour au départ</button>
+      <button id="swapBtn" class="tool" type="button" title="Si l'image ne s'affiche pas, on te dépose ailleurs sans pénalité">Écran noir ? Changer de lieu</button>
+      <button id="quitBtn" class="tool" type="button">Quitter</button>
+    </div>
+
+    <div id="guess">
+      <div id="guessMap"></div>
+      <button id="guessBtn" class="btn btn-go" type="button" disabled>Place ton point sur la carte</button>
+    </div>
+    <button id="mapToggle" class="btn btn-go" type="button">Ouvrir la carte</button>
+  </div>
+
+  <!-- Résultats -->
+  <div id="result" class="screen" hidden>
+    <div id="resultMap"></div>
+
+    <section id="roundPanel" class="panel">
+      <div class="borne" aria-hidden="true"><span class="borne-top"></span><span class="borne-txt" id="borneTxt">km</span></div>
+      <div class="round-main">
+        <p class="panel-kicker" id="rpKicker">Manche 1 sur 5</p>
+        <p class="dist" id="rpDist">—</p>
+        <p class="place" id="rpPlace"></p>
+        <a id="rpLink" class="see" target="_blank" rel="noopener">Revoir l'endroit dans Google Maps</a>
+      </div>
+      <div class="round-pts">
+        <p class="pts"><span id="rpPts">0</span><small>/ 5 000</small></p>
+        <div class="bar"><i id="rpBar"></i></div>
+        <button id="nextBtn" class="btn btn-go" type="button">Manche suivante <kbd>Espace</kbd></button>
+      </div>
+    </section>
+
+    <section id="finalPanel" class="panel final" hidden>
+      <div class="final-head">
+        <p class="panel-kicker" id="fpKicker">Partie terminée</p>
+        <p class="total"><span id="fpTotal">0</span><small id="fpMax">/ 25 000</small></p>
+        <p class="grade" id="fpGrade"></p>
+        <p class="best" id="fpBest"></p>
+      </div>
+      <ol id="fpList" class="rounds"></ol>
+      <div class="final-actions">
+        <button id="againBtn" class="btn btn-go" type="button">Rejouer <kbd>Espace</kbd></button>
+        <button id="homeBtn" class="btn btn-ghost" type="button">Changer de mode</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="vendor/leaflet.js"></script>
+  <script src="locations.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
