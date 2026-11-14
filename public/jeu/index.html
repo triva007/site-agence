@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Point de chute</title>
-  <meta name="description" content="On te dépose quelque part sur Terre. Balade-toi, observe, et retrouve où tu es sur la carte.">
+  <meta name="description" content="On te dépose quelque part sur Terre. Balade-toi, observe, et retrouve où tu es sur la carte. Seul ou entre amis.">
   <meta name="robots" content="noindex">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,20 +20,34 @@
     <main class="sign home-sign">
       <p class="kicker">Jeu de géographie</p>
       <h1>Point de chute</h1>
-      <p class="lede">On te dépose quelque part sur Terre, au bord d'une route. Balade-toi, observe les panneaux, les plaques, le paysage. Puis place ton point sur la carte.</p>
+      <p class="lede">On te dépose quelque part sur Terre, au bord d'une route. Observe, puis retrouve où tu es.</p>
+
+      <fieldset class="choice">
+        <legend>Mode</legend>
+        <div class="seg">
+          <label><input type="radio" name="mode" value="classique" checked><span>Classique</span></label>
+          <label><input type="radio" name="mode" value="postale"><span>Carte postale</span></label>
+          <label><input type="radio" name="mode" value="eclair"><span>Éclair</span></label>
+          <label><input type="radio" name="mode" value="serie"><span>Série de pays</span></label>
+        </div>
+        <p class="hint-line" id="modeDesc"></p>
+      </fieldset>
 
       <fieldset class="choice">
         <legend>Zone</legend>
-        <div class="seg" id="zoneSeg">
+        <div class="seg">
           <label><input type="radio" name="zone" value="monde" checked><span>Monde</span></label>
           <label><input type="radio" name="zone" value="europe"><span>Europe</span></label>
           <label><input type="radio" name="zone" value="france"><span>France</span></label>
+          <label><input type="radio" name="zone" value="ameriques"><span>Amériques</span></label>
+          <label><input type="radio" name="zone" value="asie"><span>Asie et Océanie</span></label>
+          <label><input type="radio" name="zone" value="afrique"><span>Afrique</span></label>
         </div>
       </fieldset>
 
       <fieldset class="choice">
         <legend>Temps par manche</legend>
-        <div class="seg" id="timeSeg">
+        <div class="seg">
           <label><input type="radio" name="time" value="0" checked><span>Libre</span></label>
           <label><input type="radio" name="time" value="180"><span>3 min</span></label>
           <label><input type="radio" name="time" value="90"><span>1 min 30</span></label>
@@ -41,26 +55,67 @@
         </div>
       </fieldset>
 
-      <button id="startBtn" class="btn btn-go" type="button">Partir <kbd>Espace</kbd></button>
+      <button id="startBtn" class="btn btn-go btn-big" type="button">Partir <kbd>Espace</kbd></button>
+      <div class="alt-row">
+        <button id="friendsBtn" class="btn btn-alt" type="button">Jouer avec des amis</button>
+        <button id="dailyBtn" class="btn btn-alt" type="button">Défi du jour</button>
+      </div>
       <p class="meta"><span id="poolLine"></span><span id="bestLine"></span></p>
+    </main>
+  </div>
+
+  <!-- Salon d'une partie entre amis -->
+  <div id="lobby" class="screen" hidden>
+    <main class="sign home-sign">
+      <p class="kicker">Partie entre amis</p>
+      <h2 id="lbTitle">Monde</h2>
+      <p class="lede">Envoie ce lien à tes amis. Tout le monde joue les 5 mêmes lieux, chacun sur son écran, quand il veut. Le classement se met à jour en direct.</p>
+
+      <div class="linkrow">
+        <input id="lbLink" type="text" readonly aria-label="Lien de la partie">
+        <button id="lbCopy" class="btn btn-alt" type="button">Copier le lien</button>
+      </div>
+
+      <form id="lbNameForm" class="nameform">
+        <label for="lbName">Ton pseudo</label>
+        <div class="linkrow">
+          <input id="lbName" type="text" maxlength="16" autocomplete="nickname" placeholder="Ex. Aaron" required>
+          <button class="btn btn-go" type="submit">Entrer dans la partie</button>
+        </div>
+      </form>
+
+      <div id="lbIn" hidden>
+        <p class="legend">Dans la partie</p>
+        <ul id="lbPlayers" class="players"></ul>
+        <button id="lbStart" class="btn btn-go btn-big" type="button">Commencer</button>
+      </div>
+
+      <p class="meta"><span id="lbStatus"></span><button id="lbBack" class="linkbtn" type="button">Retour à l'accueil</button></p>
     </main>
   </div>
 
   <!-- Partie -->
   <div id="play" class="screen" hidden>
     <div id="svWrap"></div>
+    <div id="svBlock" hidden><p id="svBlockMsg"></p></div>
     <div id="logoShield" aria-hidden="true"></div>
     <div id="svLoading"><div class="drop"></div><p>Largage en cours…</p></div>
 
-    <div class="hud sign" role="status">
-      <div class="cell"><span class="lab">Manche</span><span class="val" id="hudRound">1/5</span></div>
-      <div class="cell"><span class="lab">Score</span><span class="val" id="hudScore">0</span></div>
-      <div class="cell" id="hudTimeCell" hidden><span class="lab">Temps</span><span class="val" id="hudTime">0:00</span></div>
+    <div class="hud-col">
+      <div class="hud sign" role="status">
+        <div class="cell"><span class="lab" id="hudLab1">Manche</span><span class="val" id="hudRound">1/5</span></div>
+        <div class="cell"><span class="lab" id="hudLab2">Score</span><span class="val" id="hudScore">0</span></div>
+        <div class="cell" id="hudTimeCell" hidden><span class="lab">Temps</span><span class="val" id="hudTime">0:00</span></div>
+      </div>
+      <p id="hintChip" class="chip" hidden></p>
+      <p id="flash" class="chip chip-flash" hidden></p>
     </div>
 
     <div class="tools">
+      <button id="hintBtn" class="tool" type="button">Indice</button>
       <button id="resetBtn" class="tool" type="button" title="Revenir à l'endroit où tu as été déposé">Retour au départ</button>
       <button id="swapBtn" class="tool" type="button" title="Si l'image ne s'affiche pas, on te dépose ailleurs sans pénalité">Écran noir ? Changer de lieu</button>
+      <button id="soundBtn" class="tool" type="button">Son : oui</button>
       <button id="quitBtn" class="tool" type="button">Quitter</button>
     </div>
 
@@ -69,6 +124,23 @@
       <button id="guessBtn" class="btn btn-go" type="button" disabled>Place ton point sur la carte</button>
     </div>
     <button id="mapToggle" class="btn btn-go" type="button">Ouvrir la carte</button>
+
+    <!-- Série de pays -->
+    <div id="quiz" hidden>
+      <p class="quiz-q">Dans quel pays es-tu ?</p>
+      <div class="quiz-grid" id="quizGrid"></div>
+    </div>
+    <section id="quizOver" class="panel over" hidden>
+      <p class="panel-kicker">Série terminée</p>
+      <p class="total"><span id="qoStreak">0</span><small id="qoUnit">bonnes réponses</small></p>
+      <p class="place" id="qoPlace"></p>
+      <p class="best" id="qoBest"></p>
+      <a id="qoLink" class="see" target="_blank" rel="noopener">Revoir l'endroit dans Google Maps</a>
+      <div class="final-actions">
+        <button id="qoAgain" class="btn btn-go" type="button">Rejouer <kbd>Espace</kbd></button>
+        <button id="qoHome" class="btn btn-ghost" type="button">Accueil</button>
+      </div>
+    </section>
   </div>
 
   <!-- Résultats -->
@@ -81,6 +153,7 @@
         <p class="panel-kicker" id="rpKicker">Manche 1 sur 5</p>
         <p class="dist" id="rpDist">—</p>
         <p class="place" id="rpPlace"></p>
+        <p class="note" id="rpNote" hidden></p>
         <a id="rpLink" class="see" target="_blank" rel="noopener">Revoir l'endroit dans Google Maps</a>
       </div>
       <div class="round-pts">
@@ -88,6 +161,7 @@
         <div class="bar"><i id="rpBar"></i></div>
         <button id="nextBtn" class="btn btn-go" type="button">Manche suivante <kbd>Espace</kbd></button>
       </div>
+      <ul id="rpFriends" class="friends" hidden></ul>
     </section>
 
     <section id="finalPanel" class="panel final" hidden>
@@ -97,13 +171,24 @@
         <p class="grade" id="fpGrade"></p>
         <p class="best" id="fpBest"></p>
       </div>
-      <ol id="fpList" class="rounds"></ol>
+      <div class="final-side">
+        <ol id="fpList" class="rounds"></ol>
+        <div id="fpBoardWrap" hidden>
+          <p class="panel-kicker">Classement en direct</p>
+          <ol id="fpBoard" class="rounds board"></ol>
+          <p class="best" id="fpBoardNote"></p>
+        </div>
+      </div>
+      <p id="fpNext" class="invite" hidden><span id="fpNextTxt"></span> <button id="fpNextBtn" class="btn btn-go" type="button">Rejoindre</button></p>
       <div class="final-actions">
         <button id="againBtn" class="btn btn-go" type="button">Rejouer <kbd>Espace</kbd></button>
-        <button id="homeBtn" class="btn btn-ghost" type="button">Changer de mode</button>
+        <button id="shareBtn" class="btn btn-ghost" type="button">Copier mon résultat</button>
+        <button id="homeBtn" class="btn btn-ghost" type="button">Accueil</button>
       </div>
     </section>
   </div>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
 
   <script src="vendor/leaflet.js"></script>
   <script src="locations.js"></script>
