@@ -203,9 +203,10 @@
   const mapsUrl = (loc) => `https://www.google.com/maps/@?api=1&map_action=pano&pano=${encodeURIComponent(loc[2])}&viewpoint=${loc[0]},${loc[1]}`;
 
   /* ---------- Cartes ---------- */
-  // Fond de carte : OpenStreetMap France (noms en français). Si ses serveurs flanchent, bascule sur le fond OSM standard.
+  // Fond de carte : style maison (mapstyle.js) dessiné par MapLibre à partir des données OpenFreeMap.
+  // Si le navigateur ne sait pas l'afficher ou si le service ne répond pas, on retombe sur les tuiles OpenStreetMap.
   const OSM = '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
-  const tiles = () => {
+  const rasterTiles = () => {
     const layer = L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', { subdomains: 'abc', maxZoom: 19, attribution: OSM + ' · OSM France' });
     let fails = 0;
     layer.on('tileerror', () => {
@@ -213,6 +214,24 @@
     });
     return layer;
   };
+  function addBase(map) {
+    if (!(window.maplibregl && L.maplibreGL && window.PDC_STYLE)) { rasterTiles().addTo(map); return; }
+    let gl = null, ok = false, swapped = false;
+    const swap = () => {
+      if (ok || swapped) return;
+      swapped = true;
+      try { if (gl) map.removeLayer(gl); } catch (e) { /* déjà retiré */ }
+      rasterTiles().addTo(map);
+    };
+    try {
+      gl = L.maplibreGL({ style: window.PDC_STYLE, attribution: OSM + ' · <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · © OpenMapTiles' }).addTo(map);
+      const m = gl.getMaplibreMap();
+      let errs = 0;
+      m.on('data', (e) => { if (e.dataType === 'source' && e.tile) ok = true; });
+      m.on('error', (e) => { console.warn('carte :', e && e.error ? e.error.message : e); if (++errs >= 4) swap(); });
+      setTimeout(swap, 12000);
+    } catch (e) { console.warn('carte :', e && e.message); swap(); }
+  }
   const iconGuess = L.divIcon({ className: '', html: '<div class="pin-guess"></div>', iconSize: [22, 22], iconAnchor: [11, 11] });
   const iconTrue = (n) => L.divIcon({ className: '', html: `<div class="pin-true">${n ? `<span class="pin-num">${n}</span>` : ''}</div>`, iconSize: [22, 30], iconAnchor: [11, 28] });
   function iconOther(name, color) {
@@ -226,7 +245,7 @@
   function initHomeMap() {
     homeMap = L.map('homeMap', { zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, touchZoom: false, tap: false })
       .setView([34, 8 + Math.random() * 40], 4);
-    tiles().addTo(homeMap);
+    addBase(homeMap);
     if (!reduceMotion) {
       const drift = () => { if (!$('home').hidden) homeMap.panBy([120, 0], { animate: true, duration: 12, easeLinearity: 1 }); };
       homeMap.on('moveend', drift);
@@ -235,8 +254,8 @@
   }
 
   function initGuessMap() {
-    gmap = L.map('guessMap', { worldCopyJump: true, minZoom: 1, maxZoom: 18, zoomSnap: 0.5, wheelPxPerZoomLevel: 90 });
-    tiles().addTo(gmap);
+    gmap = L.map('guessMap', { worldCopyJump: true, minZoom: 1, maxZoom: 18, zoomSnap: 0.5, wheelPxPerZoomLevel: 90 }).setView([25, 5], 1.5);
+    addBase(gmap);
     gmap.on('click', (e) => {
       if (!gmarker) gmarker = L.marker(e.latlng, { icon: iconGuess, draggable: true, keyboard: false }).addTo(gmap);
       else gmarker.setLatLng(e.latlng);
@@ -256,8 +275,8 @@
   }
 
   function initResultMap() {
-    rmap = L.map('resultMap', { minZoom: 2, zoomSnap: 0.25, worldCopyJump: false });
-    tiles().addTo(rmap);
+    rmap = L.map('resultMap', { minZoom: 2, zoomSnap: 0.25, worldCopyJump: false }).setView([25, 5], 2);
+    addBase(rmap);
     rlayer = L.layerGroup().addTo(rmap);
     olayer = L.layerGroup().addTo(rmap);
   }
@@ -470,8 +489,7 @@
     wrap.innerHTML = '';
     const f = document.createElement('iframe');
     f.title = 'Vue de rue';
-    f.allow = 'fullscreen; accelerometer; gyroscope';
-    f.setAttribute('allowfullscreen', '');
+    f.allow = 'fullscreen';   // surtout pas les capteurs de mouvement : sur téléphone la vue tournerait toute seule
     const done = () => {
       if (token !== loadToken) return;
       loading.classList.add('off');
@@ -989,6 +1007,8 @@
   $('lbStart').addEventListener('click', startRoomGame);
   $('lbBack').addEventListener('click', goHome);
   window.addEventListener('hashchange', route);
+  // iPhone : empêche le zoom de toute la page par pincement en dehors de la vue de rue et des cartes.
+  document.addEventListener('gesturestart', (e) => { if (!(e.target.closest && e.target.closest('.leaflet-container'))) e.preventDefault(); });
 
   document.querySelectorAll('input[name="zone"], input[name="time"], input[name="mode"]').forEach((i) => i.addEventListener('change', refreshHome));
 

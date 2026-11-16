@@ -19,6 +19,10 @@
 
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
+/* Téléphone : pas de rebond ni de tirer-pour-rafraîchir quand on glisse dans la vue de rue, pas de zoom au double appui. */
+html, body { overscroll-behavior: none; touch-action: manipulation; -webkit-text-size-adjust: 100%; }
+body { position: fixed; inset: 0; width: 100%; -webkit-tap-highlight-color: transparent; }
+button, .seg, .hud, .chip, kbd { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 body {
   font-family: var(--font);
   font-size: 16px;
@@ -207,11 +211,11 @@ h1::after { content: ""; display: block; width: 74px; height: 8px; margin-top: 0
   .hud { margin-bottom: 44px; }
   .tools { top: calc(66px + var(--sat)); left: 0; right: 0; max-width: none; padding: 0 12px; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; scrollbar-width: none; }
   .tools .tool { font-size: 0.8rem; min-height: 34px; white-space: nowrap; flex: none; }
-  #mapToggle { display: inline-flex; position: absolute; z-index: 7; left: 12px; right: 12px; bottom: calc(30px + var(--sab)); }
+  #mapToggle { display: inline-flex; position: absolute; z-index: 7; left: 12px; right: auto; bottom: calc(30px + var(--sab)); min-width: 190px; }
   #guess { left: 0; right: 0; bottom: 0; width: auto; opacity: 1; padding: 10px 10px calc(10px + var(--sab)); background: var(--blue); border-top: 3px solid #fff; z-index: 8; transform: translateY(105%); transition: transform 0.22s ease-out; }
   #guess.open { width: auto; transform: none; }
   #guessMap, #guess.open #guessMap { height: 56vh; box-shadow: none; border-width: 2px; }
-  #play.sheet #mapToggle { bottom: auto; top: calc(12px + var(--sat)); left: auto; right: 10px; z-index: 9; min-height: 40px; font-size: 0.92rem; }
+  #play.sheet #mapToggle { bottom: auto; top: calc(12px + var(--sat)); left: auto; right: 10px; z-index: 9; min-height: 40px; min-width: 0; font-size: 0.92rem; }
   #play.sheet .tools { display: none; }
   #roundPanel { grid-template-columns: auto minmax(0, 1fr); gap: 12px 14px; padding: 14px; }
   .round-pts { grid-column: 1 / -1; }
