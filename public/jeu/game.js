@@ -307,7 +307,12 @@
     // Sur ordinateur, la mini-carte s'agrandit au survol.
     let closeT;
     const g = $('guess');
-    g.addEventListener('mouseenter', () => { if (compact.matches) return; clearTimeout(closeT); g.classList.add('open'); });
+    g.addEventListener('mouseenter', () => {
+      const a = document.activeElement;
+      if (a && a.tagName === 'IFRAME') { a.blur(); window.focus(); }
+      if (compact.matches) return;
+      clearTimeout(closeT); g.classList.add('open');
+    });
     g.addEventListener('mouseleave', () => { if (compact.matches) return; closeT = setTimeout(() => g.classList.remove('open'), 500); });
   }
 
@@ -386,7 +391,7 @@
       for (let i = 0; i < 4; i++) {
         try { const r = await fetch(RELAY + topic, { method: 'POST', body: JSON.stringify(m) }); if (r.ok) return true; } catch (e) { /* on réessaie */ }
         await sleep(1500 * (i + 1));
-        if (!this.cfg || 'pdc-' + this.cfg.id !== topic) return false;
+        if (m.t !== 'x' && (!this.cfg || 'pdc-' + this.cfg.id !== topic)) return false;
       }
       return false;
     },
@@ -400,7 +405,10 @@
   let loadToken = 0, view = null;
   const cur = () => S.rounds[S.idx];
 
+  let inputLock = 0;
+  const locked = () => Date.now() < inputLock;
   function show(id) {
+    inputLock = Date.now() + 500;
     ['home', 'lobby', 'passport', 'play', 'result'].forEach((s) => { $(s).hidden = s !== id; });
     if (id === 'play' || id === 'result') killHomeMap();
   }
@@ -634,7 +642,7 @@
     $('quiz').hidden = true; $('quizOver').hidden = true;
     $('guess').hidden = false; $('mapToggle').hidden = false;
     $('resetBtn').hidden = S.mode !== 'classique';
-    $('swapBtn').hidden = false;
+    $('swapBtn').hidden = r.swaps >= MAX_SWAPS;
     renderHint();
     // Mode carte postale : un voile transparent empêche de bouger.
     const blk = $('svBlock');
@@ -666,6 +674,8 @@
     wrap.innerHTML = '';
     const f = document.createElement('iframe');
     f.title = 'Vue de rue';
+    f.tabIndex = -1;
+    if (S && !Q && S.mode === 'postale') f.setAttribute('inert', '');
     f.allow = 'fullscreen';   // surtout pas les capteurs de mouvement : sur téléphone la vue tournerait toute seule
     const done = () => {
       if (token !== loadToken) return;
@@ -722,14 +732,16 @@
     if (compact.matches) setSheet(true);
   }
 
+  const MAX_SWAPS = 2;
   function swapLocation() {
-    stopTimer(); stopFlash();
     if (Q) { if (!Q.answered) nextQuestion(); return; }
     const r = cur();
+    if (r.swaps >= MAX_SWAPS) return;
+    const loc = S.seed ? altLoc(S.idx, r.swaps + 1) : pickOne(S.zone, S.usedP, S.usedC, Math.random, true);
+    if (!loc) return;
+    stopTimer(); stopFlash();
     r.swaps++;
-    let loc;
-    if (S.seed) loc = altLoc(S.idx, r.swaps);
-    else { loc = pickOne(S.zone, S.usedP, S.usedC, Math.random, true); S.usedP.add(loc[2]); }
+    if (!S.seed) S.usedP.add(loc[2]);
     r.loc = loc; r.flashed = false; r.hint = 0; r.pressed = false;
     startRound();
   }
@@ -857,6 +869,7 @@
   }
 
   function next() {
+    if (!S || locked() || $('roundPanel').hidden) return;
     if (S.idx < ROUNDS - 1) {
       S.idx++;
       show('play');
@@ -880,6 +893,7 @@
     show('result');
     if (!rmap) initResultMap();
     $('roundPanel').hidden = true; $('finalPanel').hidden = false;
+    inputLock = Date.now() + 700;
     S.done = true;
 
     const label = S.kind === 'daily' ? 'Défi du jour' : `${Z(S.zone).label} · ${MODES[S.mode].label}`;
@@ -1009,7 +1023,8 @@
   function nextQuestion() {
     clearTimeout(quizT); stopTimer(); timerOn = false;
     const z = Z(Q.zone);
-    const loc = pickOne(Q.zone, Q.used, new Set(Q.last), Math.random, true);
+    let loc = pickOne(Q.zone, Q.used, new Set(Q.last), Math.random, true);
+    if (!loc) { Q.used = new Set(); loc = pickOne(Q.zone, Q.used, new Set(Q.last), Math.random, false); }   // tous les lieux de la zone ont été vus : on repart
     Q.used.add(loc[2]); Q.loc = loc; Q.answered = false;
     Q.last = Q.last.concat(loc[4]).slice(-4);
     // Trois faux pays, de préférence sur le même continent : c'est là que ça devient dur.
@@ -1038,6 +1053,7 @@
     if (!Q || Q.answered) return;
     Q.answered = true;
     stopTimer();
+    $('hudTimeCell').classList.remove('low');
     const ok = cc === Q.loc[4];
     $('quizGrid').querySelectorAll('button').forEach((b) => {
       b.disabled = true;
@@ -1058,6 +1074,7 @@
     if (record) store.set('serie.' + Q.zone, Q.streak);
     quizT = setTimeout(() => {
       loadToken++;
+      $('svLoading').classList.add('off');
       $('quiz').hidden = true;
       $('qoStreak').textContent = String(Q.streak);
       $('qoUnit').textContent = Q.streak > 1 ? 'bonnes réponses de suite' : 'bonne réponse';
@@ -1152,6 +1169,7 @@
   function route() {
     const m = /^#p=(.+)$/.exec(location.hash), cfg = m && parseLink(m[1]);
     if (cfg && (!Room.cfg || Room.cfg.id !== cfg.id)) { openLobby(cfg, false); return true; }
+    if (!cfg && !$('lobby').hidden) goHome();
     return false;
   }
   Room.onChange = () => {
@@ -1174,7 +1192,7 @@
 
   /* ---------- Branchements ---------- */
   function again() {
-    if (!S) return;
+    if (!S || locked()) return;
     if (S.kind === 'room' && Room.cfg) { if (!joinNext()) rematch(); }
     else if (S.kind !== 'daily') startSolo(S.zone, S.mode, S.limit);
   }
