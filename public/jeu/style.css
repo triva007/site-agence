@@ -105,6 +105,8 @@ h1::after { content: ""; display: block; width: 74px; height: 8px; margin-top: 0
 #svWrap iframe { position: absolute; left: 0; top: -84px; width: 100%; height: calc(100% + 84px); border: 0; }
 /* Le logo Google ouvre la carte à l'endroit exact : on bloque le clic, le logo reste visible. */
 #logoShield { position: absolute; left: 50%; bottom: 0; width: 120px; height: 34px; transform: translateX(-50%); z-index: 3; }
+/* Même chose pour la bande de liens de Google tout en bas (conditions, signaler un problème) : un appui dessus ouvrait une page Google. */
+#logoShield::after { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: 22px; }
 
 #svLoading {
   position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; justify-items: center; gap: 14px;
@@ -286,6 +288,33 @@ h2 { margin: 0; font-weight: 900; font-size: clamp(1.5rem, 5vw, 2.1rem); line-he
 .invite { grid-column: 1 / -1; margin: 6px 0 0; padding: 10px 12px; border-radius: 10px; background: #fff3bf; border: 2px solid var(--ink); font-weight: 600; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
 .invite .btn { min-height: 40px; }
 .pin-other { width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid #fff; box-shadow: 0 0 0 1.5px var(--ink), 0 2px 6px rgba(0, 0, 0, 0.4); color: #fff; font: 600 11px/17px var(--mono); text-align: center; text-transform: uppercase; }
+
+/* ---------- Niveau, expérience, passeport ---------- */
+.lvl { display: grid; grid-template-columns: auto minmax(60px, 1fr) auto; gap: 4px 12px; align-items: center; margin-top: 12px; font-size: 0.92rem; }
+.lvl-txt b { font-weight: 800; }
+.lvl-bar { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.25); overflow: hidden; }
+.lvl-bar i { display: block; height: 100%; background: var(--yellow); border-radius: 4px; transition: width 0.8s ease-out; }
+.lvl-num { font: 600 0.8rem var(--mono); opacity: 0.85; white-space: nowrap; }
+.lvl-gain { grid-column: 1 / -1; font-weight: 800; }
+.lvl-paper .lvl-bar { background: var(--line); }
+.lvl-paper .lvl-bar i { background: var(--blue); }
+.lvl-paper .lvl-gain { color: var(--blue); }
+#passport { display: flex; padding: max(16px, var(--sat)) 16px max(16px, var(--sab)); overflow: auto; background: var(--blue-deep); }
+.pass-sign { width: min(900px, 100%); }
+#ppList h3 { margin: 1.3rem 0 0.5rem; font-weight: 800; font-size: 1.05rem; letter-spacing: 0.02em; }
+#ppList h3 small { font: 600 0.8rem var(--mono); opacity: 0.8; margin-left: 0.4em; }
+.stamps { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.stamp { display: flex; flex-direction: column; gap: 1px; text-align: left; padding: 0.55em 0.75em 0.4em; border-radius: 9px; border: 2px dashed rgba(255, 255, 255, 0.45); background: transparent; color: #fff; min-width: 0; }
+button.stamp:hover { border-color: #fff; background: rgba(255, 255, 255, 0.1); }
+.stamp.fixed { opacity: 0.7; }
+.st-name { font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-tier { font: 600 0.74rem var(--mono); opacity: 0.85; }
+.stamp.bronze, .stamp.argent, .stamp.or { border-style: solid; color: var(--ink); opacity: 1; }
+.stamp.bronze { background: #e0a877; border-color: #e0a877; }
+.stamp.argent { background: #d9dee6; border-color: #d9dee6; }
+.stamp.or { background: var(--yellow); border-color: var(--yellow); }
+.stampline { color: var(--green); }
+.chip-press { background: var(--red); color: #fff; font-weight: 800; }
 
 #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2000; }
 

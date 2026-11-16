@@ -24,14 +24,31 @@
   const contOf = (l) => (l[4] === 'RU' && l[1] > 60 ? 'AS' : CC2CONT[l[4]] || 'EU');
 
   // k = distance (km) à laquelle on ne garde plus qu'environ 37 % des points.
+  // Les lieux portant une étiquette (6e champ : 'c' capitale, 'l' lieu célèbre) ne servent qu'à leur carte thématique.
   const ZONES = {
-    monde: { label: 'Monde', k: 1500, view: [[25, 5], 1.5], has: () => true, hints: ['cont', 'pays'] },
-    europe: { label: 'Europe', k: 450, view: [[53, 12], 3.5], has: (l) => contOf(l) === 'EU', hints: ['pays'] },
-    france: { label: 'France', k: 130, view: [[46.6, 2.4], 5], has: (l) => l[4] === 'FR', hints: ['quart'] },
-    ameriques: { label: 'Amériques', k: 1200, view: [[8, -80], 2], has: (l) => contOf(l) === 'NA' || contOf(l) === 'SA', hints: ['cont', 'pays'] },
-    asie: { label: 'Asie et Océanie', k: 1200, view: [[12, 105], 2], has: (l) => contOf(l) === 'AS' || contOf(l) === 'OC', hints: ['cont', 'pays'] },
-    afrique: { label: 'Afrique', k: 800, view: [[-2, 20], 2.5], has: (l) => contOf(l) === 'AF', hints: ['pays'] },
+    monde: { label: 'Monde', k: 1500, view: [[25, 5], 1.5], has: (l) => !l[5], hints: ['cont', 'pays'] },
+    europe: { label: 'Europe', k: 450, view: [[53, 12], 3.5], has: (l) => !l[5] && contOf(l) === 'EU', hints: ['pays'] },
+    france: { label: 'France', k: 130, view: [[46.6, 2.4], 5], has: (l) => !l[5] && l[4] === 'FR', hints: ['quart'] },
+    ameriques: { label: 'Amériques', k: 1200, view: [[8, -80], 2], has: (l) => !l[5] && (contOf(l) === 'NA' || contOf(l) === 'SA'), hints: ['cont', 'pays'] },
+    asie: { label: 'Asie et Océanie', k: 1200, view: [[12, 105], 2], has: (l) => !l[5] && (contOf(l) === 'AS' || contOf(l) === 'OC'), hints: ['cont', 'pays'] },
+    afrique: { label: 'Afrique', k: 800, view: [[-2, 20], 2.5], has: (l) => !l[5] && contOf(l) === 'AF', hints: ['pays'] },
+    capitales: { label: 'Capitales', k: 1500, view: [[25, 5], 1.5], has: (l) => l[5] === 'c', hints: ['cont', 'pays'] },
+    celebres: { label: 'Lieux célèbres', k: 1500, view: [[25, 5], 1.5], has: (l) => l[5] === 'l', hints: ['cont', 'pays'] },
   };
+  // Zone d'un seul pays (clé « pays:FR »), fabriquée à la demande pour le passeport.
+  const zoneCache = {};
+  function Z(key) {
+    if (ZONES[key]) return ZONES[key];
+    const m = /^pays:([A-Z]{2})$/.exec(key || '');
+    if (!m) return ZONES.monde;
+    if (!zoneCache[key]) {
+      const cc = m[1], ls = LOCS.filter((l) => !l[5] && l[4] === cc);
+      const lats = ls.map((l) => l[0]), lngs = ls.map((l) => l[1]);
+      const sw = [Math.min(...lats), Math.min(...lngs)], ne = [Math.max(...lats), Math.max(...lngs)];
+      zoneCache[key] = { label: countryName(cc), k: clamp(haversine(sw, ne) / 8, 12, 900), bounds: [sw, ne], has: (l) => !l[5] && l[4] === cc, hints: [], country: cc };
+    }
+    return zoneCache[key];
+  }
   const MODES = {
     classique: { label: 'Classique', code: 'c', desc: 'Balade-toi librement, puis place ton point sur la carte.' },
     postale: { label: 'Carte postale', code: 'p', desc: 'Une image fixe : impossible de bouger ni de tourner la tête.' },
@@ -165,7 +182,7 @@
 
   /* ---------- Tirage des lieux ---------- */
   function pickOne(zoneKey, usedPanos, usedCountries, rng, avoidRecent) {
-    const z = ZONES[zoneKey];
+    const z = Z(zoneKey);
     let pool = LOCS.filter((l) => z.has(l) && !usedPanos.has(l[2]));
     if (avoidRecent) {
       const recent = new Set(store.get('recent', []));
@@ -286,7 +303,7 @@
   const cleanName = (s) => String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f<>]/g, '').trim().slice(0, 16);
   const COLORS = ['#e4572e', '#17bebb', '#7b2cbf', '#f72585', '#2a9d8f', '#ff9f1c', '#3a86ff', '#6c757d'];
   const colorOf = (id) => (id === myId ? '#ffd60a' : COLORS[hashStr(id) % COLORS.length]);
-  const LINK_RE = /^([a-z0-9]{8,14})-(monde|europe|france|ameriques|asie|afrique)-([cpe])-(0|30|90|180)$/;
+  const LINK_RE = /^([a-z0-9]{8,14})-(monde|europe|france|ameriques|asie|afrique|capitales|celebres)-([cpe])-(0|30|90|180)$/;
   const parseLink = (s) => { const m = LINK_RE.exec(s || ''); return m ? { id: m[1], zone: m[2], mode: MODE_BY_CODE[m[3]], limit: +m[4] } : null; };
   const linkOf = (c) => `${c.id}-${c.zone}-${MODES[c.mode].code}-${c.limit}`;
   const pageUrl = () => location.origin + location.pathname;
@@ -296,19 +313,22 @@
     cfg: null, es: null, seen: new Set(), players: new Map(), online: false, next: null, onChange: null,
     open(cfg) {
       this.close();
-      this.cfg = cfg; this.players = new Map(); this.seen = new Set(); this.next = null; this.online = false;
+      this.cfg = cfg; this.players = new Map(); this.seen = new Set(); this.next = null; this.online = false; this.openedAt = 0;
       const mine = store.get('room.' + cfg.id, null);   // mes manches, gardées aussi sur cet appareil
       if (mine) this.apply({ t: 'g', id: myId, n: store.get('name', ''), g: mine }, true);
       try {
         const es = (this.es = new EventSource(`${RELAY}pdc-${cfg.id}/sse?since=12h`));
-        es.onopen = () => { this.online = true; this.emit(); };
+        es.onopen = () => { this.online = true; if (!this.openedAt) this.openedAt = performance.now(); this.emit(); };
         es.onerror = () => { this.online = false; this.emit(); };
         es.onmessage = (e) => {
           try {
             const m = JSON.parse(e.data);
             if (m.event !== 'message' || this.seen.has(m.id)) return;
             this.seen.add(m.id);
-            this.apply(JSON.parse(m.message));
+            const msg = JSON.parse(m.message);
+            this.apply(msg);
+            // Plus de 3 s après l'ouverture, ce n'est plus l'historique : c'est un ami qui joue en ce moment.
+            if (this.onLive && this.openedAt && performance.now() - this.openedAt > 3000) this.onLive(msg);
           } catch (err) { /* message illisible : on l'ignore */ }
         };
       } catch (e) { /* pas de direct : la partie reste jouable */ }
@@ -347,16 +367,121 @@
   /* ---------- État ---------- */
   let S = null;          // partie à 5 manches en cours
   let Q = null;          // série de pays en cours
-  let timerId = null, timerOn = false, flashId = null, quizT = null;
+  let timerId = null, timerOn = false, timerEnd = 0, flashId = null, quizT = null;
   let loadToken = 0, view = null;
   const cur = () => S.rounds[S.idx];
 
-  function show(id) { ['home', 'lobby', 'play', 'result'].forEach((s) => { $(s).hidden = s !== id; }); }
+  function show(id) { ['home', 'lobby', 'passport', 'play', 'result'].forEach((s) => { $(s).hidden = s !== id; }); }
   function stopAll() {
     stopTimer(); stopFlash(); clearTimeout(quizT);
     loadToken++; view = null;
     $('svWrap').innerHTML = '';
   }
+
+  /* ---------- Progression : niveaux, expérience, passeport ---------- */
+  const TITLES = [[1, 'Auto-stoppeur'], [3, 'Voyageur du dimanche'], [5, 'Routard'], [8, 'Baroudeur'], [12, 'Globe-trotteur'], [16, 'Explorateur'], [20, 'Cartographe'], [25, 'Légende de la route']];
+  const xpNeed = (lv) => Math.round(120 * Math.pow(lv, 1.5));   // expérience totale pour passer du niveau lv au suivant
+  function levelOf(xp) {
+    let lv = 1;
+    while (xp >= xpNeed(lv) && lv < 99) lv++;
+    const base = lv > 1 ? xpNeed(lv - 1) : 0;
+    return { lv, title: TITLES.filter((t) => lv >= t[0]).pop()[1], into: xp - base, span: xpNeed(lv) - base };
+  }
+  const getXp = () => { const v = +store.get('xp', 0); return Number.isFinite(v) && v > 0 ? v : 0; };
+  function addXp(n) {
+    const before = getXp(), after = before + Math.max(0, Math.round(n));
+    store.set('xp', after);
+    return { gained: after - before, before: levelOf(before), after: levelOf(after) };
+  }
+  function levelBar(el, L) {
+    el.textContent = '';
+    const t = document.createElement('span'); t.className = 'lvl-txt';
+    const b = document.createElement('b'); b.textContent = `Niveau ${L.lv}`;
+    t.append(b, ` · ${L.title}`);
+    const bar = document.createElement('span'); bar.className = 'lvl-bar';
+    const fill = document.createElement('i'); fill.style.width = clamp(L.into / L.span * 100, 0, 100) + '%';
+    bar.appendChild(fill);
+    const n = document.createElement('span'); n.className = 'lvl-num'; n.textContent = `${fmtInt(L.into)} / ${fmtInt(L.span)} XP`;
+    el.append(t, bar, n);
+  }
+  const renderLevel = (el) => levelBar(el, levelOf(getXp()));
+  function renderXp(el, x) {
+    el.hidden = false;
+    levelBar(el, x.after);
+    const g = document.createElement('span'); g.className = 'lvl-gain';
+    g.textContent = `+${fmtInt(x.gained)} XP` + (x.after.lv > x.before.lv ? ` · Niveau ${x.after.lv} atteint : ${x.after.title}` : '');
+    el.prepend(g);
+    if (x.after.lv > x.before.lv) { Snd.good(); confetti(); }
+  }
+
+  // Passeport : meilleur score d'une manche dans chaque pays → tampon bronze, argent ou or.
+  const TIERS = [[4800, 'or', 'Or'], [4000, 'argent', 'Argent'], [2500, 'bronze', 'Bronze']];
+  const tierOf = (pts) => TIERS.find((t) => pts >= t[0]) || null;
+  const getPass = () => { const p = store.get('pass', {}); return p && typeof p === 'object' && !Array.isArray(p) ? p : {}; };
+  function stamp(cc, pts) {
+    const p = getPass(), old = +p[cc] || 0;
+    if (pts <= old) return null;
+    p[cc] = pts; store.set('pass', p);
+    const a = tierOf(old), b = tierOf(pts);
+    return b && (!a || a[1] !== b[1]) ? b : null;   // renvoie le nouveau palier s'il vient d'être franchi
+  }
+  const COUNTRY_MIN = 10;   // nombre de lieux à partir duquel un pays se joue seul
+  const countryCounts = (() => { const c = {}; LOCS.forEach((l) => { if (!l[5]) c[l[4]] = (c[l[4]] || 0) + 1; }); return c; })();
+  function passStats() {
+    const p = getPass(), all = Object.keys(countryCounts);
+    return { total: all.length, done: all.filter((cc) => tierOf(+p[cc] || 0)).length };
+  }
+  function openPassport() {
+    stopAll();
+    show('passport');
+    const p = getPass(), ps = passStats();
+    renderLevel($('ppLevel'));
+    $('ppIntro').textContent = `${ps.done} pays tamponnés sur ${ps.total}. Un tampon se gagne en marquant au moins 2 500 points sur une manche dans le pays (4 000 pour l'argent, 4 800 pour l'or). Touche un pays pour y jouer 5 manches.`;
+    const list = $('ppList');
+    list.textContent = '';
+    ['EU', 'NA', 'SA', 'AS', 'AF', 'OC'].forEach((ck) => {
+      const ccs = Object.keys(countryCounts).filter((cc) => CC2CONT[cc] === ck).sort((a, b) => countryName(a).localeCompare(countryName(b), 'fr'));
+      if (!ccs.length) return;
+      const sec = document.createElement('section');
+      const h = document.createElement('h3');
+      h.textContent = CONT[ck];
+      const small = document.createElement('small'); small.textContent = ` ${ccs.filter((cc) => tierOf(+p[cc] || 0)).length}/${ccs.length}`;
+      h.appendChild(small);
+      const grid = document.createElement('div'); grid.className = 'stamps';
+      ccs.forEach((cc) => {
+        const t = tierOf(+p[cc] || 0), playable = countryCounts[cc] >= COUNTRY_MIN;
+        const b = document.createElement(playable ? 'button' : 'div');
+        if (playable) { b.type = 'button'; b.title = `Jouer 5 manches : ${countryName(cc)}`; b.addEventListener('click', () => startSolo('pays:' + cc, 'classique', 0)); }
+        b.className = 'stamp' + (t ? ' ' + t[1] : '') + (playable ? '' : ' fixed');
+        const n = document.createElement('span'); n.className = 'st-name'; n.textContent = countryName(cc);
+        const d = document.createElement('span'); d.className = 'st-tier'; d.textContent = t ? `${t[2]} · ${fmtInt(+p[cc])}` : (playable ? 'À découvrir' : 'À croiser en partie');
+        b.append(n, d);
+        grid.appendChild(b);
+      });
+      sec.append(h, grid);
+      list.appendChild(sec);
+    });
+    $('passport').scrollTop = 0;
+  }
+
+  // Entre amis : dès qu'un joueur valide la manche sur laquelle tu es, il te reste 20 secondes.
+  const PRESS = 20;
+  function pressure(name) {
+    if (!S || S.kind !== 'room' || Q || $('play').hidden) return;
+    const r = cur();
+    if (r.pressed) return;
+    r.pressed = true;
+    if (timerId && (timerEnd - performance.now()) / 1000 <= PRESS) return;   // le chrono en cours est déjà plus court
+    const chip = $('pressChip');
+    chip.hidden = false; chip.textContent = `${name} a validé : plus que ${PRESS} s`;
+    $('hudTimeCell').hidden = false;
+    stopTimer(); timerOn = false;
+    startTimer(PRESS, submit);
+    Snd.tick();
+  }
+  Room.onLive = (m) => {
+    if (m && m.t === 'g' && m.id !== myId && Array.isArray(m.g) && S && S.kind === 'room' && m.g.length === S.idx + 1) pressure(cleanName(m.n) || 'Un joueur');
+  };
 
   /* ---------- Accueil ---------- */
   const selected = (name) => document.querySelector(`input[name="${name}"]:checked`).value;
@@ -367,7 +492,7 @@
     const fr = document.querySelector('input[name="zone"][value="france"]');
     fr.disabled = mode === 'serie';
     if (fr.disabled && fr.checked) document.querySelector('input[name="zone"][value="monde"]').checked = true;
-    const zk = selected('zone'), z = ZONES[zk];
+    const zk = selected('zone'), z = Z(zk);
     $('modeDesc').textContent = MODES[mode].desc;
     const pool = LOCS.filter((l) => z.has(l));
     const nCountries = new Set(pool.map((l) => l[4])).size;
@@ -377,6 +502,9 @@
     $('startBtn').disabled = pool.length < ROUNDS;
     const d = store.get('daily', null);
     $('dailyBtn').textContent = d && d.d === today() ? `Défi du jour : ${fmtInt(d.score)} pts` : 'Défi du jour';
+    renderLevel($('homeLevel'));
+    const ps = passStats();
+    $('passBtn').textContent = `Passeport : ${ps.done}/${ps.total} pays`;
   }
   function goHome() {
     stopAll();
@@ -426,9 +554,9 @@
     pays: { label: 'pays', f: 0.5, cost: '−50 %', text: (l) => countryName(l[4]) },
     quart: { label: 'quart du pays', f: 0.7, cost: '−30 %', text: (l) => (l[0] > 46.6 ? 'Nord' : 'Sud') + '-' + (l[1] > 2.4 ? 'Est' : 'Ouest') },
   };
-  const hintFactor = (r) => (r.hint ? HINTS[ZONES[S.zone].hints[r.hint - 1]].f : 1);
+  const hintFactor = (r) => (r.hint ? HINTS[Z(S.zone).hints[r.hint - 1]].f : 1);
   function renderHint() {
-    const r = cur(), lv = ZONES[S.zone].hints, btn = $('hintBtn'), chip = $('hintChip');
+    const r = cur(), lv = Z(S.zone).hints, btn = $('hintBtn'), chip = $('hintChip');
     if (r.hint < lv.length) { const h = HINTS[lv[r.hint]]; btn.hidden = false; btn.textContent = `Indice : ${h.label} (${h.cost})`; }
     else btn.hidden = true;
     chip.hidden = !r.hint;
@@ -455,6 +583,7 @@
     $('hudTimeCell').hidden = !S.limit;
     $('hudTimeCell').classList.remove('low');
     if (S.limit) $('hudTime').textContent = fmtTime(S.limit);
+    $('pressChip').hidden = true;
     $('quiz').hidden = true; $('quizOver').hidden = true;
     $('guess').hidden = false; $('mapToggle').hidden = false;
     $('resetBtn').hidden = S.mode !== 'classique';
@@ -471,9 +600,10 @@
     setSheet(false);
     const b = $('guessBtn');
     b.disabled = true; b.textContent = 'Place ton point sur la carte';
-    const v = ZONES[S.zone].view;
+    const zn = Z(S.zone);
     gmap.invalidateSize({ animate: false });
-    gmap.setView(v[0], v[1], { animate: false });
+    if (zn.bounds) gmap.fitBounds(zn.bounds, { padding: [8, 8], animate: false });
+    else gmap.setView(zn.view[0], zn.view[1], { animate: false });
     disarmQuit();
     loadStreetView(r.loc, r.heading, () => {
       startTimer(S.limit, submit);
@@ -504,7 +634,7 @@
   function startTimer(sec, onEnd) {
     if (!sec || timerOn) return;
     timerOn = true;
-    const end = performance.now() + sec * 1000;
+    const end = (timerEnd = performance.now() + sec * 1000);
     let lastTick = 99;
     clearInterval(timerId);
     timerId = setInterval(() => {
@@ -570,9 +700,10 @@
       const ll = gmarker.getLatLng();
       r.guess = [ll.lat, wrapLng(ll.lng)];
       r.km = haversine([r.loc[0], r.loc[1]], r.guess);
-      r.pts = Math.round(points(r.km, ZONES[S.zone].k) * hintFactor(r));
+      r.pts = Math.round(points(r.km, Z(S.zone).k) * hintFactor(r));
     } else { r.guess = null; r.km = null; r.pts = 0; }
     S.score += r.pts;
+    r.stamp = r.guess ? stamp(r.loc[4], r.pts) : null;
     markRecent(r.loc[2]);
     $('svWrap').innerHTML = '';
     if (S.kind === 'room' && Room.cfg) {
@@ -655,9 +786,12 @@
     $('borneTxt').textContent = r.loc[4];
     $('rpDist').textContent = r.guess ? (r.km <= 0.25 ? 'En plein dessus' : `À ${fmtDist(r.km)}`) : 'Pas de réponse';
     const place = $('rpPlace');
-    place.textContent = 'Tu étais près de ';
+    place.textContent = r.loc[5] === 'l' ? 'C\'était : ' : r.loc[5] === 'c' ? 'Tu étais à ' : 'Tu étais près de ';
     const strong = document.createElement('strong'); strong.textContent = r.loc[3];
     place.append(strong, `, ${countryName(r.loc[4])}.`);
+    const st = $('rpStamp');
+    st.hidden = !r.stamp;
+    if (r.stamp) st.textContent = `Nouveau tampon ${r.stamp[2].toLowerCase()} dans ton passeport : ${countryName(r.loc[4])}`;
     $('rpNote').hidden = !r.hint || !r.guess;
     if (r.hint) $('rpNote').textContent = `Indice utilisé : points × ${String(hintFactor(r)).replace('.', ',')}`;
     $('rpLink').href = mapsUrl(r.loc);
@@ -697,7 +831,7 @@
     $('roundPanel').hidden = true; $('finalPanel').hidden = false;
     S.done = true;
 
-    const label = S.kind === 'daily' ? 'Défi du jour' : `${ZONES[S.zone].label} · ${MODES[S.mode].label}`;
+    const label = S.kind === 'daily' ? 'Défi du jour' : `${Z(S.zone).label} · ${MODES[S.mode].label}`;
     $('fpKicker').textContent = `Partie terminée · ${label}`;
     $('fpMax').textContent = `/ ${fmtInt(max)}`;
     countUp($('fpTotal'), S.score, 1200);
@@ -714,6 +848,7 @@
       else $('fpBest').textContent = `Ton record : ${fmtInt(best)}`;
     }
     if (fresh) { if (record || S.score / max >= 0.75) { Snd.good(); confetti(); } else Snd.mid(); }
+    if (fresh) renderXp($('fpXp'), addXp(S.score / 100)); else $('fpXp').hidden = true;
 
     const multi = S.kind === 'room';
     $('fpList').hidden = multi; $('fpBoardWrap').hidden = !multi;
@@ -792,7 +927,7 @@
   function shareText() {
     const sq = S.rounds.map((r) => (r.pts >= 4500 ? '🟩' : r.pts >= 3000 ? '🟨' : r.pts >= 1500 ? '🟧' : '🟥')).join('');
     const d = new Date();
-    const head = S.kind === 'daily' ? `Défi du ${d.getDate()}/${d.getMonth() + 1}` : `${ZONES[S.zone].label} · ${MODES[S.mode].label}`;
+    const head = S.kind === 'daily' ? `Défi du ${d.getDate()}/${d.getMonth() + 1}` : `${Z(S.zone).label} · ${MODES[S.mode].label}`;
     const url = S.kind === 'room' && Room.cfg ? roomUrl(Room.cfg) : pageUrl();
     return `Point de chute · ${head}\n${fmtInt(S.score)} / ${fmtInt(ROUNDS * MAX)}\n${sq}\n${url}`;
   }
@@ -816,7 +951,7 @@
   }
   function nextQuestion() {
     clearTimeout(quizT); stopTimer(); timerOn = false;
-    const z = ZONES[Q.zone];
+    const z = Z(Q.zone);
     const loc = pickOne(Q.zone, Q.used, new Set(Q.last), Math.random, true);
     Q.used.add(loc[2]); Q.loc = loc; Q.answered = false;
     Q.last = Q.last.concat(loc[4]).slice(-4);
@@ -870,7 +1005,8 @@
       const place = $('qoPlace');
       place.textContent = (cc ? 'Raté : c\'était ' : 'Temps écoulé : c\'était ');
       const strong = document.createElement('strong'); strong.textContent = countryName(Q.loc[4]);
-      place.append(strong, `, près de ${Q.loc[3]}.`);
+      place.append(strong, Q.loc[5] === 'l' ? ` (${Q.loc[3]}).` : Q.loc[5] === 'c' ? `, à ${Q.loc[3]}.` : `, près de ${Q.loc[3]}.`);
+      renderXp($('qoXp'), addXp(Q.streak * 15));
       $('qoBest').textContent = record ? (Q.best ? `Nouveau record. L'ancien était à ${Q.best}.` : 'Premier record enregistré.') : `Ton record : ${Q.best}`;
       $('qoLink').href = mapsUrl(Q.loc);
       $('quizOver').hidden = false;
@@ -884,7 +1020,7 @@
     S = null; Q = null;
     Room.open(cfg);
     show('lobby');
-    $('lbTitle').textContent = `${ZONES[cfg.zone].label}, mode ${MODES[cfg.mode].label.toLowerCase()}`;
+    $('lbTitle').textContent = `${Z(cfg.zone).label}, mode ${MODES[cfg.mode].label.toLowerCase()}`;
     $('lbLink').value = roomUrl(cfg);
     const name = store.get('name', '');
     $('lbName').value = name;
@@ -982,11 +1118,13 @@
   });
   $('resetBtn').addEventListener('click', () => { if (view) loadStreetView(view.loc, view.heading, view.onReady); });
   $('swapBtn').addEventListener('click', swapLocation);
-  $('hintBtn').addEventListener('click', () => { const r = cur(); if (r.hint < ZONES[S.zone].hints.length) { r.hint++; Snd.pin(); renderHint(); } });
+  $('hintBtn').addEventListener('click', () => { const r = cur(); if (r.hint < Z(S.zone).hints.length) { r.hint++; Snd.pin(); renderHint(); } });
   $('soundBtn').addEventListener('click', () => { Snd.on = !Snd.on; store.set('snd', Snd.on); setSoundLabel(); Snd.pin(); });
   $('mapToggle').addEventListener('click', () => setSheet(!$('guess').classList.contains('open')));
   $('qoAgain').addEventListener('click', () => startSerie(Q.zone, Q.limit));
   $('qoHome').addEventListener('click', goHome);
+  $('passBtn').addEventListener('click', openPassport);
+  $('ppBack').addEventListener('click', goHome);
 
   $('lbCopy').addEventListener('click', () => {
     const url = $('lbLink').value;

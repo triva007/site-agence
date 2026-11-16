@@ -43,6 +43,8 @@
           <label><input type="radio" name="zone" value="ameriques"><span>Amériques</span></label>
           <label><input type="radio" name="zone" value="asie"><span>Asie et Océanie</span></label>
           <label><input type="radio" name="zone" value="afrique"><span>Afrique</span></label>
+          <label><input type="radio" name="zone" value="capitales"><span>Capitales</span></label>
+          <label><input type="radio" name="zone" value="celebres"><span>Lieux célèbres</span></label>
         </div>
       </fieldset>
 
@@ -60,7 +62,9 @@
       <div class="alt-row">
         <button id="friendsBtn" class="btn btn-alt" type="button">Jouer avec des amis</button>
         <button id="dailyBtn" class="btn btn-alt" type="button">Défi du jour</button>
+        <button id="passBtn" class="btn btn-alt" type="button">Passeport</button>
       </div>
+      <div class="lvl" id="homeLevel"></div>
       <p class="meta"><span id="poolLine"></span><span id="bestLine"></span></p>
     </main>
   </div>
@@ -70,7 +74,7 @@
     <main class="sign home-sign">
       <p class="kicker">Partie entre amis</p>
       <h2 id="lbTitle">Monde</h2>
-      <p class="lede">Envoie ce lien à tes amis. Tout le monde joue les 5 mêmes lieux, chacun sur son écran, quand il veut. Le classement se met à jour en direct.</p>
+      <p class="lede">Envoie ce lien à tes amis. Tout le monde joue les 5 mêmes lieux, chacun sur son écran, quand il veut. Le classement se met à jour en direct. Si vous jouez en même temps : dès qu'un joueur valide une manche, les autres n'ont plus que 20 secondes.</p>
 
       <div class="linkrow">
         <input id="lbLink" type="text" readonly aria-label="Lien de la partie">
@@ -95,6 +99,18 @@
     </main>
   </div>
 
+  <!-- Passeport -->
+  <div id="passport" class="screen" hidden>
+    <main class="sign home-sign pass-sign">
+      <p class="kicker">Ta progression</p>
+      <h2>Passeport</h2>
+      <div class="lvl" id="ppLevel"></div>
+      <p class="lede" id="ppIntro"></p>
+      <div id="ppList"></div>
+      <p class="meta"><button id="ppBack" class="linkbtn" type="button">Retour à l'accueil</button></p>
+    </main>
+  </div>
+
   <!-- Partie -->
   <div id="play" class="screen" hidden>
     <div id="svWrap"></div>
@@ -110,6 +126,7 @@
       </div>
       <p id="hintChip" class="chip" hidden></p>
       <p id="flash" class="chip chip-flash" hidden></p>
+      <p id="pressChip" class="chip chip-press" hidden></p>
     </div>
 
     <div class="tools">
@@ -136,6 +153,7 @@
       <p class="total"><span id="qoStreak">0</span><small id="qoUnit">bonnes réponses</small></p>
       <p class="place" id="qoPlace"></p>
       <p class="best" id="qoBest"></p>
+      <div class="lvl lvl-paper" id="qoXp" hidden></div>
       <a id="qoLink" class="see" target="_blank" rel="noopener">Revoir l'endroit dans Google Maps</a>
       <div class="final-actions">
         <button id="qoAgain" class="btn btn-go" type="button">Rejouer <kbd>Espace</kbd></button>
@@ -155,6 +173,7 @@
         <p class="dist" id="rpDist">—</p>
         <p class="place" id="rpPlace"></p>
         <p class="note" id="rpNote" hidden></p>
+        <p class="note stampline" id="rpStamp" hidden></p>
         <a id="rpLink" class="see" target="_blank" rel="noopener">Revoir l'endroit dans Google Maps</a>
       </div>
       <div class="round-pts">
@@ -171,6 +190,7 @@
         <p class="total"><span id="fpTotal">0</span><small id="fpMax">/ 25 000</small></p>
         <p class="grade" id="fpGrade"></p>
         <p class="best" id="fpBest"></p>
+        <div class="lvl lvl-paper" id="fpXp" hidden></div>
       </div>
       <div class="final-side">
         <ol id="fpList" class="rounds"></ol>
