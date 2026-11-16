@@ -66,7 +66,7 @@
   const regionNames = (() => { try { return new Intl.DisplayNames(['fr'], { type: 'region' }); } catch (e) { return null; } })();
   const countryName = (cc) => { try { return (regionNames && regionNames.of(cc)) || cc; } catch (e) { return cc; } };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const compact = window.matchMedia('(max-width: 760px), (hover: none)');
+  const compact = window.matchMedia('(max-width: 760px), (hover: none), (pointer: coarse)');
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
@@ -134,7 +134,11 @@
         document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
       } catch (e2) { ok = false; }
     }
-    if (btn) { const old = btn.textContent; btn.textContent = ok ? okLabel : 'Copie impossible'; setTimeout(() => { btn.textContent = old; }, 1800); }
+    if (btn) {
+      if (!btn.dataset.label) btn.dataset.label = btn.textContent;
+      btn.textContent = ok ? okLabel : 'Copie impossible';
+      clearTimeout(btn._t); btn._t = setTimeout(() => { btn.textContent = btn.dataset.label; }, 1800);
+    }
     return ok;
   }
 
@@ -146,7 +150,7 @@
       try {
         const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
         this.ctx = this.ctx || new AC();
-        if (this.ctx.state === 'suspended') this.ctx.resume();
+        if (this.ctx.state !== 'running') this.ctx.resume();   // « suspended », ou « interrupted » sur iPhone après un passage en arrière-plan
         const o = this.ctx.createOscillator(), g = this.ctx.createGain(), t0 = this.ctx.currentTime + t;
         o.type = type; o.frequency.value = f;
         g.gain.setValueAtTime(0.0001, t0); g.gain.linearRampToValueAtTime(vol, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
@@ -185,7 +189,7 @@
     const z = Z(zoneKey);
     let pool = LOCS.filter((l) => z.has(l) && !usedPanos.has(l[2]));
     if (avoidRecent) {
-      const recent = new Set(store.get('recent', []));
+      const recent = new Set(getRecent());
       const fresh = pool.filter((l) => !recent.has(l[2]));
       if (fresh.length >= 30) pool = fresh;
     }
@@ -210,8 +214,9 @@
     }
     return { locs, usedP, usedC };
   }
+  function getRecent() { const r = store.get('recent', []); return Array.isArray(r) ? r.filter((x) => typeof x === 'string') : []; }
   function markRecent(pano) {
-    const r = store.get('recent', []).filter((p) => p !== pano);
+    const r = getRecent().filter((p) => p !== pano);
     r.push(pano);
     store.set('recent', r.slice(-600));
   }
@@ -231,22 +236,34 @@
     });
     return layer;
   };
+  const hasGL = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } })();
   function addBase(map) {
-    if (!(window.maplibregl && L.maplibreGL && window.PDC_STYLE)) { rasterTiles().addTo(map); return; }
+    if (!(hasGL && window.maplibregl && L.maplibreGL && window.PDC_STYLE)) { rasterTiles().addTo(map); return; }
     let gl = null, ok = false, swapped = false;
     const swap = () => {
       if (ok || swapped) return;
       swapped = true;
-      try { if (gl) map.removeLayer(gl); } catch (e) { /* déjà retiré */ }
+      if (map._pdcDead) return;   // carte déjà détruite (accueil quitté) : rien à remplacer
+      if (gl) {
+        // Si la couche a planté en cours d'ajout, Leaflet garde ses écouteurs : on retire tout à la main.
+        try { map.removeLayer(gl); } catch (e) { /* pas complètement ajoutée */ }
+        try { map.off(gl.getEvents(), gl); } catch (e) { /* rien à retirer */ }
+        try { delete map._layers[L.stamp(gl)]; } catch (e) { /* idem */ }
+      }
       rasterTiles().addTo(map);
     };
     try {
-      gl = L.maplibreGL({ style: window.PDC_STYLE, attribution: OSM + ' · <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · © OpenMapTiles' }).addTo(map);
+      gl = L.maplibreGL({ style: window.PDC_STYLE, attribution: OSM + ' · <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · © OpenMapTiles' });
+      gl.addTo(map);
       const m = gl.getMaplibreMap();
-      let errs = 0;
+      let errs = 0, waited = 0;
       m.on('data', (e) => { if (e.dataType === 'source' && e.tile) ok = true; });
       m.on('error', (e) => { console.warn('carte :', e && e.error ? e.error.message : e); if (++errs >= 4) swap(); });
-      setTimeout(swap, 12000);
+      // Rien reçu au bout de 12 s d'affichage réel (un onglet en arrière-plan ne compte pas) : on bascule.
+      const iv = setInterval(() => {
+        if (ok || swapped) { clearInterval(iv); return; }
+        if (!document.hidden && (waited += 1000) >= 12000) { clearInterval(iv); swap(); }
+      }, 1000);
     } catch (e) { console.warn('carte :', e && e.message); swap(); }
   }
   const iconGuess = L.divIcon({ className: '', html: '<div class="pin-guess"></div>', iconSize: [22, 22], iconAnchor: [11, 11] });
@@ -260,18 +277,21 @@
   let homeMap, gmap, gmarker, rmap, rlayer, olayer;
 
   function initHomeMap() {
+    if (homeMap) return;
     homeMap = L.map('homeMap', { zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, touchZoom: false, tap: false })
       .setView([34, 8 + Math.random() * 40], 4);
     addBase(homeMap);
     if (!reduceMotion) {
-      const drift = () => { if (!$('home').hidden) homeMap.panBy([120, 0], { animate: true, duration: 12, easeLinearity: 1 }); };
-      homeMap.on('moveend', drift);
+      const map = homeMap;
+      const drift = () => { if (homeMap === map && !$('home').hidden) map.panBy([120, 0], { animate: true, duration: 12, easeLinearity: 1 }); };
+      map.on('moveend', drift);
       setTimeout(drift, 600);
     }
   }
+  function killHomeMap() { if (homeMap) { homeMap._pdcDead = true; try { homeMap.remove(); } catch (e) { /* déjà retirée */ } homeMap = null; } }
 
   function initGuessMap() {
-    gmap = L.map('guessMap', { worldCopyJump: true, minZoom: 1, maxZoom: 18, zoomSnap: 0.5, wheelPxPerZoomLevel: 90 }).setView([25, 5], 1.5);
+    gmap = L.map('guessMap', { worldCopyJump: true, minZoom: 1, maxZoom: 18, zoomSnap: 0.5, wheelPxPerZoomLevel: 90, doubleClickZoom: false }).setView([25, 5], 1.5);
     addBase(gmap);
     gmap.on('click', (e) => {
       if (!gmarker) gmarker = L.marker(e.latlng, { icon: iconGuess, draggable: true, keyboard: false }).addTo(gmap);
@@ -292,15 +312,16 @@
   }
 
   function initResultMap() {
-    rmap = L.map('resultMap', { minZoom: 2, zoomSnap: 0.25, worldCopyJump: false }).setView([25, 5], 2);
+    rmap = L.map('resultMap', { minZoom: 0.5, zoomSnap: 0.25, worldCopyJump: false }).setView([25, 5], 2);
     addBase(rmap);
     rlayer = L.layerGroup().addTo(rmap);
     olayer = L.layerGroup().addTo(rmap);
   }
 
   /* ---------- Partie entre amis : relais ---------- */
-  const myId = (() => { let v = store.get('pid', null); if (!v) { v = randId(8); store.set('pid', v); } return v; })();
+  const myId = (() => { let v = store.get('pid', null); if (typeof v !== 'string' || !/^[a-z0-9]{4,16}$/.test(v)) { v = randId(8); store.set('pid', v); } return v; })();
   const cleanName = (s) => String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f<>]/g, '').trim().slice(0, 16);
+  const getName = () => { const n = store.get('name', ''); return typeof n === 'string' ? cleanName(n) : ''; };
   const COLORS = ['#e4572e', '#17bebb', '#7b2cbf', '#f72585', '#2a9d8f', '#ff9f1c', '#3a86ff', '#6c757d'];
   const colorOf = (id) => (id === myId ? '#ffd60a' : COLORS[hashStr(id) % COLORS.length]);
   const LINK_RE = /^([a-z0-9]{8,14})-(monde|europe|france|ameriques|asie|afrique|capitales|celebres)-([cpe])-(0|30|90|180)$/;
@@ -315,10 +336,16 @@
       this.close();
       this.cfg = cfg; this.players = new Map(); this.seen = new Set(); this.next = null; this.online = false; this.openedAt = 0;
       const mine = store.get('room.' + cfg.id, null);   // mes manches, gardées aussi sur cet appareil
-      if (mine) this.apply({ t: 'g', id: myId, n: store.get('name', ''), g: mine }, true);
+      if (Array.isArray(mine)) this.apply({ t: 'g', id: myId, n: getName(), g: mine }, true, true);
+      this.connect();
+    },
+    connect() {
+      const cfg = this.cfg;
+      if (!cfg) return;
+      if (this.es) this.es.close();
       try {
         const es = (this.es = new EventSource(`${RELAY}pdc-${cfg.id}/sse?since=12h`));
-        es.onopen = () => { this.online = true; if (!this.openedAt) this.openedAt = performance.now(); this.emit(); };
+        es.onopen = () => { this.online = true; this.openedAt = performance.now(); this.emit(); };   // à chaque (re)connexion, l'historique est rejoué
         es.onerror = () => { this.online = false; this.emit(); };
         es.onmessage = (e) => {
           try {
@@ -336,14 +363,16 @@
     close() { if (this.es) this.es.close(); this.es = null; this.cfg = null; },
     emit() { if (this.onChange) this.onChange(); },
     // Tout ce qui arrive du relais est traité comme une donnée non fiable : on valide, on borne, on n'exécute rien.
-    apply(m, silent) {
+    apply(m, silent, local) {
       if (!m || typeof m !== 'object' || typeof m.id !== 'string' || !/^[a-z0-9]{4,16}$/.test(m.id)) return;
       let p = this.players.get(m.id);
       if (!p) { p = { id: m.id, name: 'Joueur', g: [] }; this.players.set(m.id, p); }
       p.name = cleanName(m.n) || p.name;
-      if (m.t === 'g' && Array.isArray(m.g) && m.g.length <= ROUNDS) {
-        const g = m.g.map((v) => (Array.isArray(v) && v.length === 4 && v.every(Number.isFinite)
-          ? [clamp(v[0], -90, 90), clamp(v[1], -180, 180), Math.max(0, v[2]), clamp(Math.round(v[3]), 0, MAX)] : 0));
+      // Mes propres manches ne sont acceptées que si elles viennent de cet appareil : sinon n'importe qui ayant le lien pourrait les écraser.
+      if (m.t === 'g' && Array.isArray(m.g) && m.g.length <= ROUNDS && (m.id !== myId || local)) {
+        // Une manche : [lat, lng, km, points, nombre de changements de lieu] ou 0 (pas de réponse).
+        const g = m.g.map((v) => (Array.isArray(v) && (v.length === 4 || v.length === 5) && v.every(Number.isFinite)
+          ? [clamp(v[0], -90, 90), clamp(v[1], -180, 180), Math.max(0, v[2]), clamp(Math.round(v[3]), 0, MAX), clamp(Math.round(v[4] || 0), 0, 50)] : 0));
         if (g.length >= p.g.length) p.g = g;
       }
       if (m.t === 'x' && m.id !== myId && parseLink(m.link)) this.next = { name: p.name, link: m.link };
@@ -351,8 +380,8 @@
     },
     async send(m) {
       if (!this.cfg) return false;
-      m.id = myId; m.n = store.get('name', '');
-      this.apply(m);
+      m.id = myId; m.n = getName();
+      this.apply(m, false, true);
       const topic = 'pdc-' + this.cfg.id;
       for (let i = 0; i < 4; i++) {
         try { const r = await fetch(RELAY + topic, { method: 'POST', body: JSON.stringify(m) }); if (r.ok) return true; } catch (e) { /* on réessaie */ }
@@ -371,7 +400,10 @@
   let loadToken = 0, view = null;
   const cur = () => S.rounds[S.idx];
 
-  function show(id) { ['home', 'lobby', 'passport', 'play', 'result'].forEach((s) => { $(s).hidden = s !== id; }); }
+  function show(id) {
+    ['home', 'lobby', 'passport', 'play', 'result'].forEach((s) => { $(s).hidden = s !== id; });
+    if (id === 'play' || id === 'result') killHomeMap();
+  }
   function stopAll() {
     stopTimer(); stopFlash(); clearTimeout(quizT);
     loadToken++; view = null;
@@ -471,7 +503,7 @@
     const r = cur();
     if (r.pressed) return;
     r.pressed = true;
-    if (timerId && (timerEnd - performance.now()) / 1000 <= PRESS) return;   // le chrono en cours est déjà plus court
+    if (timerId && (timerEnd - Date.now()) / 1000 <= PRESS) return;   // le chrono en cours est déjà plus court
     const chip = $('pressChip');
     chip.hidden = false; chip.textContent = `${name} a validé : plus que ${PRESS} s`;
     $('hudTimeCell').hidden = false;
@@ -511,9 +543,10 @@
     Room.close();
     S = null; Q = null;
     if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    $('play').classList.remove('serie');
     show('home');
     refreshHome();
-    if (homeMap) { homeMap.invalidateSize(); homeMap.fire('moveend'); }
+    if (homeMap) { homeMap.invalidateSize(); homeMap.fire('moveend'); } else initHomeMap();
   }
   function savePrefs() { store.set('prefs', { zone: selected('zone'), time: selected('time'), mode: selected('mode') }); }
 
@@ -521,12 +554,25 @@
   function makeGame(kind, zone, mode, limit, g, seed) {
     const hr = seed ? mulberry32(hashStr(seed + ':cap')) : Math.random;
     return {
-      kind, zone, mode, limit, seed, idx: 0, score: 0, usedP: g.usedP, usedC: g.usedC,
+      kind, zone, mode, limit, seed, idx: 0, score: 0, usedP: g.usedP, usedC: g.usedC, baseP: new Set(g.usedP), baseC: new Set(g.usedC),
       rounds: g.locs.map((loc) => ({ loc, guess: null, km: null, pts: 0, hint: 0, swaps: 0, flashed: false, heading: Math.floor(hr() * 360) })),
     };
   }
+  let backGuard = false;
+  function guardBack() { if (!backGuard) { backGuard = true; try { history.pushState({ pdc: 1 }, ''); } catch (e) { backGuard = false; } } }
+  window.addEventListener('popstate', () => {
+    if (!backGuard) return;
+    backGuard = false;
+    const playing = !$('play').hidden || (!$('result').hidden && S && !S.done);
+    if (playing) {
+      guardBack();
+      if (!$('play').hidden) { const q = $('quitBtn'); q.classList.add('arm'); q.textContent = 'Quitter la partie ?'; clearTimeout(quitT); quitT = setTimeout(disarmQuit, 4000); }
+    } else if ($('home').hidden) goHome();
+  });
   function beginPlay() {
     Q = null;
+    guardBack();
+    $('play').classList.remove('serie');
     show('play');
     if (!gmap) initGuessMap();
     Snd.start();
@@ -543,8 +589,9 @@
     else startSolo(selected('zone'), mode, +selected('time'));
   }
   function startDaily() {
-    const seed = 'jour-' + today();
+    const day = today(), seed = 'jour-' + day;
     S = makeGame('daily', 'monde', 'classique', 0, pickGame('monde', mulberry32(hashStr(seed)), false), seed);
+    S.day = day;
     beginPlay();
   }
 
@@ -634,11 +681,11 @@
   function startTimer(sec, onEnd) {
     if (!sec || timerOn) return;
     timerOn = true;
-    const end = (timerEnd = performance.now() + sec * 1000);
+    const end = (timerEnd = Date.now() + sec * 1000);
     let lastTick = 99;
     clearInterval(timerId);
     timerId = setInterval(() => {
-      const left = (end - performance.now()) / 1000, s = Math.ceil(left);
+      const left = (end - Date.now()) / 1000, s = Math.ceil(left);
       $('hudTime').textContent = fmtTime(left);
       $('hudTimeCell').classList.toggle('low', left <= 10);
       if (s <= 10 && s > 0 && s < lastTick) { lastTick = s; Snd.tick(); }
@@ -677,19 +724,23 @@
 
   function swapLocation() {
     stopTimer(); stopFlash();
-    if (Q) { nextQuestion(); return; }
+    if (Q) { if (!Q.answered) nextQuestion(); return; }
     const r = cur();
     r.swaps++;
-    // En partie partagée, le lieu de remplacement est le même pour tous ceux qui en changent.
-    const rng = S.seed ? mulberry32(hashStr(`${S.seed}:alt:${S.idx}:${r.swaps}`)) : Math.random;
-    const loc = pickOne(S.zone, S.usedP, S.usedC, rng, !S.seed);
-    S.usedP.add(loc[2]);
-    r.loc = loc; r.flashed = false; r.hint = 0;
+    let loc;
+    if (S.seed) loc = altLoc(S.idx, r.swaps);
+    else { loc = pickOne(S.zone, S.usedP, S.usedC, Math.random, true); S.usedP.add(loc[2]); }
+    r.loc = loc; r.flashed = false; r.hint = 0; r.pressed = false;
     startRound();
+  }
+  // En partie partagée (amis, défi du jour), le lieu de remplacement ne dépend que de la manche et du nombre de changements :
+  // il est donc le même pour tous, et on le retrouve après un rechargement.
+  function altLoc(idx, swaps) {
+    return pickOne(S.zone, S.baseP, S.baseC, mulberry32(hashStr(`${S.seed}:alt:${idx}:${swaps}`)), false);
   }
 
   function myResults() {
-    return S.rounds.slice(0, S.idx + 1).map((r) => (r.guess ? [+r.guess[0].toFixed(5), +r.guess[1].toFixed(5), +r.km.toFixed(2), r.pts] : 0));
+    return S.rounds.slice(0, S.idx + 1).map((r) => (r.guess ? [+r.guess[0].toFixed(5), +r.guess[1].toFixed(5), +r.km.toFixed(2), r.pts, r.swaps || 0] : 0));
   }
 
   function submit() {
@@ -760,10 +811,10 @@
     olayer.clearLayers();
     ul.hidden = S.kind !== 'room' || !os.length;
     if (ul.hidden) return;
-    const rows = [{ me: true, name: (store.get('name', '') || 'Toi') + ' (toi)', id: myId, v: r.guess ? [0, 0, r.km, r.pts] : 0, played: true }];
+    const rows = [{ me: true, name: (getName() || 'Toi') + ' (toi)', id: myId, v: r.guess ? [0, 0, r.km, r.pts] : 0, played: true }];
     os.forEach((p) => {
       const played = p.g.length > S.idx, v = played ? p.g[S.idx] : null;
-      if (v) drawOther(p, v, r.loc, olayer);
+      if (v && (v[4] || 0) === (r.swaps || 0)) drawOther(p, v, r.loc, olayer);
       rows.push({ name: p.name, id: p.id, v, played });
     });
     rows.sort((a, b) => (b.played - a.played) || ((b.v ? b.v[3] : 0) - (a.v ? a.v[3] : 0)));
@@ -839,9 +890,10 @@
 
     let record = false;
     if (S.kind === 'daily') {
-      const d = store.get('daily', null);
-      if (!d || d.d !== today()) store.set('daily', { d: today(), score: S.score });
-      $('fpBest').textContent = 'Les mêmes lieux pour tout le monde aujourd\'hui. Compare avec tes amis.';
+      const d = store.get('daily', null), had = d && d.d === S.day;
+      if (!had) store.set('daily', { d: S.day, score: S.score });
+      S.dayScore = had ? d.score : S.score;
+      $('fpBest').textContent = had && fresh ? `Ton score du jour reste ${fmtInt(d.score)} : seule la première partie compte.` : 'Les mêmes lieux pour tout le monde aujourd\'hui. Compare avec tes amis.';
     } else {
       const key = `best.${S.zone}.${S.mode}`, best = bestOf(S.zone, S.mode);
       if (S.score > best) { store.set(key, S.score); record = best > 0; $('fpBest').textContent = best ? `Nouveau record. L'ancien était à ${fmtInt(best)}.` : 'Premier score enregistré dans ce mode.'; }
@@ -889,7 +941,7 @@
       const t = [r.loc[0], r.loc[1]];
       L.marker(t, { icon: iconTrue(i + 1), keyboard: false, zIndexOffset: 500 }).addTo(rlayer);
       all.push(t);
-      if (p.g[i]) drawOther(p, p.g[i], r.loc, olayer).forEach((x) => all.push(x));
+      if (p.g[i] && (p.g[i][4] || 0) === (r.swaps || 0)) drawOther(p, p.g[i], r.loc, olayer).forEach((x) => all.push(x));
     });
     fit(all, $('finalPanel'));
     S.shown = p.id;
@@ -897,7 +949,7 @@
 
   function renderBoard() {
     const ol = $('fpBoard');
-    const me = { id: myId, name: (store.get('name', '') || 'Toi') + ' (toi)', total: S.score, n: ROUNDS, me: true };
+    const me = { id: myId, name: (getName() || 'Toi') + ' (toi)', total: S.score, n: ROUNDS, me: true };
     const rows = [me].concat(others().map((p) => ({ id: p.id, name: p.name, total: Room.total(p), n: p.g.length, p })));
     rows.sort((a, b) => b.total - a.total);
     ol.innerHTML = '';
@@ -926,10 +978,11 @@
 
   function shareText() {
     const sq = S.rounds.map((r) => (r.pts >= 4500 ? '🟩' : r.pts >= 3000 ? '🟨' : r.pts >= 1500 ? '🟧' : '🟥')).join('');
-    const d = new Date();
-    const head = S.kind === 'daily' ? `Défi du ${d.getDate()}/${d.getMonth() + 1}` : `${Z(S.zone).label} · ${MODES[S.mode].label}`;
+    const dm = S.day ? S.day.split('-') : [];
+    const head = S.kind === 'daily' ? `Défi du ${+dm[2]}/${+dm[1]}` : `${Z(S.zone).label} · ${MODES[S.mode].label}`;
     const url = S.kind === 'room' && Room.cfg ? roomUrl(Room.cfg) : pageUrl();
-    return `Point de chute · ${head}\n${fmtInt(S.score)} / ${fmtInt(ROUNDS * MAX)}\n${sq}\n${url}`;
+    const score = S.kind === 'daily' && S.dayScore != null ? S.dayScore : S.score;
+    return `Point de chute · ${head}\n${fmtInt(score)} / ${fmtInt(ROUNDS * MAX)}\n${sq}\n${url}`;
   }
 
   /* ---------- Série de pays ---------- */
@@ -937,6 +990,8 @@
     if (zone === 'france') zone = 'monde';
     S = null;
     Q = { zone, limit, streak: 0, used: new Set(), last: [], best: store.get('serie.' + zone, 0) };
+    guardBack();
+    $('play').classList.add('serie');
     show('play');
     Snd.start();
     $('guess').hidden = true; $('mapToggle').hidden = true;
@@ -949,6 +1004,8 @@
     disarmQuit();
     nextQuestion();
   }
+  function sizeQuiz() { $('play').style.setProperty('--quiz-h', $('quiz').hidden ? '0px' : $('quiz').offsetHeight + 'px'); }
+  window.addEventListener('resize', () => { if (Q && !$('play').hidden) sizeQuiz(); });
   function nextQuestion() {
     clearTimeout(quizT); stopTimer(); timerOn = false;
     const z = Z(Q.zone);
@@ -969,6 +1026,8 @@
       grid.appendChild(b);
     });
     $('quiz').hidden = false; $('quizOver').hidden = true;
+    $('resetBtn').hidden = false; $('swapBtn').hidden = false;
+    sizeQuiz();
     $('hudRound').textContent = String(Q.streak);
     $('hudScore').textContent = String(Math.max(Q.best, Q.streak));
     $('hudTimeCell').classList.remove('low');
@@ -1009,7 +1068,9 @@
       renderXp($('qoXp'), addXp(Q.streak * 15));
       $('qoBest').textContent = record ? (Q.best ? `Nouveau record. L'ancien était à ${Q.best}.` : 'Premier record enregistré.') : `Ton record : ${Q.best}`;
       $('qoLink').href = mapsUrl(Q.loc);
+      $('resetBtn').hidden = true; $('swapBtn').hidden = true;
       $('quizOver').hidden = false;
+      sizeQuiz();
       if (record && Q.streak >= 3) { Snd.good(); confetti(); }
     }, 900);
   }
@@ -1022,15 +1083,16 @@
     show('lobby');
     $('lbTitle').textContent = `${Z(cfg.zone).label}, mode ${MODES[cfg.mode].label.toLowerCase()}`;
     $('lbLink').value = roomUrl(cfg);
-    const name = store.get('name', '');
+    const name = getName();
     $('lbName').value = name;
     if (autoJoin && name) store.set('joined.' + cfg.id, true);
     const joined = !!(name && store.get('joined.' + cfg.id, false));
-    if (joined) Room.send({ t: 'j' });
+    const mine = store.get('room.' + cfg.id, null);
+    if (joined) Room.send(Array.isArray(mine) && mine.length ? { t: 'g', g: mine } : { t: 'j' });
     setJoined(joined);
     renderLobby();
   }
-  function setJoined(j) { $('lbNameForm').hidden = j; $('lbIn').hidden = !j; if (!j) setTimeout(() => $('lbName').focus(), 50); }
+  function setJoined(j) { $('lbNameForm').hidden = j; $('lbIn').hidden = !j; if (!j && !compact.matches) setTimeout(() => $('lbName').focus(), 50); }
   function renderLobby() {
     if (!Room.cfg) return;
     const cfg = Room.cfg, ul = $('lbPlayers');
@@ -1052,7 +1114,10 @@
     const mine = (Room.players.get(myId) || { g: [] }).g;
     mine.forEach((v, i) => {
       const r = S.rounds[i];
-      if (v) { r.guess = [v[0], v[1]]; r.km = v[2]; r.pts = v[3]; }
+      if (v) {
+        r.guess = [v[0], v[1]]; r.km = v[2]; r.pts = v[3];
+        if (v[4]) { r.swaps = v[4]; r.loc = altLoc(i, v[4]); }
+      }
       S.score += r.pts;
     });
     if (mine.length >= ROUNDS) { S.idx = ROUNDS - 1; showFinal(false); return; }
@@ -1064,12 +1129,25 @@
     history.replaceState(null, '', '#p=' + linkOf(cfg));
     openLobby(cfg, autoJoin);
   }
+  let rematching = false;
   async function rematch() {
     const old = Room.cfg;
-    const cfg = { id: randId(10), zone: old.zone, mode: old.mode, limit: old.limit };
-    await Promise.race([Room.send({ t: 'x', link: linkOf(cfg) }), sleep(1500)]);
+    if (rematching || !old) return;
+    rematching = true;
+    try {
+      const cfg = { id: randId(10), zone: old.zone, mode: old.mode, limit: old.limit };
+      await Promise.race([Room.send({ t: 'x', link: linkOf(cfg) }), sleep(1500)]);
+      if (Room.cfg !== old) return;   // le joueur est parti entre-temps (accueil, autre partie)
+      history.replaceState(null, '', '#p=' + linkOf(cfg));
+      openLobby(cfg, true);
+    } finally { rematching = false; }
+  }
+  function joinNext() {
+    const cfg = Room.next && parseLink(Room.next.link);
+    if (!cfg) return false;
     history.replaceState(null, '', '#p=' + linkOf(cfg));
     openLobby(cfg, true);
+    return true;
   }
   function route() {
     const m = /^#p=(.+)$/.exec(location.hash), cfg = m && parseLink(m[1]);
@@ -1097,7 +1175,7 @@
   /* ---------- Branchements ---------- */
   function again() {
     if (!S) return;
-    if (S.kind === 'room' && Room.cfg) rematch();
+    if (S.kind === 'room' && Room.cfg) { if (!joinNext()) rematch(); }
     else if (S.kind !== 'daily') startSolo(S.zone, S.mode, S.limit);
   }
   const setSoundLabel = () => { $('soundBtn').textContent = Snd.on ? 'Son : oui' : 'Son : non'; };
@@ -1110,12 +1188,7 @@
   $('againBtn').addEventListener('click', again);
   $('homeBtn').addEventListener('click', goHome);
   $('shareBtn').addEventListener('click', () => copyText(shareText(), $('shareBtn'), 'Résultat copié'));
-  $('fpNextBtn').addEventListener('click', () => {
-    const cfg = Room.next && parseLink(Room.next.link);
-    if (!cfg) return;
-    history.replaceState(null, '', '#p=' + linkOf(cfg));
-    openLobby(cfg, true);
-  });
+  $('fpNextBtn').addEventListener('click', joinNext);
   $('resetBtn').addEventListener('click', () => { if (view) loadStreetView(view.loc, view.heading, view.onReady); });
   $('swapBtn').addEventListener('click', swapLocation);
   $('hintBtn').addEventListener('click', () => { const r = cur(); if (r.hint < Z(S.zone).hints.length) { r.hint++; Snd.pin(); renderHint(); } });
@@ -1128,7 +1201,7 @@
 
   $('lbCopy').addEventListener('click', () => {
     const url = $('lbLink').value;
-    if (navigator.share && compact.matches) navigator.share({ title: 'Point de chute', text: 'Rejoins ma partie :', url }).catch(() => copyText(url, $('lbCopy'), 'Lien copié'));
+    if (navigator.share && compact.matches) navigator.share({ title: 'Point de chute', text: 'Rejoins ma partie :', url }).catch((e) => { if (!e || e.name !== 'AbortError') copyText(url, $('lbCopy'), 'Lien copié'); });
     else copyText(url, $('lbCopy'), 'Lien copié');
   });
   $('lbLink').addEventListener('focus', (e) => e.target.select());
@@ -1145,13 +1218,17 @@
   $('lbStart').addEventListener('click', startRoomGame);
   $('lbBack').addEventListener('click', goHome);
   window.addEventListener('hashchange', route);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && Room.cfg && (!Room.es || Room.es.readyState === 2)) Room.connect(); });
+  document.querySelector('.tools').addEventListener('click', () => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
   // iPhone : empêche le zoom de toute la page par pincement en dehors de la vue de rue et des cartes.
   document.addEventListener('gesturestart', (e) => { if (!(e.target.closest && e.target.closest('.leaflet-container'))) e.preventDefault(); });
 
   document.querySelectorAll('input[name="zone"], input[name="time"], input[name="mode"]').forEach((i) => i.addEventListener('change', refreshHome));
 
   document.addEventListener('keydown', (e) => {
-    if (e.repeat || (e.target.closest && e.target.closest('button, a, input, select, textarea'))) return;
+    // On laisse le clavier tranquille quand on écrit ou qu'un bouton/lien a le focus ; les boutons radio, eux, ne bloquent pas les raccourcis.
+    const t = e.target, typing = t.closest && t.closest('button, a, select, textarea, input:not([type="radio"])');
+    if (e.repeat || typing || e.ctrlKey || e.metaKey || e.altKey) return;
     if (Q && !$('play').hidden && !Q.answered && /^Digit[1-4]$|^Numpad[1-4]$/.test(e.code)) {
       const b = $('quizGrid').querySelectorAll('button')[+e.code.slice(-1) - 1];
       if (b) { e.preventDefault(); b.click(); }
@@ -1162,6 +1239,7 @@
     if (!$('home').hidden) fn = () => { if (!$('startBtn').disabled) startFromHome(); };
     else if (!$('lobby').hidden) fn = () => { if (!$('lbIn').hidden) startRoomGame(); };
     else if (!$('play').hidden) fn = () => { if (Q) { if (!$('quizOver').hidden) startSerie(Q.zone, Q.limit); } else if (gmarker) submit(); };
+    else if ($('result').hidden) return;   // passeport ou autre écran sans raccourci
     else if (!$('roundPanel').hidden) fn = next;
     else fn = again;
     e.preventDefault();
@@ -1170,9 +1248,9 @@
 
   // Préférences de la dernière partie
   const prefs = store.get('prefs', null);
-  if (prefs) {
+  if (prefs && typeof prefs === 'object') {
     ['zone', 'time', 'mode'].forEach((k) => {
-      const el = prefs[k] != null && document.querySelector(`input[name="${k}"][value="${prefs[k]}"]`);
+      const el = [...document.querySelectorAll(`input[name="${k}"]`)].find((i) => i.value === String(prefs[k]));
       if (el) el.checked = true;
     });
   }
