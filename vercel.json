@@ -1,5 +1,6 @@
 {
   "redirects": [
+    { "source": "/", "has": [{ "type": "host", "value": "guesslendroit.vercel.app" }], "destination": "/atlas/", "permanent": false },
     { "source": "/jeu", "destination": "/atlas/", "permanent": false },
     { "source": "/jeu/:path*", "destination": "/atlas/:path*", "permanent": false }
   ],
