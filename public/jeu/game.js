@@ -283,12 +283,19 @@
     addBase(homeMap);
     if (!reduceMotion) {
       const map = homeMap;
-      const drift = () => { if (homeMap === map && !$('home').hidden) map.panBy([120, 0], { animate: true, duration: 12, easeLinearity: 1 }); };
+      const drift = () => { if (homeMap === map && !$('home').hidden && !(map._panAnim && map._panAnim._inProgress)) map.panBy([120, 0], { animate: true, duration: 12, easeLinearity: 1 }); };
       map.on('moveend', drift);
       setTimeout(drift, 600);
     }
   }
-  function killHomeMap() { if (homeMap) { homeMap._pdcDead = true; try { homeMap.remove(); } catch (e) { /* déjà retirée */ } homeMap = null; } }
+  function killHomeMap() {
+    if (!homeMap) return;
+    const m = homeMap;
+    homeMap = null; m._pdcDead = true;
+    // On arrête d'abord la dérive en cours : sinon son animation se termine sur une carte déjà détruite.
+    try { m.off('moveend'); m.stop(); } catch (e) { /* rien à arrêter */ }
+    try { m.remove(); } catch (e) { /* déjà retirée */ }
+  }
 
   function initGuessMap() {
     gmap = L.map('guessMap', { worldCopyJump: true, minZoom: 1, maxZoom: 18, zoomSnap: 0.5, wheelPxPerZoomLevel: 90, doubleClickZoom: false }).setView([25, 5], 1.5);
