@@ -1040,13 +1040,17 @@ button.stamp.got:hover { border-color: currentColor; background-color: #fff; box
 
 /* Amis : les réponses de chacun sur l'étape */
 .friends { list-style: none; margin: 0; padding: 10px 0 0; border-top: 2px dashed var(--line); display: grid; gap: 3px; }
-.friends li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto 6ch 6ch; gap: 10px; align-items: center; min-height: 34px; padding: 3px 10px 3px 4px; border-radius: var(--r-pill); }
+.friends li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto 6ch; grid-template-areas: "dot w p t" "dot d p t"; gap: 0 10px; align-items: center; min-height: 34px; padding: 3px 10px 3px 4px; border-radius: var(--r-pill); }
 .friends .dot, .ranks .dot { width: 26px; height: 26px; display: grid; place-items: center; padding-top: 0.18em; border-color: var(--ink); color: #fff; font: 900 0.78rem/1 var(--font); text-transform: uppercase; text-shadow: 0 1px 0 rgba(3, 15, 36, 0.4); }
 .friends .me .dot, .ranks .me .dot { color: var(--ink); text-shadow: none; }
 .friends .w { padding-top: 0.15em; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .friends .d, .friends .p { padding-top: 0.15em; font: 600 0.82rem var(--mono); white-space: nowrap; text-align: right; }
 .friends .d, .friends .p { color: var(--muted); }
 .friends .t { padding-top: 0.15em; font: 800 0.88rem var(--mono); white-space: nowrap; text-align: right; }
+/* Le nom garde toute la ligne ; la distance passe dessous, en petit */
+.friends .dot { grid-area: dot; } .friends .w { grid-area: w; } .friends .p { grid-area: p; } .friends .t { grid-area: t; }
+.friends .d { grid-area: d; padding-top: 0; text-align: left; font-size: 0.72rem; line-height: 1.2; }
+.friends li { padding-block: 4px; }
 #rpRankLab { margin: 0; padding-top: 12px; border-top: 2px dashed var(--line); }
 #rpRankLab + .friends { border-top: 0; padding-top: 4px; }
 .auto-note { margin: 0 0 8px; text-align: center; font-size: var(--fs-sm); font-weight: 700; color: var(--blue); }

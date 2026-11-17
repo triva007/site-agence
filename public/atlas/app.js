@@ -311,6 +311,7 @@
     return L.divIcon({ className: '', html: d, iconSize: [22, 22], iconAnchor: [11, 11] });
   }
 
+  L.Map.addInitHook(function () { if (this.attributionControl) this.attributionControl.setPrefix(false); });
   let homeMap, gmap, gmarker, rmap, rlayer, olayer;
 
   function initHomeMap() {
@@ -599,7 +600,7 @@
     el.hidden = false;
     levelBar(el, x.after);
     const g = document.createElement('span'); g.className = 'lvl-gain';
-    g.textContent = `+${fmtInt(x.gained)} exp.` + (x.after.lv > x.before.lv ? ` · Niveau ${x.after.lv} atteint : ${x.after.title}` : '');
+    g.textContent = `+${fmtInt(x.gained)} exp.` + (x.after.lv > x.before.lv ? ` · Niveau ${x.after.lv} atteint` + (x.after.title !== x.before.title ? ` : ${x.after.title}` : '') : '');
     el.prepend(g);
     if (x.after.lv > x.before.lv) { Snd.good(); confetti(); }
   }
@@ -615,6 +616,8 @@
     const a = tierOf(old), b = tierOf(pts);
     return b && (!a || a[1] !== b[1]) ? b : null;   // renvoie le nouveau palier s'il vient d'être franchi
   }
+  // Centre approximatif de chaque pays (moyenne de ses lieux), pour trouver ses voisins.
+  const CENTER = (() => { const a = {}; LOCS.forEach((l) => { const x = a[l[4]] || (a[l[4]] = [0, 0, 0]); x[0] += l[0]; x[1] += l[1]; x[2]++; }); Object.keys(a).forEach((c) => { a[c] = [a[c][0] / a[c][2], a[c][1] / a[c][2]]; }); return a; })();
   const COUNTRY_MIN = 10;   // nombre de lieux à partir duquel un pays se parcourt seul
   const countryCounts = (() => { const c = {}; LOCS.forEach((l) => { if (!l[5]) c[l[4]] = (c[l[4]] || 0) + 1; }); return c; })();
   function passStats() {
@@ -776,6 +779,8 @@
     const day = today(), seed = 'jour-' + day;
     S = makeGame('daily', 'monde', 'classique', 0, pickGame('monde', mulberry32(hashStr(seed)), false), seed);
     S.day = day;
+    const d = store.get('daily', null);
+    S.replay = !!(d && d.d === day);   // déjà fait aujourd'hui : on peut le refaire, mais sans expérience ni tampon
     beginPlay();
   }
 
@@ -873,7 +878,11 @@
     loadStreetView(r.loc, r.heading, () => {
       roundCue(r, last ? 'Dernière étape' : roundTxt, S.mode === 'eclair' ? 'Regarde bien !' : 'Où es-tu ?');
       startTimer(S.limit, submit);
-      if (S.mode === 'eclair') startFlash();
+      if (S.mode === 'eclair') {
+        // Le compte à rebours ne part qu'une fois l'annonce d'étape effacée : les 15 secondes sont 15 secondes de vue.
+        const tk = loadToken;
+        setTimeout(() => { if (tk === loadToken && S && !Q && cur() === r && !$('play').hidden) startFlash(); }, reduceMotion ? 0 : 1700);
+      }
     });
   }
 
@@ -984,14 +993,13 @@
       r.pts = Math.round(points(r.km, Z(S.zone).k) * hintFactor(r));
     } else { r.guess = null; r.km = null; r.pts = 0; }
     S.score += r.pts;
-    r.stamp = r.guess ? stamp(r.loc[4], r.pts) : null;
+    r.stamp = r.guess && !S.replay ? stamp(r.loc[4], r.pts) : null;
     $('svWrap').innerHTML = '';
     if (S.kind === 'room' && Room.cfg) {
       const g = myResults();
       store.set('room.' + Room.cfg.id, g);
       Room.send({ t: 'g', g });
     }
-    if (r.pts >= 4000) { Snd.good(); if (r.pts >= 4500) confetti(); } else if (r.pts >= 1500) Snd.mid(); else Snd.bad();
     showRound();
   }
 
@@ -1058,7 +1066,7 @@
     const sz = rmap.getSize(), side = panel.offsetLeft * sz.y > panel.offsetTop * sz.x;   // où reste-t-il le plus de carte : à gauche ou au-dessus ?
     const padR = side ? Math.min(sz.x - panel.offsetLeft, sz.x * 0.7) : 0, padB = side ? 0 : Math.min(sz.y - panel.offsetTop, sz.y * 0.7);
     fitting = true;
-    rmap.fitBounds(b, { paddingTopLeft: [side ? 60 : 36, side ? 48 : 58], paddingBottomRight: [padR + 36, padB + (side ? 40 : 30)], maxZoom: 11, animate: false });
+    rmap.fitBounds(b, { paddingTopLeft: [68, side ? 48 : 58], paddingBottomRight: [padR + 36, padB + (side ? 40 : 30)], maxZoom: 11, animate: false });
     fitting = false;
     lastFit = { pts, panel, moved: false };
   }
@@ -1218,6 +1226,9 @@
     $('rpPts').textContent = '0';
     const tally = () => { countUp($('rpPts'), r.pts, 750); $('rpBar').style.width = (r.pts / MAX * 100) + '%'; };
     if (anim) later(t1 + 60, tally); else tally();
+    // Le son et les confettis arrivent avec le verdict, une fois la route tracée et les points comptés.
+    const cheer = () => { if (r.pts >= 4000) { Snd.good(); if (r.pts >= 4500) confetti(); } else if (r.pts >= 1500) Snd.mid(); else Snd.bad(); };
+    if (anim) later(t2, cheer); else cheer();
 
     roundPts = drawRound(r, 0, rlayer, anim ? { wait: t0, ms: lineMs } : null);
     renderRoundFriends(true);
@@ -1298,7 +1309,7 @@
     }
     $('fpBest').classList.toggle('rec', record);
     if (fresh) { if (record || S.score / max >= 0.75) { Snd.good(); confetti(); } else Snd.mid(); }
-    if (fresh) { const x = addXp(S.score / 100); renderXp($('fpXp'), x); dressXp($('fpXp'), x); } else $('fpXp').hidden = true;
+    if (fresh && !S.replay) { const x = addXp(S.score / 100); renderXp($('fpXp'), x); dressXp($('fpXp'), x); } else $('fpXp').hidden = true;
 
     const multi = S.kind === 'room';
     $('fpList').hidden = multi; $('fpBoardWrap').hidden = !multi;
@@ -1439,11 +1450,11 @@
     if (!loc) { Q.used = new Set(); loc = pickOne(Q.zone, Q.used, new Set(Q.last), Math.random, false); }   // tous les lieux de la zone ont été vus : on repart
     Q.used.add(loc[2]); Q.loc = loc; Q.answered = false;
     Q.last = Q.last.concat(loc[4]).slice(-4);
-    // Trois faux pays, de préférence sur le même continent : c'est là que ça devient dur.
+    // Trois faux pays pris parmi les plus proches : c'est là que ça devient dur (et l'Océanie ne se devine plus par élimination).
     const all = [...new Set(LOCS.filter((l) => z.has(l)).map((l) => l[4]))].filter((c) => c !== loc[4]);
     const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-    const near = shuffle(all.filter((c) => CC2CONT[c] === CC2CONT[loc[4]])), far = shuffle(all.filter((c) => CC2CONT[c] !== CC2CONT[loc[4]]));
-    const opts = shuffle([loc[4]].concat(near.concat(far).slice(0, 3)));
+    const byDist = all.filter((c) => CENTER[c]).sort((a, b) => haversine(loc, CENTER[a]) - haversine(loc, CENTER[b]));
+    const opts = shuffle([loc[4]].concat(shuffle(byDist.slice(0, 7)).slice(0, 3)));
     const grid = $('quizGrid');
     grid.innerHTML = '';
     opts.forEach((cc, i) => {
@@ -1506,7 +1517,7 @@
       $('qoStreak').textContent = String(Q.streak);
       $('qoUnit').textContent = Q.streak > 1 ? 'bonnes réponses de suite' : 'bonne réponse';
       const place = $('qoPlace');
-      place.textContent = (cc ? 'Raté : c\'était ' : 'Temps écoulé : c\'était ');
+      place.textContent = (cc ? 'Raté. La bonne réponse : ' : 'Temps écoulé. La bonne réponse : ');
       const strong = document.createElement('strong'); strong.textContent = countryName(Q.loc[4]);
       place.append(strong, Q.loc[5] === 'l' ? ` (${Q.loc[3]}).` : Q.loc[5] === 'c' ? `, à ${Q.loc[3]}.` : `, près de ${Q.loc[3]}.`);
       const x = addXp(Q.streak * 15);
@@ -1739,7 +1750,14 @@
   $('fpNextBtn').addEventListener('click', () => joinNext());
   $('resetBtn').addEventListener('click', () => { if (view) loadStreetView(view.loc, view.heading, view.onReady); });
   $('swapBtn').addEventListener('click', swapLocation);
-  $('hintBtn').addEventListener('click', () => { const r = cur(); if (r.hint < Z(S.zone).hints.length) { r.hint++; Snd.pin(); renderHint(); } });
+  $('hintBtn').addEventListener('click', () => {
+    const r = cur(), lv = Z(S.zone).hints;
+    if (r.hint >= lv.length) return;
+    r.hint++; Snd.pin(); renderHint();
+    // La carte se recadre sur ce que l'indice vient de donner (continent ou pays).
+    const k = lv[r.hint - 1], ls = k === 'cont' ? LOCS.filter((l) => contOf(l) === contOf(r.loc)) : k === 'pays' ? LOCS.filter((l) => l[4] === r.loc[4]) : null;
+    if (ls && ls.length && gmap) { try { gmap.fitBounds(L.latLngBounds(ls.map((l) => [l[0], l[1]])), { padding: [18, 18], maxZoom: 6, animate: false }); } catch (e) { /* carte pas encore mesurée */ } }
+  });
   $('soundBtn').addEventListener('click', () => { Snd.on = !Snd.on; store.set('snd', Snd.on); setSoundLabel(); Snd.pin(); });
   $('mapToggle').addEventListener('click', () => setSheet(!$('guess').classList.contains('open')));
   $('sheetClose').addEventListener('click', () => setSheet(false));
