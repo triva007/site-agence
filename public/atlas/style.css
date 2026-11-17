@@ -8,11 +8,11 @@
    3. Composants    à réutiliser partout : .sign .btn .plate .chip .seg
                     .mode .tile .well .field .ticket .players .lvl .bar
    4. Accueil       5. Salon       6. Passeport
-   7. Partie        8. Résultats   9. Adaptations (compact, mouvement réduit)
+   7. En route       8. Résultats   9. Adaptations (compact, mouvement réduit)
 
    Écrit « téléphone d'abord ». Seuils des menus : 600 px (tablette),
    900 px (deux colonnes), fenêtres peu hautes (téléphone couché).
-   La partie et les résultats gardent leur requête « compact » :
+   La route et les résultats gardent leur requête « compact » :
    (max-width: 760px), (hover: none), (pointer: coarse).
    ===================================================================== */
 
@@ -56,7 +56,7 @@
   --fs-xl: 1.375rem;      /* sous-titres */
   --fs-2xl: 1.75rem;      /* titres d'écran */
   --fs-3xl: 2.25rem;      /* grands chiffres */
-  --fs-display: clamp(3.3rem, 5.7vw, 5.6rem);   /* titre du jeu */
+  --fs-display: clamp(3.3rem, 5.7vw, 5.6rem);   /* titre du site */
 
   /* Espaces (pas de 4 px) */
   --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px;
@@ -317,7 +317,7 @@ kbd {
 .ticket input:focus { outline: none; }
 .ticket-main:focus-within { box-shadow: inset 0 0 0 2.5px var(--blue); }
 
-/* Liste de joueurs (sur fond bleu) : pastille à l'initiale, nom, état à droite */
+/* Liste de voyageurs (sur fond bleu) : pastille à l'initiale, nom, état à droite */
 .players { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .players li { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 5px 14px 5px 6px; border-radius: var(--r-pill); background: rgba(255, 255, 255, 0.1); font-weight: 600; }
 .players .new { animation: rise-in 0.35s var(--ease) backwards; }
@@ -328,7 +328,7 @@ kbd {
 .players .me { background: rgba(255, 255, 255, 0.18); }
 .players .me .dot { color: var(--ink); text-shadow: none; }
 
-/* Niveau du joueur : borne (niveau) + titre + jauge d'expérience. Rempli par levelBar() dans game.js.
+/* Niveau du voyageur : borne (niveau) + titre + jauge d'expérience. Rempli par levelBar() dans app.js.
    Sur fond sombre par défaut ; .lvl-paper sur papier ; .lvl-card lui donne son propre fond sombre. */
 .lvl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; margin-top: var(--s-3); font-size: var(--fs-sm); color: #fff; }
 .lvl-badge {
@@ -386,7 +386,7 @@ kbd {
 #home::after { content: ""; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1; background: linear-gradient(180deg, rgba(5, 29, 66, 0.94), rgba(7, 42, 92, 0.82) 320px); pointer-events: none; }
 .home-wrap { position: relative; z-index: 2; min-height: 100%; display: flex; flex-direction: column; --pad-l: max(16px, var(--sal)); --pad-r: max(16px, var(--sar)); }
 
-/* En-tête : titre, emblème, badge du joueur, raccourcis */
+/* En-tête : titre, emblème, badge du voyageur, raccourcis */
 .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding: calc(10px + var(--sat)) var(--pad-r) 10px var(--pad-l); color: #fff; }
 .hero > * { animation: rise-in 0.55s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 70ms); }
 .hero-title { --i: 0; display: grid; gap: 6px; }
@@ -395,7 +395,7 @@ kbd {
 .hero .quick { --i: 4; }
 .hero .plate { display: none; }
 h1 { margin: 0; font-weight: 900; font-size: clamp(1.75rem, 8.8vw, 2.4rem); line-height: 0.92; letter-spacing: -0.025em; text-shadow: 0 3px 0 rgba(3, 15, 36, 0.45); }
-/* Le point du « i » de Point : le point jaune du joueur */
+/* Le point du « i » de Point : le point jaune du voyageur */
 .i-pt { position: relative; }
 .i-pt::after { content: ""; position: absolute; left: 50%; top: 0.125em; width: 0.2em; height: 0.2em; margin-left: -0.1em; border-radius: 50%; background: var(--yellow); box-shadow: 0 0.04em 0 rgba(3, 15, 36, 0.45); }
 /* Marquage au sol sous le titre */
@@ -553,7 +553,7 @@ h1 { margin: 0; font-weight: 900; font-size: clamp(1.75rem, 8.8vw, 2.4rem); line
   #friendsBtn { font-size: 0.95rem; }
 }
 
-/* ---------- 5. Salon (partie entre amis) ---------- */
+/* ---------- 5. Salon (trajet entre amis) ---------- */
 #lobby, #passport { display: flex; overflow-x: hidden; overflow-y: auto; padding: max(16px, var(--sat)) max(14px, var(--sar)) max(22px, var(--sab)) max(14px, var(--sal)); }
 .lobby-sign { margin: auto; width: min(560px, 100%); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-4); padding: clamp(14px, 4vw, 26px); padding-top: clamp(10px, 2.5vw, 18px); animation: rise-in 0.5s var(--ease) backwards; }
 .lobby-head { display: grid; gap: var(--s-2); justify-items: start; }
@@ -563,7 +563,7 @@ h1 { margin: 0; font-weight: 900; font-size: clamp(1.75rem, 8.8vw, 2.4rem); line
 .nameform, #lbIn { display: flex; flex-direction: column; gap: var(--s-3); }
 .nameform .hint-line { margin-top: 2px; }
 #lbIn { flex: 1; }
-/* Place libre dans la liste des joueurs */
+/* Place libre dans la liste des voyageurs */
 .slot { min-height: 44px; display: flex; align-items: center; padding: 8px 16px 6px; border-radius: var(--r-pill); border: 1.5px dashed var(--hair); font-size: var(--fs-sm); line-height: 1.3; color: var(--soft); }
 #lbStart { margin-top: auto; }
 .lobby-room .slot { margin-bottom: var(--s-2); }
@@ -673,7 +673,7 @@ button.stamp:not(.got):hover .st-tier { color: var(--blue); }
 button.stamp.got:hover { border-color: currentColor; background-color: #fff; box-shadow: inset 0 0 0 2.5px #fff, inset 0 0 0 3.5px currentColor, 0 4px 10px rgba(14, 27, 44, 0.18); transform: rotate(0deg) scale(1.04); }
 .stampline { color: var(--green); }
 
-/* ---------- 7. Partie ---------- */
+/* ---------- 7. En route---------- */
 #play { background: #000; }
 /* La vue de rue dépasse en haut : la fiche d'adresse de Google reste hors écran. */
 /* Zone de la vue de rue (tout l'écran, sauf en mode Série où la barre de réponses est posée dessous). */

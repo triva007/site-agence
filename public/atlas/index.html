@@ -72,10 +72,10 @@
 
       <header class="hero">
         <div class="hero-title">
-          <p class="plate">Jeu de géographie</p>
+          <p class="plate">Géographie grandeur nature</p>
           <h1 aria-label="Point de chute"><span aria-hidden="true">Po<span class="i-pt">ı</span>nt <span class="l2">de chute</span></span></h1>
         </div>
-        <!-- La borne kilométrique parachutée : l'emblème du jeu -->
+        <!-- La borne kilométrique parachutée : l'emblème du site -->
         <svg class="chute" viewBox="0 0 120 162" aria-hidden="true" focusable="false">
           <g class="chute-body" stroke="#0e1b2c" stroke-linejoin="round" stroke-linecap="round">
             <g stroke-width="1.6" fill="none">
@@ -98,7 +98,7 @@
         <div class="quick">
           <button id="dailyBtn" class="tile" type="button" title="5 lieux, les mêmes pour tout le monde. Un nouveau défi chaque jour.">
             <span class="cal" aria-hidden="true"><i id="dailyMonth"></i><b id="dailyDay"></b></span>
-            <span class="tile-txt"><b>Défi du jour</b><small id="dailySub">À jouer</small></span>
+            <span class="tile-txt"><b>Défi du jour</b><small id="dailySub">À faire</small></span>
           </button>
           <button id="passBtn" class="tile" type="button" title="Un tampon par pays visité">
             <span class="booklet" aria-hidden="true"><svg class="ico"><use href="#i-globe"/></svg></span>
@@ -155,19 +155,19 @@
     <div id="homeMap" aria-hidden="true"></div>
   </div>
 
-  <!-- Salon d'une partie entre amis -->
+  <!-- Salon entre amis -->
   <div id="lobby" class="screen backdrop" hidden>
     <main class="sign lobby-sign">
       <header class="lobby-head">
         <button id="lbBack" class="btn-quiet back" type="button"><svg class="ico"><use href="#i-back"/></svg>Accueil</button>
-        <p class="plate">Partie entre amis</p>
+        <p class="plate">Trajet entre amis</p>
         <h2 id="lbTitle">Monde</h2>
         <p class="status" id="lbStatus"></p>
       </header>
 
       <div class="ticket lobby-ticket">
         <div class="ticket-main">
-          <label class="label" for="lbLink">Lien de la partie</label>
+          <label class="label" for="lbLink">Lien du trajet</label>
           <input id="lbLink" type="text" readonly>
         </div>
         <div class="ticket-stub">
@@ -180,12 +180,12 @@
           <label class="label" for="lbName">Ton pseudo</label>
           <div class="linkrow">
             <input id="lbName" class="field" type="text" maxlength="16" autocomplete="nickname" placeholder="Ex. Aaron" required>
-            <button class="btn btn-go" type="submit">Entrer dans la partie</button>
+            <button class="btn btn-go" type="submit">Monter à bord</button>
           </div>
           <p class="hint-line">C'est le nom que tes amis verront au classement.</p>
         </form>
         <div id="lbIn" hidden>
-          <p class="label">Dans la partie</p>
+          <p class="label">À bord</p>
           <ul id="lbPlayers" class="players"></ul>
           <p class="slot">Tes amis apparaîtront ici dès qu'ils ouvrent le lien.</p>
           <button id="lbStart" class="btn btn-go btn-big" type="button">Commencer</button>
@@ -194,8 +194,8 @@
 
       <ol class="steps">
         <li>Envoie ce lien à tes amis.</li>
-        <li>Tout le monde joue les 5 mêmes lieux, chacun sur son écran, quand il veut. Le classement se met à jour en direct.</li>
-        <li>Vous jouez en même temps ? Dès qu'un joueur valide une manche, les autres n'ont plus que 20 secondes.</li>
+        <li>Tout le monde reçoit les 5 mêmes lieux, chacun sur son écran, quand il veut. Le classement se met à jour en direct.</li>
+        <li>Vous êtes en ligne en même temps ? Dès que quelqu'un valide une étape, les autres n'ont plus que 20 secondes.</li>
       </ol>
     </main>
   </div>
@@ -223,7 +223,7 @@
     </main>
   </div>
 
-  <!-- Partie -->
+  <!-- Sur la route -->
   <div id="play" class="screen" hidden>
     <div id="svArea">
       <div id="svWrap"></div>
@@ -235,8 +235,8 @@
 
     <div class="hud-col">
       <div class="hud sign" role="status">
-        <div class="cell"><span class="lab" id="hudLab1">Manche</span><span class="val" id="hudRound">1/5</span></div>
-        <div class="cell"><span class="lab" id="hudLab2">Score</span><span class="val" id="hudScore">0</span></div>
+        <div class="cell"><span class="lab" id="hudLab1">Étape</span><span class="val" id="hudRound">1/5</span></div>
+        <div class="cell"><span class="lab" id="hudLab2">Points</span><span class="val" id="hudScore">0</span></div>
         <div class="cell" id="hudTimeCell" hidden><span class="lab">Temps</span><span class="val" id="hudTime">0:00</span></div>
       </div>
       <p id="hintChip" class="chip" hidden></p>
@@ -271,7 +271,7 @@
       <div class="lvl lvl-paper" id="qoXp" hidden></div>
       <a id="qoLink" class="see" target="_blank" rel="noopener">Revoir l'endroit dans Google Maps</a>
       <div class="final-actions">
-        <button id="qoAgain" class="btn btn-go" type="button">Rejouer <kbd>Espace</kbd></button>
+        <button id="qoAgain" class="btn btn-go" type="button">Repartir <kbd>Espace</kbd></button>
         <button id="qoHome" class="btn btn-ghost" type="button">Accueil</button>
       </div>
     </section>
@@ -284,7 +284,7 @@
     <section id="roundPanel" class="panel">
       <div class="borne" aria-hidden="true"><span class="borne-top"></span><span class="borne-txt" id="borneTxt">km</span></div>
       <div class="round-main">
-        <p class="panel-kicker" id="rpKicker">Manche 1 sur 5</p>
+        <p class="panel-kicker" id="rpKicker">Étape 1 sur 5</p>
         <p class="dist" id="rpDist">—</p>
         <p class="place" id="rpPlace"></p>
         <p class="note" id="rpNote" hidden></p>
@@ -294,14 +294,14 @@
       <div class="round-pts">
         <p class="pts"><span id="rpPts">0</span><small>/ 5 000</small></p>
         <div class="bar"><i id="rpBar"></i></div>
-        <button id="nextBtn" class="btn btn-go" type="button">Manche suivante <kbd>Espace</kbd></button>
+        <button id="nextBtn" class="btn btn-go" type="button">Étape suivante <kbd>Espace</kbd></button>
       </div>
       <ul id="rpFriends" class="friends" hidden></ul>
     </section>
 
     <section id="finalPanel" class="panel final" hidden>
       <div class="final-head">
-        <p class="panel-kicker" id="fpKicker">Partie terminée</p>
+        <p class="panel-kicker" id="fpKicker">Trajet terminé</p>
         <p class="total"><span id="fpTotal">0</span><small id="fpMax">/ 25 000</small></p>
         <p class="grade" id="fpGrade"></p>
         <p class="best" id="fpBest"></p>
@@ -317,7 +317,7 @@
       </div>
       <p id="fpNext" class="invite" hidden><span id="fpNextTxt"></span> <button id="fpNextBtn" class="btn btn-go" type="button">Rejoindre</button></p>
       <div class="final-actions">
-        <button id="againBtn" class="btn btn-go" type="button">Rejouer <kbd>Espace</kbd></button>
+        <button id="againBtn" class="btn btn-go" type="button">Repartir <kbd>Espace</kbd></button>
         <button id="shareBtn" class="btn btn-ghost" type="button">Copier mon résultat</button>
         <button id="homeBtn" class="btn btn-ghost" type="button">Accueil</button>
       </div>
@@ -331,6 +331,6 @@
   <script src="vendor/leaflet-maplibre-gl.js"></script>
   <script src="mapstyle.js"></script>
   <script src="locations.js"></script>
-  <script src="game.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

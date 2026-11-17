@@ -1,4 +1,4 @@
-/* Point de chute — logique du jeu.
+/* Point de chute — logique du site.
    Lieux : window.LOCS = [lat, lng, idPanorama, ville, codePays] (voir locations.js). */
 (() => {
   'use strict';
@@ -77,7 +77,7 @@
     return fmtInt(km) + ' km';
   }
   function fmtTime(s) { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
-  const fmtLimit = (s) => (!s ? 'temps libre' : s === 90 ? '1 min 30 par manche' : s >= 60 ? `${s / 60} min par manche` : `${s} s par manche`);
+  const fmtLimit = (s) => (!s ? 'temps libre' : s === 90 ? '1 min 30 par étape' : s >= 60 ? `${s / 60} min par étape` : `${s} s par étape`);
   const wrapLng = (lng) => ((lng + 180) % 360 + 360) % 360 - 180;
 
   // Hasard reproductible : une même graine donne les mêmes lieux chez tout le monde.
@@ -330,7 +330,7 @@
     olayer = L.layerGroup().addTo(rmap);
   }
 
-  /* ---------- Partie entre amis : relais ---------- */
+  /* ---------- Trajet entre amis : relais ---------- */
   const myId = (() => { let v = store.get('pid', null); if (typeof v !== 'string' || !/^[a-z0-9]{4,16}$/.test(v)) { v = randId(8); store.set('pid', v); } return v; })();
   const cleanName = (s) => String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f<>]/g, '').trim().slice(0, 16);
   const getName = () => { const n = store.get('name', ''); return typeof n === 'string' ? cleanName(n) : ''; };
@@ -347,7 +347,7 @@
     open(cfg) {
       this.close();
       this.cfg = cfg; this.players = new Map(); this.seen = new Set(); this.next = null; this.online = false; this.openedAt = 0;
-      const mine = store.get('room.' + cfg.id, null);   // mes manches, gardées aussi sur cet appareil
+      const mine = store.get('room.' + cfg.id, null);   // mes étapes, gardées aussi sur cet appareil
       if (Array.isArray(mine)) this.apply({ t: 'g', id: myId, n: getName(), g: mine }, true, true);
       this.connect();
     },
@@ -357,7 +357,7 @@
       if (this.es) this.es.close();
       try {
         const es = (this.es = new EventSource(`${RELAY}pdc-${cfg.id}/sse?since=12h`));
-        es.onopen = () => { this.online = true; this.openedAt = performance.now(); this.emit(); };   // à chaque (re)connexion, l'historique est rejoué
+        es.onopen = () => { this.online = true; this.openedAt = performance.now(); this.emit(); };   // à chaque (re)connexion, l'historique est renvoyé
         es.onerror = () => { this.online = false; this.emit(); };
         es.onmessage = (e) => {
           try {
@@ -366,11 +366,11 @@
             this.seen.add(m.id);
             const msg = JSON.parse(m.message);
             this.apply(msg);
-            // Plus de 3 s après l'ouverture, ce n'est plus l'historique : c'est un ami qui joue en ce moment.
+            // Plus de 3 s après l'ouverture, ce n'est plus l'historique : c'est un ami en route en ce moment.
             if (this.onLive && this.openedAt && performance.now() - this.openedAt > 3000) this.onLive(msg);
           } catch (err) { /* message illisible : on l'ignore */ }
         };
-      } catch (e) { /* pas de direct : la partie reste jouable */ }
+      } catch (e) { /* pas de direct : le trajet reste possible */ }
     },
     close() { if (this.es) this.es.close(); this.es = null; this.cfg = null; },
     emit() { if (this.onChange) this.onChange(); },
@@ -378,11 +378,11 @@
     apply(m, silent, local) {
       if (!m || typeof m !== 'object' || typeof m.id !== 'string' || !/^[a-z0-9]{4,16}$/.test(m.id)) return;
       let p = this.players.get(m.id);
-      if (!p) { p = { id: m.id, name: 'Joueur', g: [] }; this.players.set(m.id, p); }
+      if (!p) { p = { id: m.id, name: 'Voyageur', g: [] }; this.players.set(m.id, p); }
       p.name = cleanName(m.n) || p.name;
-      // Mes propres manches ne sont acceptées que si elles viennent de cet appareil : sinon n'importe qui ayant le lien pourrait les écraser.
+      // Mes propres étapes ne sont acceptées que si elles viennent de cet appareil : sinon n'importe qui ayant le lien pourrait les écraser.
       if (m.t === 'g' && Array.isArray(m.g) && m.g.length <= ROUNDS && (m.id !== myId || local)) {
-        // Une manche : [lat, lng, km, points, nombre de changements de lieu] ou 0 (pas de réponse).
+        // Une étape : [lat, lng, km, points, nombre de changements de lieu] ou 0 (pas de réponse).
         const g = m.g.map((v) => (Array.isArray(v) && (v.length === 4 || v.length === 5) && v.every(Number.isFinite)
           ? [clamp(v[0], -90, 90), clamp(v[1], -180, 180), Math.max(0, v[2]), clamp(Math.round(v[3]), 0, MAX), clamp(Math.round(v[4] || 0), 0, 50)] : 0));
         if (g.length >= p.g.length) p.g = g;
@@ -406,7 +406,7 @@
   };
 
   /* ---------- État ---------- */
-  let S = null;          // partie à 5 manches en cours
+  let S = null;          // trajet à 5 étapes en cours
   let Q = null;          // série de pays en cours
   let timerId = null, timerOn = false, timerEnd = 0, flashId = null, quizT = null;
   let loadToken = 0, view = null;
@@ -440,7 +440,7 @@
     store.set('xp', after);
     return { gained: after - before, before: levelOf(before), after: levelOf(after) };
   }
-  // Badge du joueur : une petite borne (niveau), le titre, la jauge d'expérience.
+  // Badge du voyageur : une petite borne (niveau), le titre, la jauge d'expérience.
   function levelBar(el, L) {
     el.textContent = '';
     const badge = document.createElement('span'); badge.className = 'lvl-badge';
@@ -453,7 +453,7 @@
     const bar = document.createElement('span'); bar.className = 'lvl-bar';
     const fill = document.createElement('i'); fill.style.width = clamp(L.into / L.span * 100, 0, 100) + '%';
     bar.appendChild(fill);
-    const n = document.createElement('span'); n.className = 'lvl-num'; n.textContent = `${fmtInt(L.into)} / ${fmtInt(L.span)} XP`;
+    const n = document.createElement('span'); n.className = 'lvl-num'; n.textContent = `${fmtInt(L.into)} / ${fmtInt(L.span)} exp.`;
     el.append(badge, t, n, bar);
   }
   const renderLevel = (el) => levelBar(el, levelOf(getXp()));
@@ -461,12 +461,12 @@
     el.hidden = false;
     levelBar(el, x.after);
     const g = document.createElement('span'); g.className = 'lvl-gain';
-    g.textContent = `+${fmtInt(x.gained)} XP` + (x.after.lv > x.before.lv ? ` · Niveau ${x.after.lv} atteint : ${x.after.title}` : '');
+    g.textContent = `+${fmtInt(x.gained)} exp.` + (x.after.lv > x.before.lv ? ` · Niveau ${x.after.lv} atteint : ${x.after.title}` : '');
     el.prepend(g);
     if (x.after.lv > x.before.lv) { Snd.good(); confetti(); }
   }
 
-  // Passeport : meilleur score d'une manche dans chaque pays → tampon bronze, argent ou or.
+  // Passeport : meilleur total d'une étape dans chaque pays → tampon bronze, argent ou or.
   const TIERS = [[4800, 'or', 'Or'], [4000, 'argent', 'Argent'], [2500, 'bronze', 'Bronze']];
   const tierOf = (pts) => TIERS.find((t) => pts >= t[0]) || null;
   const getPass = () => { const p = store.get('pass', {}); return p && typeof p === 'object' && !Array.isArray(p) ? p : {}; };
@@ -477,7 +477,7 @@
     const a = tierOf(old), b = tierOf(pts);
     return b && (!a || a[1] !== b[1]) ? b : null;   // renvoie le nouveau palier s'il vient d'être franchi
   }
-  const COUNTRY_MIN = 10;   // nombre de lieux à partir duquel un pays se joue seul
+  const COUNTRY_MIN = 10;   // nombre de lieux à partir duquel un pays se parcourt seul
   const countryCounts = (() => { const c = {}; LOCS.forEach((l) => { if (!l[5]) c[l[4]] = (c[l[4]] || 0) + 1; }); return c; })();
   function passStats() {
     const p = getPass(), all = Object.keys(countryCounts);
@@ -490,7 +490,7 @@
     renderLevel($('ppLevel'));
     $('ppCount').textContent = ps.done;
     $('ppTotal').textContent = `/ ${ps.total} pays`;
-    $('ppIntro').textContent = `Marque au moins ${fmtInt(TIERS[TIERS.length - 1][0])} points sur une manche dans un pays pour gagner son tampon. Touche un pays pour y jouer 5 manches.`;
+    $('ppIntro').textContent = `Marque au moins ${fmtInt(TIERS[TIERS.length - 1][0])} points sur une étape dans un pays pour gagner son tampon. Touche un pays pour y faire 5 étapes.`;
     // Légende des paliers, du bronze à l'or
     const tiers = $('ppTiers');
     tiers.textContent = '';
@@ -516,12 +516,12 @@
       ccs.forEach((cc) => {
         const t = tierOf(+p[cc] || 0), playable = countryCounts[cc] >= COUNTRY_MIN;
         const b = document.createElement(playable ? 'button' : 'div');
-        if (playable) { b.type = 'button'; b.title = `Jouer 5 manches : ${countryName(cc)}`; b.addEventListener('click', () => startSolo('pays:' + cc, 'classique', 0)); }
+        if (playable) { b.type = 'button'; b.title = `5 étapes : ${countryName(cc)}`; b.addEventListener('click', () => startSolo('pays:' + cc, 'classique', 0)); }
         b.className = 'stamp' + (t ? ' got ' + t[1] : '') + (playable ? '' : ' fixed');
         // Chaque tampon est posé un peu de travers, toujours pareil pour un même pays.
         if (t) { b.style.setProperty('--rot', ((hashStr(cc) % 9) - 4) * 0.7 + 'deg'); b.style.setProperty('--k', Math.min(nGot++, 14)); }
         const n = document.createElement('span'); n.className = 'st-name'; n.textContent = countryName(cc);
-        const d = document.createElement('span'); d.className = 'st-tier'; d.textContent = t ? `${t[2]} ${fmtInt(+p[cc])}` : (playable ? 'À découvrir' : 'À croiser en partie');
+        const d = document.createElement('span'); d.className = 'st-tier'; d.textContent = t ? `${t[2]} ${fmtInt(+p[cc])}` : (playable ? 'À découvrir' : 'À croiser en route');
         b.append(n, d);
         grid.appendChild(b);
       });
@@ -531,7 +531,7 @@
     $('passport').scrollTop = 0;
   }
 
-  // Entre amis : dès qu'un joueur valide la manche sur laquelle tu es, il te reste 20 secondes.
+  // Entre amis : dès qu'un voyageur valide l'étape sur laquelle tu es, il te reste 20 secondes.
   const PRESS = 20;
   function pressure(name) {
     if (!S || S.kind !== 'room' || Q || $('play').hidden) return;
@@ -547,7 +547,7 @@
     Snd.tick();
   }
   Room.onLive = (m) => {
-    if (m && m.t === 'g' && m.id !== myId && Array.isArray(m.g) && S && S.kind === 'room' && m.g.length === S.idx + 1) pressure(cleanName(m.n) || 'Un joueur');
+    if (m && m.t === 'g' && m.id !== myId && Array.isArray(m.g) && S && S.kind === 'room' && m.g.length === S.idx + 1) pressure(cleanName(m.n) || 'Un voyageur');
   };
 
   /* ---------- Accueil ---------- */
@@ -570,7 +570,7 @@
     const d = store.get('daily', null), played = !!(d && d.d === today()), now = new Date();
     $('dailyDay').textContent = now.getDate();
     $('dailyMonth').textContent = now.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '');
-    $('dailySub').textContent = played ? `${fmtInt(d.score)} pts` : 'À jouer';
+    $('dailySub').textContent = played ? `${fmtInt(d.score)} pts` : 'À faire';
     $('dailyBtn').classList.toggle('done', played);
     renderLevel($('homeLevel'));
     const ps = passStats();
@@ -588,7 +588,7 @@
   }
   function savePrefs() { store.set('prefs', { zone: selected('zone'), time: selected('time'), mode: selected('mode') }); }
 
-  /* ---------- Lancement d'une partie ---------- */
+  /* ---------- Lancement d'un trajet ---------- */
   function makeGame(kind, zone, mode, limit, g, seed) {
     const hr = seed ? mulberry32(hashStr(seed + ':cap')) : Math.random;
     return {
@@ -604,7 +604,7 @@
     const playing = !$('play').hidden || (!$('result').hidden && S && !S.done);
     if (playing) {
       guardBack();
-      if (!$('play').hidden) { const q = $('quitBtn'); q.classList.add('arm'); q.textContent = 'Quitter la partie ?'; clearTimeout(quitT); quitT = setTimeout(disarmQuit, 4000); }
+      if (!$('play').hidden) { const q = $('quitBtn'); q.classList.add('arm'); q.textContent = 'Quitter le trajet ?'; clearTimeout(quitT); quitT = setTimeout(disarmQuit, 4000); }
     } else if ($('home').hidden) goHome();
   });
   function beginPlay() {
@@ -633,7 +633,7 @@
     beginPlay();
   }
 
-  /* ---------- Manche ---------- */
+  /* ---------- Étape ---------- */
   const HINTS = {
     cont: { label: 'continent', f: 0.8, cost: '−20 %', text: (l) => CONT[contOf(l)] },
     pays: { label: 'pays', f: 0.5, cost: '−50 %', text: (l) => countryName(l[4]) },
@@ -662,7 +662,7 @@
   function startRound() {
     const r = cur();
     stopTimer(); stopFlash(); timerOn = false;
-    $('hudLab1').textContent = 'Manche'; $('hudLab2').textContent = 'Score';
+    $('hudLab1').textContent = 'Étape'; $('hudLab2').textContent = 'Points';
     $('hudRound').textContent = `${S.idx + 1}/${ROUNDS}`;
     $('hudScore').textContent = fmtInt(S.score);
     $('hudTimeCell').hidden = !S.limit;
@@ -775,7 +775,7 @@
     r.loc = loc; r.flashed = false; r.hint = 0; r.pressed = false;
     startRound();
   }
-  // En partie partagée (amis, défi du jour), le lieu de remplacement ne dépend que de la manche et du nombre de changements :
+  // En trajet partagée (amis, défi du jour), le lieu de remplacement ne dépend que de l'étape et du nombre de changements :
   // il est donc le même pour tous, et on le retrouve après un rechargement.
   function altLoc(idx, swaps) {
     return pickOne(S.zone, S.baseP, S.baseC, mulberry32(hashStr(`${S.seed}:alt:${idx}:${swaps}`)), false);
@@ -808,7 +808,7 @@
     showRound();
   }
 
-  /* ---------- Résultat d'une manche ---------- */
+  /* ---------- Résultat d'une étape ---------- */
   function drawRound(r, n, layer) {
     const t = [r.loc[0], r.loc[1]];
     const out = [t];
@@ -847,7 +847,7 @@
     return li;
   }
 
-  // Les réponses des amis sur cette manche (seulement après avoir joué la sienne).
+  // Les réponses des amis sur cette étape (seulement après avoir fait la sienne).
   function renderRoundFriends() {
     const r = cur(), ul = $('rpFriends'), os = others();
     olayer.clearLayers();
@@ -863,7 +863,7 @@
     ul.innerHTML = '';
     rows.forEach((x) => ul.appendChild(row([
       ['dot', '', colorOf(x.id)], ['w', x.name],
-      ['d', !x.played ? 'pas encore joué' : x.v ? fmtDist(x.v[2]) : 'sans réponse'],
+      ['d', !x.played ? 'pas encore passé' : x.v ? fmtDist(x.v[2]) : 'sans réponse'],
       ['p', x.played ? fmtInt(x.v ? x.v[3] : 0) : ''],
     ], (x.me ? 'me ' : '') + (x.played ? '' : 'wait'))));
   }
@@ -875,7 +875,7 @@
     if (!rmap) initResultMap();
     rlayer.clearLayers(); olayer.clearLayers();
 
-    $('rpKicker').textContent = `Manche ${S.idx + 1} sur ${ROUNDS}`;
+    $('rpKicker').textContent = `Étape ${S.idx + 1} sur ${ROUNDS}`;
     $('borneTxt').textContent = r.loc[4];
     $('rpDist').textContent = r.guess ? (r.km <= 0.25 ? 'En plein dessus' : `À ${fmtDist(r.km)}`) : 'Pas de réponse';
     const place = $('rpPlace');
@@ -888,7 +888,7 @@
     $('rpNote').hidden = !r.hint || !r.guess;
     if (r.hint) $('rpNote').textContent = `Indice utilisé : points × ${String(hintFactor(r)).replace('.', ',')}`;
     $('rpLink').href = mapsUrl(r.loc);
-    $('nextBtn').innerHTML = (last ? 'Voir le résultat' : 'Manche suivante') + ' <kbd>Espace</kbd>';
+    $('nextBtn').innerHTML = (last ? 'Voir le résultat' : 'Étape suivante') + ' <kbd>Espace</kbd>';
     $('rpBar').style.width = '0%';
     countUp($('rpPts'), r.pts);
     requestAnimationFrame(() => requestAnimationFrame(() => { $('rpBar').style.width = (r.pts / MAX * 100) + '%'; }));
@@ -907,7 +907,7 @@
     } else showFinal(true);
   }
 
-  /* ---------- Fin de partie ---------- */
+  /* ---------- Fin de trajet ---------- */
   const GRADES = [
     [0.9, 'Cartographe en chef'],
     [0.75, 'Grand voyageur'],
@@ -927,7 +927,7 @@
     S.done = true;
 
     const label = S.kind === 'daily' ? 'Défi du jour' : `${Z(S.zone).label} · ${MODES[S.mode].label}`;
-    $('fpKicker').textContent = `Partie terminée · ${label}`;
+    $('fpKicker').textContent = `Trajet terminé · ${label}`;
     $('fpMax').textContent = `/ ${fmtInt(max)}`;
     countUp($('fpTotal'), S.score, 1200);
     $('fpGrade').textContent = GRADES.find((g) => S.score / max >= g[0])[1];
@@ -937,10 +937,10 @@
       const d = store.get('daily', null), had = d && d.d === S.day;
       if (!had) store.set('daily', { d: S.day, score: S.score });
       S.dayScore = had ? d.score : S.score;
-      $('fpBest').textContent = had && fresh ? `Ton score du jour reste ${fmtInt(d.score)} : seule la première partie compte.` : 'Les mêmes lieux pour tout le monde aujourd\'hui. Compare avec tes amis.';
+      $('fpBest').textContent = had && fresh ? `Ton total du jour reste ${fmtInt(d.score)} : seul le premier trajet compte.` : 'Les mêmes lieux pour tout le monde aujourd\'hui. Compare avec tes amis.';
     } else {
       const key = `best.${S.zone}.${S.mode}`, best = bestOf(S.zone, S.mode);
-      if (S.score > best) { store.set(key, S.score); record = best > 0; $('fpBest').textContent = best ? `Nouveau record. L'ancien était à ${fmtInt(best)}.` : 'Premier score enregistré dans ce mode.'; }
+      if (S.score > best) { store.set(key, S.score); record = best > 0; $('fpBest').textContent = best ? `Nouveau record. L'ancien était à ${fmtInt(best)}.` : 'Premier total enregistré dans ce mode.'; }
       else $('fpBest').textContent = `Ton record : ${fmtInt(best)}`;
     }
     if (fresh) { if (record || S.score / max >= 0.75) { Snd.good(); confetti(); } else Snd.mid(); }
@@ -949,7 +949,7 @@
     const multi = S.kind === 'room';
     $('fpList').hidden = multi; $('fpBoardWrap').hidden = !multi;
     $('againBtn').hidden = S.kind === 'daily';
-    $('againBtn').innerHTML = (multi ? 'Revanche' : 'Rejouer') + ' <kbd>Espace</kbd>';
+    $('againBtn').innerHTML = (multi ? 'Revanche' : 'Repartir') + ' <kbd>Espace</kbd>';
 
     showMine();
     if (multi) renderBoard();
@@ -958,7 +958,7 @@
       list.innerHTML = '';
       S.rounds.forEach((r, i) => {
         const li = document.createElement('li'), b = document.createElement('button');
-        b.type = 'button'; b.title = 'Voir cette manche sur la carte';
+        b.type = 'button'; b.title = 'Voir cette étape sur la carte';
         [['n', i + 1], ['w', placeText(r.loc)], ['d', r.guess ? fmtDist(r.km) : 'sans réponse'], ['p', fmtInt(r.pts)]].forEach(([c, t]) => {
           const s = document.createElement('span'); s.className = c; s.textContent = t; b.appendChild(s);
         });
@@ -969,7 +969,7 @@
     renderInvite();
   }
 
-  // Carte finale : mes 5 manches.
+  // Carte finale : mes 5 étapes.
   function showMine() {
     rlayer.clearLayers(); olayer.clearLayers();
     const all = []; perRound = [];
@@ -1002,7 +1002,7 @@
       b.type = 'button'; b.title = 'Voir ses réponses sur la carte';
       if (x.me) li.className = 'me';
       if (S.shown === x.id) b.className = 'on';
-      [['n', i + 1], ['dot', '', colorOf(x.id)], ['w', x.name], ['d', x.n >= ROUNDS ? 'a fini' : x.n ? `${x.n}/${ROUNDS} manches` : 'pas commencé'], ['p', fmtInt(x.total)]].forEach(([c, t, color]) => {
+      [['n', i + 1], ['dot', '', colorOf(x.id)], ['w', x.name], ['d', x.n >= ROUNDS ? 'a fini' : x.n ? `${x.n}/${ROUNDS} étapes` : 'pas commencé'], ['p', fmtInt(x.total)]].forEach(([c, t, color]) => {
         const s = document.createElement('span'); s.className = c;
         if (color) s.style.background = color; else s.textContent = t;
         b.appendChild(s);
@@ -1011,7 +1011,7 @@
       li.appendChild(b); ol.appendChild(li);
     });
     $('fpBoardNote').textContent = rows.length === 1
-      ? 'Personne d\'autre n\'a encore joué. Le classement se mettra à jour ici tout seul.'
+      ? 'Personne d\'autre n\'est encore passé. Le classement se mettra à jour ici tout seul.'
       : (Room.online ? '' : 'Connexion au classement en cours…');
   }
   function renderInvite() {
@@ -1140,7 +1140,7 @@
     setJoined(joined);
     renderLobby();
   }
-  let lobbySeen = new Set();   // joueurs déjà affichés dans ce salon (pour n'animer que les arrivées)
+  let lobbySeen = new Set();   // voyageurs déjà affichés dans ce salon (pour n'animer que les arrivées)
   function setJoined(j) { $('lbNameForm').hidden = j; $('lbIn').hidden = !j; if (!j && !compact.matches) setTimeout(() => $('lbName').focus(), 50); }
   function renderLobby() {
     if (!Room.cfg) return;
@@ -1148,7 +1148,7 @@
     ul.innerHTML = '';
     const ps = [...Room.players.values()].sort((a, b) => (b.id === myId) - (a.id === myId));
     ps.forEach((p) => {
-      const st = p.g.length >= ROUNDS ? `a fini : ${fmtInt(Room.total(p))}` : p.g.length ? `${p.g.length}/${ROUNDS} manches` : 'prêt';
+      const st = p.g.length >= ROUNDS ? `a fini : ${fmtInt(Room.total(p))}` : p.g.length ? `${p.g.length}/${ROUNDS} étapes` : 'prêt';
       const li = row([['dot', '', colorOf(p.id)], ['w', p.name + (p.id === myId ? ' (toi)' : '')], ['st', st]], p.id === myId ? 'me' : '');
       const dot = li.querySelector('.dot');
       dot.style.borderColor = '#fff';
@@ -1157,8 +1157,8 @@
       ul.appendChild(li);
     });
     const mine = Room.players.get(myId), n = mine ? mine.g.length : 0;
-    $('lbStart').textContent = n >= ROUNDS ? 'Voir le classement' : n ? 'Reprendre ma partie' : 'Commencer';
-    $('lbStatus').textContent = `5 manches, ${fmtLimit(cfg.limit)}. ` + (Room.online ? 'Classement en direct connecté.' : 'Connexion au classement…');
+    $('lbStart').textContent = n >= ROUNDS ? 'Voir le classement' : n ? 'Reprendre mon trajet' : 'Commencer';
+    $('lbStatus').textContent = `5 étapes, ${fmtLimit(cfg.limit)}. ` + (Room.online ? 'Classement en direct connecté.' : 'Connexion au classement…');
     $('lbStatus').classList.toggle('on', Room.online);
   }
   function startRoomGame() {
@@ -1190,7 +1190,7 @@
     try {
       const cfg = { id: randId(10), zone: old.zone, mode: old.mode, limit: old.limit };
       await Promise.race([Room.send({ t: 'x', link: linkOf(cfg) }), sleep(1500)]);
-      if (Room.cfg !== old) return;   // le joueur est parti entre-temps (accueil, autre partie)
+      if (Room.cfg !== old) return;   // le voyageur est parti entre-temps (accueil, autre trajet)
       history.replaceState(null, '', '#p=' + linkOf(cfg));
       openLobby(cfg, true);
     } finally { rematching = false; }
@@ -1222,7 +1222,7 @@
   $('quitBtn').addEventListener('click', () => {
     const q = $('quitBtn');
     if (q.classList.contains('arm')) { disarmQuit(); goHome(); return; }
-    q.classList.add('arm'); q.textContent = 'Quitter la partie ?';
+    q.classList.add('arm'); q.textContent = 'Quitter le trajet ?';
     quitT = setTimeout(disarmQuit, 3000);
   });
 
@@ -1255,7 +1255,7 @@
 
   $('lbCopy').addEventListener('click', () => {
     const url = $('lbLink').value;
-    if (navigator.share && compact.matches) navigator.share({ title: 'Point de chute', text: 'Rejoins ma partie :', url }).catch((e) => { if (!e || e.name !== 'AbortError') copyText(url, $('lbCopy'), 'Lien copié'); });
+    if (navigator.share && compact.matches) navigator.share({ title: 'Point de chute', text: 'Rejoins mon trajet :', url }).catch((e) => { if (!e || e.name !== 'AbortError') copyText(url, $('lbCopy'), 'Lien copié'); });
     else copyText(url, $('lbCopy'), 'Lien copié');
   });
   $('lbLink').addEventListener('focus', (e) => e.target.select());
@@ -1300,7 +1300,7 @@
     fn();
   });
 
-  // Préférences de la dernière partie
+  // Préférences de la dernière trajet
   const prefs = store.get('prefs', null);
   if (prefs && typeof prefs === 'object') {
     ['zone', 'time', 'mode'].forEach((k) => {

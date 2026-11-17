@@ -1,4 +1,8 @@
 {
+  "redirects": [
+    { "source": "/jeu", "destination": "/atlas/", "permanent": false },
+    { "source": "/jeu/:path*", "destination": "/atlas/:path*", "permanent": false }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
