@@ -1,8 +1,37 @@
 {
   "redirects": [
-    { "source": "/", "has": [{ "type": "host", "value": "guesslendroit.vercel.app" }], "destination": "/atlas/", "permanent": false },
-    { "source": "/jeu", "destination": "/atlas/", "permanent": false },
-    { "source": "/jeu/:path*", "destination": "/atlas/:path*", "permanent": false }
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "atlas.notlegal.fr"
+        }
+      ],
+      "destination": "/atlas/",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "guesslendroit.vercel.app"
+        }
+      ],
+      "destination": "/atlas/",
+      "permanent": false
+    },
+    {
+      "source": "/jeu",
+      "destination": "/atlas/",
+      "permanent": false
+    },
+    {
+      "source": "/jeu/:path*",
+      "destination": "/atlas/:path*",
+      "permanent": false
+    }
   ],
   "rewrites": [
     {
