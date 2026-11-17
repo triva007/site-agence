@@ -367,7 +367,7 @@
     addBase(rmap);
     rlayer = L.layerGroup().addTo(rmap);
     olayer = L.layerGroup().addTo(rmap);
-    rmap.on('dragstart zoomstart', () => { if (!fitting && lastFit) lastFit.moved = true; });
+    rmap.on('dragstart zoomstart', () => { if (fitting) return; if (lastFit) lastFit.moved = true; holdAuto(); });
   }
 
   /* ---------- Trajet entre amis : relais ---------- */
@@ -517,7 +517,7 @@
     if (id === 'play' || id === 'result') killHomeMap();
   }
   function stopAll() {
-    stopTimer(); stopFlash(); clearTimeout(quizT);
+    stopTimer(); stopFlash(); clearTimeout(quizT); stopAuto();
     loadToken++; view = null;
     $('svWrap').innerHTML = '';
   }
@@ -647,7 +647,9 @@
     if (!m || typeof m.id !== 'string' || m.id === myId) return;
     if (m.t === 'g' && Array.isArray(m.g) && S && S.kind === 'room' && m.g.length === S.idx + 1) pressure(cleanName(m.n) || 'Un voyageur');
     // Un ami donne le départ : ceux qui attendent dans le salon partent avec lui.
-    if (m.t === 's' && !$('lobby').hidden && !$('lbIn').hidden && !myRoomSteps()) startRoomGame();
+    if (m.t === 's' && !$('lobby').hidden && !$('lbIn').hidden && !myRoomSteps()) launch(cleanName(m.n) || 'Un ami');
+    // Un ami repart après la même étape : on le suit au bout de quelques secondes, pour rester ensemble.
+    if (m.t === 'n' && m.i === (S && S.idx) && S.kind === 'room' && !$('result').hidden && !$('roundPanel').hidden) autoNext(cleanName(m.n) || 'Un ami');
   };
   const myRoomSteps = () => { const p = Room.players.get(myId); return p ? p.g.length : 0; };
 
@@ -678,7 +680,7 @@
     $('passSub').textContent = `${ps.done} / ${ps.total} pays`;
   }
   function goHome() {
-    stopAll();
+    stopAll(); stopCount();
     Room.close();
     S = null; Q = null;
     if (location.hash) history.replaceState(null, '', location.pathname + location.search);
@@ -788,6 +790,7 @@
 
   function startRound() {
     const r = cur();
+    renderMates();
     stopTimer(); stopFlash(); timerOn = false;
     $('hudLab1').textContent = 'Étape'; $('hudLab2').textContent = 'Points';
     $('hudRound').textContent = `${S.idx + 1}/${ROUNDS}`;
@@ -1042,6 +1045,34 @@
   $('fpFold').addEventListener('click', () => setFold(!$('finalPanel').classList.contains('folded')));
   const placeText = (loc) => `${loc[3]}, ${countryName(loc[4])}`;
   const others = () => (Room.cfg ? [...Room.players.values()].filter((p) => p.id !== myId) : []);
+  // Pendant l'étape : une pastille par ami, cochée quand il a validé, pâle s'il n'est pas sur cette étape.
+  function renderMates() {
+    const ul = $('mates'), os = S && S.kind === 'room' && !Q && !$('play').hidden ? others() : [];
+    ul.hidden = !os.length;
+    if (ul.hidden) return;
+    ul.textContent = '';
+    os.slice().sort((a, b) => b.g.length - a.g.length).slice(0, 6).forEach((p) => {
+      const li = document.createElement('li'), done = p.g.length > S.idx, here = p.g.length === S.idx;
+      li.className = done ? 'done' : here ? '' : 'away';
+      li.style.background = colorOf(p.id);
+      li.textContent = (p.name || '?').slice(0, 1);
+      li.title = `${p.name} : ${done ? 'a validé cette étape' : here ? 'cherche encore' : p.g.length ? 'sur une étape précédente' : 'pas encore parti'}`;
+      ul.appendChild(li);
+    });
+    if (os.length > 6) { const li = document.createElement('li'); li.className = 'more'; li.textContent = '+' + (os.length - 6); ul.appendChild(li); }
+  }
+  // Après une étape : si un ami repart, on le suit au bout de 5 secondes (sauf si on explore la carte).
+  let autoT = null;
+  function stopAuto() { clearInterval(autoT); autoT = null; $('rpAuto').hidden = true; }
+  function holdAuto() { if (!autoT) return; clearInterval(autoT); autoT = null; $('rpAuto').textContent = 'Tes amis sont repartis. Rejoins-les quand tu veux.'; }
+  function autoNext(name) {
+    if (autoT) return;
+    let n = 6;
+    const note = $('rpAuto');
+    note.hidden = false;
+    const tick = () => { if (--n <= 0) { stopAuto(); inputLock = 0; next(); return; } note.textContent = `${name} repart : départ dans ${n} s`; };
+    tick(); autoT = setInterval(tick, 1000);
+  }
   function row(cells, cls) {
     const li = document.createElement('li');
     if (cls) li.className = cls;
@@ -1061,20 +1092,25 @@
     const frame = () => { if (first === true || (lastFit && !lastFit.moved && seen.length)) fit(roundPts.concat(seen), $('roundPanel')); };
     olayer.clearLayers();
     ul.hidden = S.kind !== 'room' || !os.length;
+    $('rpRankLab').hidden = ul.hidden;
     if (ul.hidden) { frame(); return; }
-    const rows = [{ me: true, name: (getName() || 'Toi') + ' (toi)', id: myId, v: r.guess ? [0, 0, r.km, r.pts] : 0, played: true }];
+    const sum = (g) => g.slice(0, S.idx + 1).reduce((a, v) => a + (v ? v[3] : 0), 0);
+    const rows = [{ me: true, name: (getName() || 'Toi') + ' (toi)', id: myId, v: r.guess ? [0, 0, r.km, r.pts] : 0, played: true, total: S.score }];
     os.forEach((p) => {
       const played = p.g.length > S.idx, v = played ? p.g[S.idx] : null;
       if (v && (v[4] || 0) === (r.swaps || 0)) drawOther(p, v, r.loc, olayer).forEach((x) => seen.push(x));
-      rows.push({ name: p.name, id: p.id, v, played });
+      rows.push({ name: p.name, id: p.id, v, played, total: sum(p.g) });
     });
-    rows.sort((a, b) => (b.played - a.played) || ((b.v ? b.v[3] : 0) - (a.v ? a.v[3] : 0)));
+    // Classement général après cette étape : distance et points de l'étape, puis total.
+    rows.sort((a, b) => (b.played - a.played) || (b.total - a.total));
+    $('rpRankLab').textContent = `Classement après l'étape ${S.idx + 1}`;
     ul.innerHTML = '';
     rows.forEach((x) => {
       const li = row([
         ['dot', '', colorOf(x.id)], ['w', x.name],
         ['d', !x.played ? 'pas encore arrivé' : x.v ? fmtDist(x.v[2]) : 'sans réponse'],
-        ['p', x.played ? fmtInt(x.v ? x.v[3] : 0) : ''],
+        ['p', x.played ? '+' + fmtInt(x.v ? x.v[3] : 0) : ''],
+        ['t', x.played ? fmtInt(x.total) : ''],
       ], (x.me ? 'me ' : '') + (x.played ? '' : 'wait'));
       li.querySelector('.dot').textContent = (x.name || '?').slice(0, 1);   // même pastille que sur la carte
       ul.appendChild(li);
@@ -1085,6 +1121,7 @@
   function showRound() {
     const r = cur(), last = S.idx === ROUNDS - 1, panel = $('roundPanel');
     show('result');
+    stopAuto();
     panel.hidden = false; $('finalPanel').hidden = true;
     if (!rmap) initResultMap();
     rlayer.clearLayers(); olayer.clearLayers();
@@ -1145,6 +1182,8 @@
 
   function next() {
     if (!S || locked() || $('roundPanel').hidden) return;
+    stopAuto();
+    if (S.kind === 'room') Room.send({ t: 'n', i: S.idx });   // les amis encore sur ce résultat suivent
     if (S.idx < ROUNDS - 1) {
       S.idx++;
       show('play');
@@ -1180,6 +1219,7 @@
   function showFinal(fresh) {
     const max = ROUNDS * MAX;
     show('result');
+    stopAuto();
     if (!rmap) initResultMap();
     $('roundPanel').hidden = true; $('finalPanel').hidden = false;
     inputLock = Date.now() + 700;
@@ -1293,9 +1333,23 @@
       li.appendChild(b); ol.appendChild(li);
     });
     $('fpBoardWrap').classList.toggle('online', Room.online);
-    $('fpBoardNote').textContent = rows.length === 1
-      ? 'Personne d\'autre n\'est encore parti. Le classement se mettra à jour ici tout seul.'
-      : (Room.online ? '' : 'Connexion au classement en cours…');
+    const act = rows.filter((x) => x.n > 0), pend = act.filter((x) => x.n < ROUNDS);
+    const tie = act.length > 1 && act[0].total === act[1].total;
+    let note = '';
+    if (rows.length === 1) note = 'Personne d\'autre n\'est encore parti. Le classement se mettra à jour ici tout seul.';
+    else if (pend.length) note = `Encore en route : ${pend.map((x) => `${x.name} (${x.n}/${ROUNDS})`).join(', ')}.`;
+    else if (act.length > 1) {
+      note = tie ? 'Égalité en tête.' : act[0].me ? 'Tu gagnes ce trajet.' : `${act[0].name} gagne ce trajet.`;
+      if (act[0].me && !tie && !S.won) { S.won = true; Snd.good(); confetti(); }
+    }
+    // En tête de fiche : mon rang, visible sans faire défiler.
+    if (act.length > 1) {
+      const rk = act.findIndex((x) => x.me) + 1;
+      $('fpBest').textContent = `${rk}${rk === 1 ? 'er' : 'e'} sur ${act.length}${pend.length ? ' pour l\'instant.' : '. ' + note}`;
+      $('fpBest').classList.toggle('rec', rk === 1 && !tie && !pend.length);
+    }
+    if (!Room.online) note = (note ? note + ' ' : '') + 'Connexion au classement en cours…';
+    $('fpBoardNote').textContent = note;
   }
   function renderInvite() {
     const show = !!(S && S.kind === 'room' && Room.next);
@@ -1428,7 +1482,7 @@
 
   /* ---------- Salon entre amis ---------- */
   function openLobby(cfg, autoJoin) {
-    stopAll();
+    stopAll(); stopCount();
     S = null; Q = null;
     Room.open(cfg);
     lobbySeen = new Set();
@@ -1458,11 +1512,13 @@
       const dot = li.querySelector('.dot');
       dot.style.borderColor = '#fff';
       dot.textContent = (p.name || '?').slice(0, 1);
-      if (!lobbySeen.has(p.id)) { lobbySeen.add(p.id); li.classList.add('new'); }
+      if (!lobbySeen.has(p.id)) { if (lobbySeen.size && p.id !== myId) Snd.pin(); lobbySeen.add(p.id); li.classList.add('new'); }
       ul.appendChild(li);
     });
     const mine = Room.players.get(myId), n = mine ? mine.g.length : 0;
-    $('lbStart').textContent = n >= ROUNDS ? 'Voir le classement' : n ? 'Reprendre mon trajet' : 'Commencer';
+    const os = ps.filter((p) => p.id !== myId), going = os.filter((p) => p.g.length);
+    $('lbStart').textContent = n >= ROUNDS ? 'Voir le classement' : n ? 'Reprendre mon trajet' : going.length ? 'Rejoindre le trajet' : os.length ? 'Donner le départ' : 'Commencer';
+    $('lbHint').textContent = n ? '' : going.length ? `${going[0].name} est déjà en route.` : os.length ? 'Le départ est donné à tous ceux qui sont là.' : 'Pars tout de suite, ou attends tes amis ici.';
     $('lbStatus').textContent = `5 étapes, ${fmtLimit(cfg.limit)}. ` + (Room.online ? 'Classement en direct connecté.' : 'Connexion au classement…');
     $('lbStatus').classList.toggle('on', Room.online);
   }
@@ -1482,10 +1538,29 @@
     S.idx = mine.length;
     beginPlay();
   }
-  // « Commencer » donne aussi le départ aux amis qui attendent dans le salon (sauf si je ne fais que reprendre mon trajet).
+  // « Commencer » donne aussi le départ aux amis qui attendent dans le salon : même compte à rebours pour tous.
+  // (Seul dans le salon, ou pour reprendre un trajet commencé, on part tout de suite.)
+  let countT = null;
+  function stopCount() { clearInterval(countT); countT = null; $('lbCount').hidden = true; }
+  function launch(by) {
+    if (countT) return;
+    let n = 3;
+    const num = $('lbCountN');
+    $('lbCountBy').textContent = by ? `${by} donne le départ` : 'Départ';
+    $('lbCount').hidden = false;
+    const tick = () => {
+      if (n === 0) { stopCount(); if (!$('lobby').hidden && Room.cfg) startRoomGame(); return; }
+      num.textContent = n--;
+      num.classList.remove('pop'); void num.offsetWidth; num.classList.add('pop');
+      Snd.tick();
+    };
+    tick(); countT = setInterval(tick, 800);
+  }
   function startFromLobby() {
-    if (!myRoomSteps()) Room.send({ t: 's' });
-    startRoomGame();
+    if (countT) return;
+    if (myRoomSteps()) { startRoomGame(); return; }
+    Room.send({ t: 's' });
+    if (others().length) launch(''); else startRoomGame();
   }
   function createRoom(zone, mode, limit, autoJoin) {
     const cfg = newRoom(zone, mode === 'serie' ? 'classique' : mode, limit);
@@ -1530,6 +1605,7 @@
   }
   Room.onChange = () => {
     if (!$('lobby').hidden) renderLobby();
+    else if (S && S.kind === 'room' && !$('play').hidden) renderMates();
     else if (S && S.kind === 'room' && !$('result').hidden) {
       if (!$('roundPanel').hidden) renderRoundFriends();
       else { renderBoard(); renderInvite(); }
@@ -1569,14 +1645,14 @@
   $('dailyBtn').addEventListener('click', startDaily);
   $('friendsBtn').addEventListener('click', openFriends);
   $('frBack').addEventListener('click', goHome);
-  $('frCreate').addEventListener('click', () => createRoom(selected('zone'), selected('mode'), +selected('time'), false));
+  $('frCreate').addEventListener('click', () => createRoom(selected('zone'), selected('mode'), +selected('time'), true));
   $('frCode').addEventListener('input', (e) => { e.target.value = fmtCode(cleanCode(e.target.value)); $('frErr').textContent = ''; });
   $('frJoinForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const cfg = parseCode($('frCode').value);
     if (!cfg) { $('frErr').textContent = cleanCode($('frCode').value).length < 6 ? 'Le code fait 6 caractères.' : 'Ce code n\'existe pas. Vérifie-le avec la personne qui t\'invite.'; $('frCode').focus(); return; }
     history.replaceState(null, '', '#p=' + linkOf(cfg));
-    openLobby(cfg, false);
+    openLobby(cfg, true);
   });
   $('guessBtn').addEventListener('click', submit);
   $('nextBtn').addEventListener('click', next);
@@ -1613,6 +1689,7 @@
   });
   $('lbStart').addEventListener('click', startFromLobby);
   $('lbBack').addEventListener('click', goHome);
+  $('lbRename').addEventListener('click', () => setJoined(false));
   window.addEventListener('hashchange', route);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && Room.cfg && !Room.viaProxy && (!Room.es || Room.es.readyState === 2)) Room.connect(); });
   document.querySelector('.tools').addEventListener('click', (e) => {

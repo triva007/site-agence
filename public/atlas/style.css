@@ -573,7 +573,15 @@ h1 { margin: 0; font-weight: 900; font-size: clamp(1.75rem, 8.8vw, 2.4rem); line
 @media (max-width: 759px) { #lbStart { position: sticky; bottom: calc(14px + var(--sab)); z-index: 2; } }
 .code-big { display: block; font: 600 clamp(1.9rem, 8.5vw, 2.5rem)/1.15 var(--mono); letter-spacing: 0.1em; color: var(--ink); user-select: all; -webkit-user-select: all; }
 .lobby-ticket .ticket-main { padding: 12px 16px 8px; }
-#lbHint { text-align: center; }
+#lbHint { text-align: center; min-height: 1.4em; }
+.lb-top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); }
+.lb-top .btn-quiet { font-size: var(--fs-sm); color: var(--soft); }
+/* Compte à rebours commun avant le départ */
+.count { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 50; display: grid; place-content: center; justify-items: center; gap: var(--s-4); background: rgba(5, 29, 66, 0.88); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.count[hidden] { display: none; }
+.count-n { margin: 0; font: 900 clamp(7rem, 34vw, 13rem)/1 var(--font); color: var(--yellow); text-shadow: 0 6px 0 rgba(3, 15, 36, 0.5); }
+.count-n.pop { animation: count-pop 0.7s var(--ease) both; }
+@keyframes count-pop { from { transform: scale(1.6); opacity: 0; } 35% { opacity: 1; } to { transform: scale(1); } }
 .code-big { white-space: nowrap; }
 @media (max-width: 480px) {
   .lobby-ticket { flex-direction: column; }
@@ -780,6 +788,13 @@ button.stamp.got:hover { border-color: currentColor; background-color: #fff; box
 }
 
 /* Bandeaux sous le compteur : indice (sombre), compte à rebours Éclair (jaune), pression d'un ami (rouge) */
+/* Entre amis : une pastille par ami pendant l'étape (cochée = il a validé) */
+.mates { list-style: none; margin: 0; padding: 4px 5px; display: flex; gap: 6px; border-radius: var(--r-pill); background: rgba(5, 29, 66, 0.82); border: 1.5px solid rgba(255, 255, 255, 0.55); }
+.mates[hidden] { display: none; }
+.mates li { position: relative; width: 26px; height: 26px; display: grid; place-items: center; padding-top: 0.15em; border-radius: 50%; border: 2px solid #fff; color: #fff; font: 900 0.74rem/1 var(--font); text-transform: uppercase; text-shadow: 0 1px 0 rgba(3, 15, 36, 0.4); }
+.mates li.away { opacity: 0.45; }
+.mates li.done::after { content: ""; position: absolute; right: -6px; bottom: -4px; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid #fff; background: #17a35c url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%23fff' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 9px no-repeat; }
+.mates li.more { width: auto; padding: 0.15em 4px 0; border-color: transparent; background: none; text-shadow: none; }
 .hud-col .chip {
   position: relative; display: inline-flex; align-items: center; gap: 0.45em; max-width: 100%; min-height: 38px; overflow: hidden;
   padding: 0.42em 0.85em 0.26em 0.65em; border-radius: 10px; border: 2px solid rgba(255, 255, 255, 0.9);
@@ -1001,12 +1016,17 @@ button.stamp.got:hover { border-color: currentColor; background-color: #fff; box
 
 /* Amis : les réponses de chacun sur l'étape */
 .friends { list-style: none; margin: 0; padding: 10px 0 0; border-top: 2px dashed var(--line); display: grid; gap: 3px; }
-.friends li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto 5ch; gap: 10px; align-items: center; min-height: 34px; padding: 3px 10px 3px 4px; border-radius: var(--r-pill); }
+.friends li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto 6ch 6ch; gap: 10px; align-items: center; min-height: 34px; padding: 3px 10px 3px 4px; border-radius: var(--r-pill); }
 .friends .dot, .ranks .dot { width: 26px; height: 26px; display: grid; place-items: center; padding-top: 0.18em; border-color: var(--ink); color: #fff; font: 900 0.78rem/1 var(--font); text-transform: uppercase; text-shadow: 0 1px 0 rgba(3, 15, 36, 0.4); }
 .friends .me .dot, .ranks .me .dot { color: var(--ink); text-shadow: none; }
 .friends .w { padding-top: 0.15em; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .friends .d, .friends .p { padding-top: 0.15em; font: 600 0.82rem var(--mono); white-space: nowrap; text-align: right; }
-.friends .d { color: var(--muted); }
+.friends .d, .friends .p { color: var(--muted); }
+.friends .t { padding-top: 0.15em; font: 800 0.88rem var(--mono); white-space: nowrap; text-align: right; }
+#rpRankLab { margin: 0; padding-top: 12px; border-top: 2px dashed var(--line); }
+#rpRankLab + .friends { border-top: 0; padding-top: 4px; }
+.auto-note { margin: 0 0 8px; text-align: center; font-size: var(--fs-sm); font-weight: 700; color: var(--blue); }
+.auto-note[hidden] { display: none; }
 .friends .me, .ranks .me button { background: rgba(255, 214, 10, 0.3); }
 .friends .me .w, .ranks .me .w { font-weight: 900; }
 .friends .wait .dot { opacity: 0.45; }

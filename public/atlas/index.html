@@ -283,10 +283,10 @@
           <p class="hint-line">C'est le nom que tes amis verront au classement.</p>
         </form>
         <div id="lbIn" hidden>
-          <p class="label">À bord</p>
+          <div class="lb-top"><p class="label">À bord</p><button id="lbRename" class="btn-quiet" type="button">Changer de pseudo</button></div>
           <ul id="lbPlayers" class="players"></ul>
           <p class="slot">Tes amis apparaîtront ici dès qu'ils auront tapé le code.</p>
-          <p class="hint-line" id="lbHint">Le départ est donné à tous ceux qui sont déjà là.</p>
+          <p class="hint-line" id="lbHint"></p>
           <button id="lbStart" class="btn btn-go btn-big" type="button">Commencer</button>
         </div>
       </section>
@@ -297,6 +297,8 @@
         <li>Dès que quelqu'un valide une étape, les autres n'ont plus que 20 secondes. Un retardataire peut toujours entrer avec le code et faire le trajet de son côté.</li>
       </ol>
     </main>
+    <!-- Compte à rebours commun avant le départ -->
+    <div id="lbCount" class="count" role="status" aria-live="assertive" hidden><p class="plate" id="lbCountBy"></p><p class="count-n" id="lbCountN">3</p></div>
   </div>
 
   <!-- Passeport -->
@@ -347,6 +349,8 @@
         <div class="cell"><span class="lab" id="hudLab2">Points</span><span class="val" id="hudScore">0</span></div>
         <div class="cell cell-time" id="hudTimeCell" hidden><span class="lab">Temps</span><span class="val" id="hudTime">0:00</span><i class="time-bar" aria-hidden="true"></i></div>
       </div>
+      <!-- Entre amis : où en sont les autres sur cette étape -->
+      <ul id="mates" class="mates" hidden></ul>
       <p id="hintChip" class="chip" hidden></p>
       <p id="flash" class="chip chip-flash" hidden></p>
       <p id="pressChip" class="chip chip-press" hidden></p>
@@ -446,9 +450,11 @@
         <div class="gauge" aria-hidden="true"><div class="bar"><i id="rpBar"></i></div><span>5 000</span></div>
         <p class="note event stampline" id="rpStamp" hidden></p>
         <p class="note event" id="rpNote" hidden></p>
+        <p class="panel-kicker" id="rpRankLab" hidden></p>
         <ul id="rpFriends" class="friends" hidden></ul>
       </div>
       <footer class="panel-foot">
+        <p class="auto-note" id="rpAuto" role="status" hidden></p>
         <button id="nextBtn" class="btn btn-go btn-big" type="button">Étape suivante <kbd>Espace</kbd></button>
       </footer>
     </section>
