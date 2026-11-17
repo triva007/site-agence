@@ -9,6 +9,7 @@
   const MAX = 5000;
   const FLASH = 15;                   // secondes de vue en mode Éclair
   const RELAY = 'https://ntfy.sh/';   // relais public du classement entre amis
+  const RELAY_ALT = 'relais/';        // le même relais, atteint par notre propre adresse quand le navigateur bloque le premier
 
   /* ---------- Géographie ---------- */
   const CONT = { EU: 'Europe', AS: 'Asie', AF: 'Afrique', NA: 'Amérique du Nord', SA: 'Amérique du Sud', OC: 'Océanie' };
@@ -375,9 +376,31 @@
   const getName = () => { const n = store.get('name', ''); return typeof n === 'string' ? cleanName(n) : ''; };
   const COLORS = ['#e4572e', '#17bebb', '#7b2cbf', '#f72585', '#2a9d8f', '#ff9f1c', '#3a86ff', '#6c757d'];
   const colorOf = (id) => (id === myId ? '#ffd60a' : COLORS[hashStr(id) % COLORS.length]);
-  const LINK_RE = /^([a-z0-9]{8,14})-(monde|europe|france|ameriques|asie|afrique|capitales|celebres)-([cpe])-(0|30|90|180)$/;
-  const parseLink = (s) => { const m = LINK_RE.exec(s || ''); return m ? { id: m[1], zone: m[2], mode: MODE_BY_CODE[m[3]], limit: +m[4] } : null; };
-  const linkOf = (c) => `${c.id}-${c.zone}-${MODES[c.mode].code}-${c.limit}`;
+  // Un trajet entre amis tient dans un code de 6 caractères (sans I, O, 0, 1 : trop faciles à confondre).
+  // Les 4 premiers sont tirés au hasard ; les 2 derniers portent les réglages (zone, mode, temps), brouillés par les 4 premiers :
+  // tout le monde retrouve donc les mêmes lieux à partir du seul code, et un code mal recopié est presque toujours refusé.
+  const CODE_ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const CODE_ZONES = ['monde', 'europe', 'france', 'ameriques', 'asie', 'afrique', 'capitales', 'celebres'];
+  const CODE_MODES = ['classique', 'postale', 'eclair'], CODE_LIMITS = [0, 180, 90, 30];
+  const codeKey = (head) => hashStr('pdc' + head) % 1024;
+  const cleanCode = (s) => String(s == null ? '' : s).toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+  const fmtCode = (c) => (c.length > 3 ? c.slice(0, 3) + ' ' + c.slice(3) : c);
+  function parseCode(s) {
+    const c = cleanCode(s);
+    if (!/^[A-HJ-NP-Z2-9]{6}$/.test(c)) return null;
+    const k = (((CODE_ABC.indexOf(c[4]) << 5) | CODE_ABC.indexOf(c[5])) - codeKey(c.slice(0, 4)) + 1024) % 1024;
+    if (k >= CODE_ZONES.length * 12) return null;
+    return { id: c.toLowerCase(), code: c, zone: CODE_ZONES[Math.floor(k / 12)], mode: CODE_MODES[(k % 12) >> 2], limit: CODE_LIMITS[k % 4] };
+  }
+  function newRoom(zone, mode, limit) {
+    const a = new Uint8Array(4); (window.crypto || window.msCrypto).getRandomValues(a);
+    const head = Array.from(a, (b) => CODE_ABC[b % 32]).join('');
+    const z = Math.max(0, CODE_ZONES.indexOf(zone)), m = Math.max(0, CODE_MODES.indexOf(mode)), l = Math.max(0, CODE_LIMITS.indexOf(limit));
+    const k = (z * 12 + m * 4 + l + codeKey(head)) % 1024;
+    return parseCode(head + CODE_ABC[k >> 5] + CODE_ABC[k & 31]);
+  }
+  const parseLink = parseCode;
+  const linkOf = (c) => c.code;
   const pageUrl = () => location.origin + location.pathname;
   const roomUrl = (c) => `${pageUrl()}#p=${linkOf(c)}`;
 
@@ -385,7 +408,7 @@
     cfg: null, es: null, seen: new Set(), players: new Map(), online: false, next: null, onChange: null,
     open(cfg) {
       this.close();
-      this.cfg = cfg; this.players = new Map(); this.seen = new Set(); this.next = null; this.online = false; this.openedAt = 0;
+      this.cfg = cfg; this.players = new Map(); this.seen = new Set(); this.next = null; this.online = false; this.openedAt = 0; this.lastId = '';
       const mine = store.get('room.' + cfg.id, null);   // mes étapes, gardées aussi sur cet appareil
       if (Array.isArray(mine)) this.apply({ t: 'g', id: myId, n: getName(), g: mine }, true, true);
       this.connect();
@@ -394,24 +417,56 @@
       const cfg = this.cfg;
       if (!cfg) return;
       if (this.es) this.es.close();
+      this.es = null; clearTimeout(this.linkT); this.pollToken = (this.pollToken || 0) + 1;
+      if (this.viaProxy) { this.poll(); return; }
+      // En direct d'abord. Si le navigateur ne peut pas joindre le relais (réseau filtré), on passe par notre propre adresse.
+      let opened = false;
+      const fallback = () => {
+        clearTimeout(this.linkT);
+        if (opened || this.cfg !== cfg || this.viaProxy) return;
+        this.viaProxy = true;
+        if (this.es) { this.es.close(); this.es = null; }
+        this.poll();
+      };
       try {
         const es = (this.es = new EventSource(`${RELAY}pdc-${cfg.id}/sse?since=12h`));
-        es.onopen = () => { this.online = true; this.openedAt = performance.now(); this.emit(); };   // à chaque (re)connexion, l'historique est renvoyé
-        es.onerror = () => { this.online = false; this.emit(); };
-        es.onmessage = (e) => {
-          try {
-            const m = JSON.parse(e.data);
-            if (m.event !== 'message' || this.seen.has(m.id)) return;
-            this.seen.add(m.id);
-            const msg = JSON.parse(m.message);
-            this.apply(msg);
-            // Plus de 3 s après l'ouverture, ce n'est plus l'historique : c'est un ami en route en ce moment.
-            if (this.onLive && this.openedAt && performance.now() - this.openedAt > 3000) this.onLive(msg);
-          } catch (err) { /* message illisible : on l'ignore */ }
-        };
-      } catch (e) { /* pas de direct : le trajet reste possible */ }
+        es.onopen = () => { opened = true; clearTimeout(this.linkT); this.online = true; this.openedAt = performance.now(); this.emit(); };   // à chaque (re)connexion, l'historique est renvoyé
+        es.onerror = () => { this.online = false; this.emit(); if (!opened) fallback(); };
+        es.onmessage = (e) => this.receive(e.data);
+        this.linkT = setTimeout(fallback, 6000);
+      } catch (e) { fallback(); }
     },
-    close() { if (this.es) this.es.close(); this.es = null; this.cfg = null; },
+    receive(line) {
+      try {
+        const m = JSON.parse(line);
+        if (m.event !== 'message' || this.seen.has(m.id)) return;
+        this.seen.add(m.id); this.lastId = m.id;
+        const msg = JSON.parse(m.message);
+        this.apply(msg);
+        // Plus de 3 s après l'ouverture, ce n'est plus l'historique : c'est un ami en route en ce moment.
+        if (this.onLive && this.openedAt && performance.now() - this.openedAt > 3000) this.onLive(msg);
+      } catch (err) { /* message illisible : on l'ignore */ }
+    },
+    // Relais de secours : pas de flux continu, on redemande les nouveautés toutes les 3 secondes.
+    async poll() {
+      const cfg = this.cfg, token = this.pollToken;
+      let fails = 0;
+      while (this.cfg === cfg && this.pollToken === token) {
+        if (!document.hidden) {
+          try {
+            const r = await fetch(`${RELAY_ALT}pdc-${cfg.id}/json?poll=1&since=${this.lastId || '12h'}`, { cache: 'no-store' });
+            if (!r.ok) throw new Error('relais');
+            const txt = await r.text();
+            if (this.cfg !== cfg || this.pollToken !== token) return;
+            fails = 0;
+            if (!this.online) { this.online = true; if (!this.openedAt) this.openedAt = performance.now(); this.emit(); }
+            txt.split('\n').forEach((l) => { if (l.trim()) this.receive(l); });
+          } catch (e) { if (++fails >= 2 && this.online) { this.online = false; this.emit(); } }
+        }
+        await sleep(document.hidden ? 1500 : 3000);
+      }
+    },
+    close() { if (this.es) this.es.close(); this.es = null; clearTimeout(this.linkT); this.pollToken = (this.pollToken || 0) + 1; this.cfg = null; },
     emit() { if (this.onChange) this.onChange(); },
     // Tout ce qui arrive du relais est traité comme une donnée non fiable : on valide, on borne, on n'exécute rien.
     apply(m, silent, local) {
@@ -435,7 +490,10 @@
       this.apply(m, false, true);
       const topic = 'pdc-' + this.cfg.id;
       for (let i = 0; i < 4; i++) {
-        try { const r = await fetch(RELAY + topic, { method: 'POST', body: JSON.stringify(m) }); if (r.ok) return true; } catch (e) { /* on réessaie */ }
+        // Deux chemins vers le même relais : si l'un est bloqué ou saturé, l'autre prend le relais.
+        for (const base of (this.viaProxy ? [RELAY_ALT, RELAY] : [RELAY, RELAY_ALT])) {
+          try { const r = await fetch(base + topic, { method: 'POST', body: JSON.stringify(m) }); if (r.ok) return true; } catch (e) { /* on essaie l'autre chemin */ }
+        }
         await sleep(1500 * (i + 1));
         if (m.t !== 'x' && (!this.cfg || 'pdc-' + this.cfg.id !== topic)) return false;
       }
@@ -455,7 +513,7 @@
   const locked = () => Date.now() < inputLock;
   function show(id) {
     inputLock = Date.now() + 500;
-    ['home', 'lobby', 'passport', 'play', 'result'].forEach((s) => { $(s).hidden = s !== id; });
+    ['home', 'friends', 'lobby', 'passport', 'play', 'result'].forEach((s) => { $(s).hidden = s !== id; });
     if (id === 'play' || id === 'result') killHomeMap();
   }
   function stopAll() {
@@ -586,8 +644,12 @@
     Snd.tick();
   }
   Room.onLive = (m) => {
-    if (m && m.t === 'g' && m.id !== myId && Array.isArray(m.g) && S && S.kind === 'room' && m.g.length === S.idx + 1) pressure(cleanName(m.n) || 'Un voyageur');
+    if (!m || typeof m.id !== 'string' || m.id === myId) return;
+    if (m.t === 'g' && Array.isArray(m.g) && S && S.kind === 'room' && m.g.length === S.idx + 1) pressure(cleanName(m.n) || 'Un voyageur');
+    // Un ami donne le départ : ceux qui attendent dans le salon partent avec lui.
+    if (m.t === 's' && !$('lobby').hidden && !$('lbIn').hidden && !myRoomSteps()) startRoomGame();
   };
+  const myRoomSteps = () => { const p = Room.players.get(myId); return p ? p.g.length : 0; };
 
   /* ---------- Accueil ---------- */
   const selected = (name) => document.querySelector(`input[name="${name}"]:checked`).value;
@@ -1372,6 +1434,7 @@
     lobbySeen = new Set();
     show('lobby');
     $('lbTitle').textContent = `${Z(cfg.zone).label}, mode ${MODES[cfg.mode].label.toLowerCase()}`;
+    $('lbCode').textContent = fmtCode(cfg.code);
     $('lbLink').value = roomUrl(cfg);
     const name = getName();
     $('lbName').value = name;
@@ -1419,10 +1482,25 @@
     S.idx = mine.length;
     beginPlay();
   }
+  // « Commencer » donne aussi le départ aux amis qui attendent dans le salon (sauf si je ne fais que reprendre mon trajet).
+  function startFromLobby() {
+    if (!myRoomSteps()) Room.send({ t: 's' });
+    startRoomGame();
+  }
   function createRoom(zone, mode, limit, autoJoin) {
-    const cfg = { id: randId(10), zone, mode: mode === 'serie' ? 'classique' : mode, limit };
+    const cfg = newRoom(zone, mode === 'serie' ? 'classique' : mode, limit);
     history.replaceState(null, '', '#p=' + linkOf(cfg));
     openLobby(cfg, autoJoin);
+  }
+  // Entre amis : on entre un code reçu, ou on en crée un avec les réglages de l'accueil.
+  function openFriends() {
+    savePrefs();
+    const mode = selected('mode') === 'serie' ? 'classique' : selected('mode');
+    $('frSummary').textContent = `${Z(selected('zone')).label}, mode ${MODES[mode].label.toLowerCase()}, ${fmtLimit(+selected('time'))}`;
+    $('frNote').textContent = selected('mode') === 'serie' ? 'La série de pays se fait en solo : à plusieurs, ce sera le mode classique.' : 'Ce sont les réglages choisis à l\'accueil.';
+    $('frCode').value = ''; $('frErr').textContent = '';
+    show('friends');
+    if (!compact.matches) setTimeout(() => $('frCode').focus(), 50);
   }
   let rematching = false;
   async function rematch() {
@@ -1430,7 +1508,7 @@
     if (rematching || !old) return;
     rematching = true;
     try {
-      const cfg = { id: randId(10), zone: old.zone, mode: old.mode, limit: old.limit };
+      const cfg = newRoom(old.zone, old.mode, old.limit);
       await Promise.race([Room.send({ t: 'x', link: linkOf(cfg) }), sleep(1500)]);
       if (Room.cfg !== old) return;   // le voyageur est parti entre-temps (accueil, autre trajet)
       history.replaceState(null, '', '#p=' + linkOf(cfg));
@@ -1489,7 +1567,17 @@
 
   $('startBtn').addEventListener('click', startFromHome);
   $('dailyBtn').addEventListener('click', startDaily);
-  $('friendsBtn').addEventListener('click', () => { savePrefs(); createRoom(selected('zone'), selected('mode'), +selected('time'), false); });
+  $('friendsBtn').addEventListener('click', openFriends);
+  $('frBack').addEventListener('click', goHome);
+  $('frCreate').addEventListener('click', () => createRoom(selected('zone'), selected('mode'), +selected('time'), false));
+  $('frCode').addEventListener('input', (e) => { e.target.value = fmtCode(cleanCode(e.target.value)); $('frErr').textContent = ''; });
+  $('frJoinForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const cfg = parseCode($('frCode').value);
+    if (!cfg) { $('frErr').textContent = cleanCode($('frCode').value).length < 6 ? 'Le code fait 6 caractères.' : 'Ce code n\'existe pas. Vérifie-le avec la personne qui t\'invite.'; $('frCode').focus(); return; }
+    history.replaceState(null, '', '#p=' + linkOf(cfg));
+    openLobby(cfg, false);
+  });
   $('guessBtn').addEventListener('click', submit);
   $('nextBtn').addEventListener('click', next);
   $('againBtn').addEventListener('click', again);
@@ -1508,11 +1596,11 @@
   $('ppBack').addEventListener('click', goHome);
 
   $('lbCopy').addEventListener('click', () => {
-    const url = $('lbLink').value;
-    if (navigator.share && compact.matches) navigator.share({ title: 'Point de chute', text: 'Rejoins mon trajet :', url }).catch((e) => { if (!e || e.name !== 'AbortError') copyText(url, $('lbCopy'), 'Lien copié'); });
-    else copyText(url, $('lbCopy'), 'Lien copié');
+    if (!Room.cfg) return;
+    const url = $('lbLink').value, text = `Rejoins-moi sur Point de chute avec le code ${fmtCode(Room.cfg.code)}`, all = `${text}\n${url}`;
+    if (navigator.share && compact.matches) navigator.share({ title: 'Point de chute', text, url }).catch((e) => { if (!e || e.name !== 'AbortError') copyText(all, $('lbCopy'), 'Invitation copiée'); });
+    else copyText(all, $('lbCopy'), 'Invitation copiée');
   });
-  $('lbLink').addEventListener('focus', (e) => e.target.select());
   $('lbNameForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const name = cleanName($('lbName').value);
@@ -1523,10 +1611,10 @@
     setJoined(true);
     renderLobby();
   });
-  $('lbStart').addEventListener('click', startRoomGame);
+  $('lbStart').addEventListener('click', startFromLobby);
   $('lbBack').addEventListener('click', goHome);
   window.addEventListener('hashchange', route);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden && Room.cfg && (!Room.es || Room.es.readyState === 2)) Room.connect(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && Room.cfg && !Room.viaProxy && (!Room.es || Room.es.readyState === 2)) Room.connect(); });
   document.querySelector('.tools').addEventListener('click', (e) => {
     if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     if (e.target.closest('#hintBtn, #resetBtn, #swapBtn, #toolsClose')) setTools(false);   // Son et Quitter laissent le menu ouvert : on y lit leur état
@@ -1551,7 +1639,7 @@
     if (e.code !== 'Space' && e.code !== 'Enter') return;
     let fn = null;
     if (!$('home').hidden) fn = () => { if (!$('startBtn').disabled) startFromHome(); };
-    else if (!$('lobby').hidden) fn = () => { if (!$('lbIn').hidden) startRoomGame(); };
+    else if (!$('lobby').hidden) fn = () => { if (!$('lbIn').hidden) startFromLobby(); };
     else if (!$('play').hidden) fn = () => { if (Q) { if (!$('quizOver').hidden) startSerie(Q.zone, Q.limit); } else if (gmarker) submit(); };
     else if ($('result').hidden) return;   // passeport ou autre écran sans raccourci
     else if (!$('roundPanel').hidden) fn = next;
@@ -1560,7 +1648,7 @@
     fn();
   });
 
-  // Préférences de la dernière trajet
+  // Préférences du dernier trajet
   const prefs = store.get('prefs', null);
   if (prefs && typeof prefs === 'object') {
     ['zone', 'time', 'mode'].forEach((k) => {

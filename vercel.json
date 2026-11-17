@@ -35,6 +35,14 @@
   ],
   "rewrites": [
     {
+      "source": "/atlas/relais/:topic(pdc-[a-z2-9]{6})",
+      "destination": "https://ntfy.sh/:topic"
+    },
+    {
+      "source": "/atlas/relais/:topic(pdc-[a-z2-9]{6})/:rest*",
+      "destination": "https://ntfy.sh/:topic/:rest*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

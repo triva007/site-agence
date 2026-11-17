@@ -226,6 +226,32 @@
     <div id="homeMap" aria-hidden="true"></div>
   </div>
 
+  <!-- Entre amis : rejoindre avec un code, ou en créer un -->
+  <div id="friends" class="screen backdrop" hidden>
+    <main class="sign gate-sign">
+      <header class="lobby-head">
+        <button id="frBack" class="btn-quiet back" type="button"><svg class="ico"><use href="#i-back"/></svg>Accueil</button>
+        <p class="plate">Entre amis</p>
+        <h2>Un code, et tout le monde part</h2>
+      </header>
+      <form id="frJoinForm" class="gate-card well" novalidate>
+        <label class="label" for="frCode">Tu as reçu un code ?</label>
+        <div class="linkrow">
+          <input id="frCode" class="field code-field" type="text" maxlength="7" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="ABC 234" aria-describedby="frErr">
+          <button class="btn btn-go" type="submit">Rejoindre</button>
+        </div>
+        <p class="hint-line gate-err" id="frErr" role="status"></p>
+      </form>
+      <p class="gate-or" aria-hidden="true"><span>ou</span></p>
+      <div class="gate-card well">
+        <p class="label">C'est toi qui invites ?</p>
+        <p class="gate-sum" id="frSummary"></p>
+        <button id="frCreate" class="btn btn-alt btn-big" type="button">Créer un code</button>
+        <p class="hint-line" id="frNote"></p>
+      </div>
+    </main>
+  </div>
+
   <!-- Salon entre amis -->
   <div id="lobby" class="screen backdrop" hidden>
     <main class="sign lobby-sign">
@@ -238,11 +264,12 @@
 
       <div class="ticket lobby-ticket">
         <div class="ticket-main">
-          <label class="label" for="lbLink">Lien du trajet</label>
-          <input id="lbLink" type="text" readonly>
+          <span class="label" id="lbCodeLab">Code du trajet</span>
+          <output id="lbCode" class="code-big" aria-labelledby="lbCodeLab"></output>
+          <input id="lbLink" type="hidden">
         </div>
         <div class="ticket-stub">
-          <button id="lbCopy" class="btn btn-ghost btn-sm" type="button">Copier le lien</button>
+          <button id="lbCopy" class="btn btn-ghost btn-sm" type="button">Copier l'invitation</button>
         </div>
       </div>
 
@@ -258,15 +285,16 @@
         <div id="lbIn" hidden>
           <p class="label">À bord</p>
           <ul id="lbPlayers" class="players"></ul>
-          <p class="slot">Tes amis apparaîtront ici dès qu'ils ouvrent le lien.</p>
+          <p class="slot">Tes amis apparaîtront ici dès qu'ils auront tapé le code.</p>
+          <p class="hint-line" id="lbHint">Le départ est donné à tous ceux qui sont déjà là.</p>
           <button id="lbStart" class="btn btn-go btn-big" type="button">Commencer</button>
         </div>
       </section>
 
       <ol class="steps">
-        <li>Envoie ce lien à tes amis.</li>
-        <li>Tout le monde reçoit les 5 mêmes lieux, chacun sur son écran, quand il veut. Le classement se met à jour en direct.</li>
-        <li>Vous êtes en ligne en même temps ? Dès que quelqu'un valide une étape, les autres n'ont plus que 20 secondes.</li>
+        <li>Donne ce code à tes amis. Ils touchent « Entre amis » à l'accueil et le tapent.</li>
+        <li>Tout le monde reçoit les 5 mêmes lieux, chacun sur son écran. Le classement se met à jour en direct.</li>
+        <li>Dès que quelqu'un valide une étape, les autres n'ont plus que 20 secondes. Un retardataire peut toujours entrer avec le code et faire le trajet de son côté.</li>
       </ol>
     </main>
   </div>
