@@ -583,7 +583,7 @@ h1 { margin: 0; font-weight: 900; font-size: clamp(1.75rem, 8.8vw, 2.4rem); line
 .count-n.pop { animation: count-pop 0.7s var(--ease) both; }
 @keyframes count-pop { from { transform: scale(1.6); opacity: 0; } 35% { opacity: 1; } to { transform: scale(1); } }
 .code-big { white-space: nowrap; }
-@media (max-width: 480px) {
+@media (max-width: 480px), (min-width: 760px) and (max-width: 979px) {   /* téléphone, ou tablette debout (deux colonnes étroites) */
   .lobby-ticket { flex-direction: column; }
   .lobby-ticket .ticket-main { text-align: center; }
   .lobby-ticket .ticket-stub { border-left: 0; border-top: 2px dashed #b9b09b; padding: 10px 14px 12px; }
@@ -908,6 +908,8 @@ button.stamp.got:hover { border-color: currentColor; background-color: #fff; box
 .pin-true::before { content: ""; position: absolute; inset: 0 0 auto; height: 11px; background: var(--red); border-bottom: 2.5px solid var(--ink); }
 .pin-num { font: 600 11px/1 var(--mono); position: absolute; left: 0; right: 0; bottom: 3px; text-align: center; color: var(--ink); }
 .leaflet-container { font-family: var(--font); }
+/* Au-delà des pôles, les cartes montrent la couleur de la mer plutôt qu'un bandeau gris */
+#guessMap.leaflet-container, #resultMap.leaflet-container { background: #a8d4ef; }
 .leaflet-control-attribution { font-size: 10px; }
 
 /* ---------- 8. Résultats ---------- */
@@ -1208,8 +1210,12 @@ button.stamp.got:hover { border-color: currentColor; background-color: #fff; box
   .quiz-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 13px; }
   #quizGrid .btn { min-height: 50px; font-size: 1rem; padding-inline: 0.5em; }
 
-  /* Téléphone couché : le volet de la carte vient de la droite, la vue garde toute la hauteur */
-  @media (orientation: landscape) and (max-height: 540px) {
+  /* Tablette couchée : même principe, avec un volet plus large (la carte et la vue se partagent l'écran) */
+  @media (orientation: landscape) and (min-width: 900px) and (min-height: 541px) {
+    #play { --sheet-w: min(48%, 680px); }
+  }
+  /* Téléphone ou tablette couchés : le volet de la carte vient de la droite, la vue garde toute la hauteur */
+  @media (orientation: landscape) and (max-height: 540px), (orientation: landscape) and (min-width: 900px) {
     #play.sheet { --sv-b: 0px; --dock-b: 0px; --sv-r: var(--sheet-w); --dock-r: var(--sheet-w); }
     #guess {
       left: auto; top: 0; width: calc(var(--sheet-w) + var(--sar)); height: auto; padding: 0 max(10px, var(--sar)) calc(10px + var(--sab)) 10px;
