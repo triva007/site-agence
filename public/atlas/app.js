@@ -165,20 +165,24 @@
     bad() { [300, 220].forEach((f, i) => this.tone(f, 0.24, i * 0.14, 'sawtooth', 0.04)); },
   };
 
+  // Confettis aux couleurs de la route. Une seule boucle de dessin : deux salves rapprochées (record + niveau) s'additionnent.
+  let confParts = [], confOn = false;
   function confetti() {
     if (reduceMotion) return;
     const c = $('confetti'), x = c.getContext('2d'), W = (c.width = window.innerWidth), H = (c.height = window.innerHeight);
-    const cols = ['#ffd60a', '#0a7a4b', '#d5202a', '#ffffff', '#0c4da2'];
-    const ps = Array.from({ length: 120 }, () => ({ x: W / 2 + (Math.random() - 0.5) * W * 0.3, y: H * 0.45, vx: (Math.random() - 0.5) * 15, vy: -Math.random() * 13 - 4, s: 6 + Math.random() * 6, r: Math.random() * 6, c: cols[Math.floor(Math.random() * cols.length)] }));
-    const t0 = performance.now();
+    const cols = ['#ffd60a', '#0a7a4b', '#d5202a', '#ffffff', '#0c4da2'], t0 = performance.now();
+    for (let i = 0; i < 130; i++) confParts.push({ t0, x: W / 2 + (Math.random() - 0.5) * W * 0.3, y: H * 0.45, vx: (Math.random() - 0.5) * 15, vy: -Math.random() * 13 - 4, s: 6 + Math.random() * 6, r: Math.random() * 6, round: i % 4 === 0, c: cols[Math.floor(Math.random() * cols.length)] });
+    if (confOn) return;
+    confOn = true;
     (function frame(now) {
-      const t = now - t0;
-      x.clearRect(0, 0, W, H);
-      if (t >= 2300) return;
-      ps.forEach((p) => {
+      x.clearRect(0, 0, c.width, c.height);
+      confParts = confParts.filter((p) => now - p.t0 < 2300);
+      if (!confParts.length) { confOn = false; return; }
+      confParts.forEach((p) => {
         p.vy += 0.32; p.x += p.vx; p.y += p.vy; p.r += 0.2;
-        x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.globalAlpha = Math.max(0, 1 - t / 2300);
-        x.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * 0.66); x.restore();
+        x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.globalAlpha = Math.max(0, 1 - (now - p.t0) / 2300);
+        if (p.round) { x.beginPath(); x.arc(0, 0, p.s * 0.42, 0, 6.3); x.fill(); } else x.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * 0.66);
+        x.restore();
       });
       requestAnimationFrame(frame);
     })(t0);
@@ -321,6 +325,40 @@
       clearTimeout(closeT); g.classList.add('open');
     });
     g.addEventListener('mouseleave', () => { if (compact.matches) return; closeT = setTimeout(() => g.classList.remove('open'), 500); });
+
+    // Trois tailles et une punaise pour la garder ouverte : préférences d'affichage, gardées d'un trajet à l'autre.
+    let size = Math.min(3, Math.max(1, +store.get('ui.gm', 2) || 2)), pinned = store.get('ui.gmPin', false) === true;
+    const renderGm = () => {
+      g.dataset.size = size; g.classList.toggle('pinned', pinned);
+      $('gmLess').disabled = size <= 1; $('gmMore').disabled = size >= 3;
+      const pin = $('gmPin'), txt = pinned ? 'Laisser la carte se replier' : 'Garder la carte ouverte';
+      pin.setAttribute('aria-pressed', pinned); pin.title = txt; pin.setAttribute('aria-label', txt);
+    };
+    const gmAct = (id, fn) => $(id).addEventListener('click', (e) => { fn(); store.set('ui.gm', size); store.set('ui.gmPin', pinned); renderGm(); e.currentTarget.blur(); });
+    gmAct('gmLess', () => { size = Math.max(1, size - 1); });
+    gmAct('gmMore', () => { size = Math.min(3, size + 1); });
+    gmAct('gmPin', () => { pinned = !pinned; });
+    renderGm();
+
+    // Fenêtre redimensionnée, téléphone tourné : la carte reprend sa place (et son cadrage tant qu'aucun point n'est posé).
+    let wide = innerWidth > innerHeight, rsT;
+    const refit = () => {
+      clearTimeout(rsT);
+      rsT = setTimeout(() => {
+        const turned = wide !== (innerWidth > innerHeight);
+        wide = innerWidth > innerHeight;
+        if ($('play').hidden) return;
+        gmap.invalidateSize({ animate: false });
+        if (turned && S && !Q) { if (gmarker) gmap.panTo(gmarker.getLatLng(), { animate: false }); else fitZone(); }
+      }, 200);
+    };
+    window.addEventListener('resize', refit);
+    window.addEventListener('orientationchange', refit);
+  }
+  function fitZone() {
+    const zn = Z(S.zone);
+    if (zn.bounds) gmap.fitBounds(zn.bounds, { padding: [8, 8], animate: false });
+    else gmap.setView(zn.view[0], zn.view[1], { animate: false });
   }
 
   function initResultMap() {
@@ -328,6 +366,7 @@
     addBase(rmap);
     rlayer = L.layerGroup().addTo(rmap);
     olayer = L.layerGroup().addTo(rmap);
+    rmap.on('dragstart zoomstart', () => { if (!fitting && lastFit) lastFit.moved = true; });
   }
 
   /* ---------- Trajet entre amis : relais ---------- */
@@ -540,7 +579,7 @@
     r.pressed = true;
     if (timerId && (timerEnd - Date.now()) / 1000 <= PRESS) return;   // le chrono en cours est déjà plus court
     const chip = $('pressChip');
-    chip.hidden = false; chip.textContent = `${name} a validé : plus que ${PRESS} s`;
+    chip.hidden = false; chip.textContent = ''; chip.append(icoEl('i-chrono'), `${name} a validé : ${PRESS} s pour répondre`);
     $('hudTimeCell').hidden = false;
     stopTimer(); timerOn = false;
     startTimer(PRESS, submit);
@@ -604,7 +643,7 @@
     const playing = !$('play').hidden || (!$('result').hidden && S && !S.done);
     if (playing) {
       guardBack();
-      if (!$('play').hidden) { const q = $('quitBtn'); q.classList.add('arm'); q.textContent = 'Quitter le trajet ?'; clearTimeout(quitT); quitT = setTimeout(disarmQuit, 4000); }
+      if (!$('play').hidden) { armQuit(4000); setTools(true); }
     } else if ($('home').hidden) goHome();
   });
   function beginPlay() {
@@ -642,21 +681,47 @@
   const hintFactor = (r) => (r.hint ? HINTS[Z(S.zone).hints[r.hint - 1]].f : 1);
   function renderHint() {
     const r = cur(), lv = Z(S.zone).hints, btn = $('hintBtn'), chip = $('hintChip');
-    if (r.hint < lv.length) { const h = HINTS[lv[r.hint]]; btn.hidden = false; btn.textContent = `Indice : ${h.label} (${h.cost})`; }
+    if (r.hint < lv.length) { const h = HINTS[lv[r.hint]]; btn.hidden = false; $('hintTag').textContent = `${h.label} ${h.cost}`; }
     else btn.hidden = true;
     chip.hidden = !r.hint;
     if (r.hint) {
-      chip.textContent = 'Indice : ';
+      chip.textContent = '';
       const b = document.createElement('b');
       b.textContent = lv.slice(0, r.hint).map((k) => HINTS[k].text(r.loc)).join(' · ');
-      chip.appendChild(b);
+      chip.append(icoEl('i-p-indice'), 'Indice : ', b);
     }
   }
 
   function setSheet(open) {
     $('guess').classList.toggle('open', open);
     $('play').classList.toggle('sheet', open);
-    $('mapToggle').textContent = open ? 'Revenir à la vue' : 'Ouvrir la carte';
+    $('mapToggle').setAttribute('aria-expanded', open);
+  }
+
+  // Petites aides d'affichage de l'écran du trajet
+  function icoEl(id) {
+    const NS = 'http://www.w3.org/2000/svg', s = document.createElementNS(NS, 'svg'), u = document.createElementNS(NS, 'use');
+    s.setAttribute('class', 'ico'); s.setAttribute('aria-hidden', 'true'); u.setAttribute('href', '#' + id);
+    s.appendChild(u);
+    return s;
+  }
+  function setT(btn, txt) { btn.querySelector('.t').textContent = txt; }   // libellé d'un bouton à pictogramme
+  // Menu des outils (téléphone)
+  function setTools(open) {
+    open = !!open && compact.matches;
+    $('play').classList.toggle('tools-open', open);
+    $('toolsScrim').hidden = !open;
+    $('toolsBtn').setAttribute('aria-expanded', open);
+  }
+  // Annonce de début d'étape : un panneau passe sur la vue, une seule fois par étape.
+  let cueT, cueFor = null;
+  function roundCue(key, kicker, title) {
+    if (cueFor === key) return;
+    cueFor = key;
+    const el = $('roundCue');
+    $('cueKicker').textContent = kicker; $('cueTitle').textContent = title;
+    el.hidden = true; void el.offsetWidth; el.hidden = false;
+    clearTimeout(cueT); cueT = setTimeout(() => { el.hidden = true; }, 1700);
   }
 
   function startRound() {
@@ -667,7 +732,16 @@
     $('hudScore').textContent = fmtInt(S.score);
     $('hudTimeCell').hidden = !S.limit;
     $('hudTimeCell').classList.remove('low');
+    $('hudTimeCell').style.setProperty('--left', 1);
     if (S.limit) $('hudTime').textContent = fmtTime(S.limit);
+    const pips = $('hudPips');
+    pips.hidden = false;
+    [...pips.children].forEach((el, i) => { el.className = i < S.idx ? 'on' : i === S.idx ? 'now' : ''; });
+    const last = S.idx === ROUNDS - 1, roundTxt = `Étape ${S.idx + 1}/${ROUNDS}`;
+    $('loadKicker').textContent = roundTxt; $('loadKicker').hidden = false;
+    $('roundCue').hidden = true;
+    $('play').classList.remove('is-dark');
+    setTools(false);
     $('pressChip').hidden = true;
     $('quiz').hidden = true; $('quizOver').hidden = true;
     $('guess').hidden = false; $('mapToggle').hidden = false;
@@ -685,12 +759,11 @@
     setSheet(false);
     const b = $('guessBtn');
     b.disabled = true; b.textContent = 'Place ton point sur la carte';
-    const zn = Z(S.zone);
     gmap.invalidateSize({ animate: false });
-    if (zn.bounds) gmap.fitBounds(zn.bounds, { padding: [8, 8], animate: false });
-    else gmap.setView(zn.view[0], zn.view[1], { animate: false });
+    fitZone();
     disarmQuit();
     loadStreetView(r.loc, r.heading, () => {
+      roundCue(r, last ? 'Dernière étape' : roundTxt, S.mode === 'eclair' ? 'Regarde bien !' : 'Où es-tu ?');
       startTimer(S.limit, submit);
       if (S.mode === 'eclair') startFlash();
     });
@@ -724,10 +797,12 @@
     const end = (timerEnd = Date.now() + sec * 1000);
     let lastTick = 99;
     clearInterval(timerId);
+    $('hudTimeCell').style.setProperty('--left', 1);
     timerId = setInterval(() => {
       const left = (end - Date.now()) / 1000, s = Math.ceil(left);
       $('hudTime').textContent = fmtTime(left);
       $('hudTimeCell').classList.toggle('low', left <= 10);
+      $('hudTimeCell').style.setProperty('--left', Math.max(0, left / sec).toFixed(3));
       if (s <= 10 && s > 0 && s < lastTick) { lastTick = s; Snd.tick(); }
       if (left <= 0) { stopTimer(); onEnd(); }
     }, 200);
@@ -740,12 +815,15 @@
     if (r.flashed) return;
     r.flashed = true;
     let left = FLASH;
-    const el = $('flash');
-    el.hidden = false; el.textContent = `Regarde bien : ${left} s`;
+    const el = $('flash'), tx = document.createElement('span');
+    el.textContent = ''; el.append(icoEl('i-eclair'), tx);
+    el.style.setProperty('--flash', FLASH + 's'); el.classList.remove('low');
+    el.hidden = false; tx.textContent = `Regarde bien : ${left} s`;
     flashId = setInterval(() => {
       left--;
       if (left <= 0) { stopFlash(); blackout(); return; }
-      el.textContent = `Regarde bien : ${left} s`;
+      tx.textContent = `Regarde bien : ${left} s`;
+      el.classList.toggle('low', left <= 5);
       if (left <= 3) Snd.tick();
     }, 1000);
   }
@@ -759,6 +837,7 @@
     $('svBlockMsg').textContent = 'La vue a disparu. À toi de placer ton point.';
     $('swapBtn').hidden = true;
     $('guess').classList.add('stay');
+    $('play').classList.add('is-dark');
     if (compact.matches) setSheet(true);
   }
 
@@ -809,31 +888,96 @@
   }
 
   /* ---------- Résultat d'une étape ---------- */
-  function drawRound(r, n, layer) {
+  // Palier d'une étape (0 = sans réponse … 4 = 4 500 points et plus) : mêmes seuils que les carrés du résultat partagé.
+  const gradeOf = (r) => (!r.guess ? 0 : r.pts >= 4500 ? 4 : r.pts >= 3000 ? 3 : r.pts >= 1500 ? 2 : 1);
+  const VERDICTS = ['Temps écoulé', 'Mauvaise route', 'Sur la bonne voie', 'Bien vu', 'Tout près'];
+  // Mise en scène : tout ce qui est lancé pour un écran de résultat s'arrête dès qu'un autre le remplace.
+  let revealId = 0;
+  function tween(ms, wait, fn) {
+    const id = revealId, t0 = performance.now() + wait;
+    (function step(now) {
+      if (id !== revealId) return;
+      const t = clamp((now - t0) / ms, 0, 1);
+      if (now >= t0) fn(t);
+      if (t < 1) requestAnimationFrame(step);
+    })(performance.now());
+  }
+  function later(ms, fn) { const id = revealId; setTimeout(() => { if (id === revealId) fn(); }, ms); }
+
+  // Le trajet entre ton point et le vrai lieu est dessiné comme une route : chaussée sombre, ligne jaune discontinue.
+  const ROAD = { color: '#0e1b2c', weight: 6, lineCap: 'round', lineJoin: 'round', interactive: false };
+  const ROAD_MARK = { color: '#ffd60a', weight: 2, dashArray: '7 9', lineCap: 'butt', interactive: false };
+  // reveal = { wait, ms } : la route se trace depuis ton point, puis la borne tombe sur le vrai lieu.
+  function drawRound(r, n, layer, reveal) {
     const t = [r.loc[0], r.loc[1]];
     const out = [t];
-    L.marker(t, { icon: iconTrue(n), keyboard: false, zIndexOffset: 500 }).addTo(layer);
+    const mk = L.marker(t, { icon: iconTrue(n), keyboard: false, zIndexOffset: 500 }).addTo(layer);
+    let drop = n ? (n - 1) * 90 : 0;   // carte finale : les cinq bornes tombent l'une après l'autre
     if (r.guess) {
       const path = arc(t, r.guess);
-      L.polyline(path, { color: '#0e1b2c', weight: 3, dashArray: '2 8', lineCap: 'round', interactive: false }).addTo(layer);
+      const lines = [L.polyline(path, ROAD).addTo(layer), L.polyline(path, ROAD_MARK).addTo(layer)];
       L.marker(path[path.length - 1], { icon: iconGuess, keyboard: false, zIndexOffset: 300 }).addTo(layer);
       path.forEach((p) => out.push(p));
+      if (reveal && reveal.ms) {
+        const back = path.slice().reverse(), last = back.length - 1;
+        lines.forEach((l) => l.setLatLngs([back[0]]));
+        tween(reveal.ms, reveal.wait, (u) => {
+          const k = (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2) * last, i = Math.floor(k), f = k - i;
+          const part = back.slice(0, i + 1);
+          if (i < last) part.push([back[i][0] + (back[i + 1][0] - back[i][0]) * f, back[i][1] + (back[i + 1][1] - back[i][1]) * f]);
+          lines.forEach((l) => l.setLatLngs(part));
+        });
+      }
     }
+    if (reveal) drop = reveal.wait + reveal.ms;
+    const el = mk.getElement();
+    if (el && el.firstChild) el.firstChild.style.setProperty('--d', drop + 'ms');
     return out;
   }
   function drawOther(p, v, loc, layer) {
     const path = arc([loc[0], loc[1]], [v[0], v[1]]), col = colorOf(p.id);
-    L.polyline(path, { color: col, weight: 2, opacity: 0.75, interactive: false }).addTo(layer);
+    L.polyline(path, { color: '#fff', weight: 5, opacity: 0.7, interactive: false }).addTo(layer);
+    L.polyline(path, { color: col, weight: 2.5, opacity: 0.9, interactive: false }).addTo(layer);
     L.marker(path[path.length - 1], { icon: iconOther(p.name, col), keyboard: false, title: p.name }).addTo(layer);
     return path;
   }
+  // Cadre les points dans la zone de la carte que la fiche laisse libre : à sa gauche si elle est sur le côté, au-dessus si elle est en bas.
+  let lastFit = null, fitting = false, refitT;
   function fit(pts, panel) {
     rmap.invalidateSize({ animate: false });
     let b = L.latLngBounds(pts);
     if (pts.length === 1) b = L.latLngBounds([[pts[0][0] - 4, pts[0][1] - 6], [pts[0][0] + 4, pts[0][1] + 6]]);
-    const h = Math.min(panel.getBoundingClientRect().height, window.innerHeight * 0.6);
-    rmap.fitBounds(b, { paddingTopLeft: [50, 50], paddingBottomRight: [50, h + 50], maxZoom: 11, animate: false });
+    const sz = rmap.getSize(), side = panel.offsetLeft * sz.y > panel.offsetTop * sz.x;   // où reste-t-il le plus de carte : à gauche ou au-dessus ?
+    const padR = side ? Math.min(sz.x - panel.offsetLeft, sz.x * 0.7) : 0, padB = side ? 0 : Math.min(sz.y - panel.offsetTop, sz.y * 0.7);
+    fitting = true;
+    rmap.fitBounds(b, { paddingTopLeft: [side ? 60 : 36, side ? 48 : 58], paddingBottomRight: [padR + 36, padB + (side ? 40 : 30)], maxZoom: 11, animate: false });
+    fitting = false;
+    lastFit = { pts, panel, moved: false };
   }
+  // On recadre quand l'écran tourne ou change de taille, et quand la fiche change de hauteur (tant que le voyageur n'a pas déplacé la carte lui-même).
+  function refit(force) {
+    clearTimeout(refitT);
+    refitT = setTimeout(() => {
+      if (!rmap || !lastFit || $('result').hidden || lastFit.panel.hidden || (lastFit.moved && !force)) return;
+      fit(lastFit.pts, lastFit.panel);
+    }, 120);
+  }
+  window.addEventListener('resize', () => {
+    if (!$('fpFold').offsetParent) setFold(false);   // la fiche n'est plus en bas : plus rien à replier
+    refit(true);
+  });
+  if (window.ResizeObserver) { const ro = new ResizeObserver(() => refit(false)); ro.observe($('roundPanel')); ro.observe($('finalPanel')); }
+  // Téléphone : la fiche de fin de trajet se replie pour laisser voir la carte.
+  function setFold(folded) {
+    const p = $('finalPanel'), b = $('fpFold');
+    if (p.classList.contains('folded') === folded) return;
+    p.classList.toggle('folded', folded);
+    if (folded) p.classList.add('still');   // une fois repliée, la fiche ne relance plus ses entrées en scène
+    b.setAttribute('aria-expanded', String(!folded));
+    b.setAttribute('aria-label', folded ? 'Afficher le détail du trajet' : 'Réduire le détail pour voir la carte');
+    if (lastFit && lastFit.panel === p && !p.hidden) fit(lastFit.pts, p);
+  }
+  $('fpFold').addEventListener('click', () => setFold(!$('finalPanel').classList.contains('folded')));
   const placeText = (loc) => `${loc[3]}, ${countryName(loc[4])}`;
   const others = () => (Room.cfg ? [...Room.players.values()].filter((p) => p.id !== myId) : []);
   function row(cells, cls) {
@@ -847,55 +991,94 @@
     return li;
   }
 
-  // Les réponses des amis sur cette étape (seulement après avoir fait la sienne).
-  function renderRoundFriends() {
-    const r = cur(), ul = $('rpFriends'), os = others();
+  // Les réponses des amis sur cette étape (seulement après avoir donné la sienne).
+  // La carte cadre ma route et leurs points ; elle n'est pas recadrée si le voyageur l'a déplacée entre-temps.
+  let roundPts = [];
+  function renderRoundFriends(first) {
+    const r = cur(), ul = $('rpFriends'), os = others(), seen = [];
+    const frame = () => { if (first === true || (lastFit && !lastFit.moved && seen.length)) fit(roundPts.concat(seen), $('roundPanel')); };
     olayer.clearLayers();
     ul.hidden = S.kind !== 'room' || !os.length;
-    if (ul.hidden) return;
+    if (ul.hidden) { frame(); return; }
     const rows = [{ me: true, name: (getName() || 'Toi') + ' (toi)', id: myId, v: r.guess ? [0, 0, r.km, r.pts] : 0, played: true }];
     os.forEach((p) => {
       const played = p.g.length > S.idx, v = played ? p.g[S.idx] : null;
-      if (v && (v[4] || 0) === (r.swaps || 0)) drawOther(p, v, r.loc, olayer);
+      if (v && (v[4] || 0) === (r.swaps || 0)) drawOther(p, v, r.loc, olayer).forEach((x) => seen.push(x));
       rows.push({ name: p.name, id: p.id, v, played });
     });
     rows.sort((a, b) => (b.played - a.played) || ((b.v ? b.v[3] : 0) - (a.v ? a.v[3] : 0)));
     ul.innerHTML = '';
-    rows.forEach((x) => ul.appendChild(row([
-      ['dot', '', colorOf(x.id)], ['w', x.name],
-      ['d', !x.played ? 'pas encore passé' : x.v ? fmtDist(x.v[2]) : 'sans réponse'],
-      ['p', x.played ? fmtInt(x.v ? x.v[3] : 0) : ''],
-    ], (x.me ? 'me ' : '') + (x.played ? '' : 'wait'))));
+    rows.forEach((x) => {
+      const li = row([
+        ['dot', '', colorOf(x.id)], ['w', x.name],
+        ['d', !x.played ? 'pas encore arrivé' : x.v ? fmtDist(x.v[2]) : 'sans réponse'],
+        ['p', x.played ? fmtInt(x.v ? x.v[3] : 0) : ''],
+      ], (x.me ? 'me ' : '') + (x.played ? '' : 'wait'));
+      li.querySelector('.dot').textContent = (x.name || '?').slice(0, 1);   // même pastille que sur la carte
+      ul.appendChild(li);
+    });
+    frame();
   }
 
   function showRound() {
-    const r = cur(), last = S.idx === ROUNDS - 1;
+    const r = cur(), last = S.idx === ROUNDS - 1, panel = $('roundPanel');
     show('result');
-    $('roundPanel').hidden = false; $('finalPanel').hidden = true;
+    panel.hidden = false; $('finalPanel').hidden = true;
     if (!rmap) initResultMap();
     rlayer.clearLayers(); olayer.clearLayers();
+    revealId++;
+
+    // Déroulé : la route se trace (la distance défile), la borne tombe et le lieu s'affiche (t1),
+    // les points montent avec la jauge, puis le verdict et les petits événements (t2). Sans animation : tout est là d'emblée.
+    const anim = !reduceMotion, far = !!r.guess && r.km > 0.25;
+    const lineMs = anim && far ? 700 : 0, t0 = anim ? 320 : 0;
+    const t1 = t0 + lineMs, t2 = anim ? t1 + (r.pts ? 820 : 200) : 0;
+    const g = gradeOf(r);
+    panel.className = `panel t-${g}` + (r.pts === MAX ? ' bull' : '');
+    panel.style.setProperty('--d1', t1 + 'ms'); panel.style.setProperty('--d2', t2 + 'ms');
 
     $('rpKicker').textContent = `Étape ${S.idx + 1} sur ${ROUNDS}`;
+    const steps = $('rpSteps');
+    steps.textContent = '';
+    S.rounds.forEach((x, i) => {
+      const li = document.createElement('li');
+      if (i <= S.idx) li.className = (i < S.idx ? 'done' : 'now') + ' t-' + gradeOf(x);
+      steps.appendChild(li);
+    });
     $('borneTxt').textContent = r.loc[4];
-    $('rpDist').textContent = r.guess ? (r.km <= 0.25 ? 'En plein dessus' : `À ${fmtDist(r.km)}`) : 'Pas de réponse';
+    $('rpVerdict').textContent = r.pts === MAX ? 'Dans le mille' : VERDICTS[g];
+    const dist = $('rpDist'), away = (km) => `À ${fmtDist(km)}`.replace(/ /g, '\u00a0');   // insécable : la distance tient sur une ligne
+    dist.textContent = r.guess ? (far ? away(r.km) : 'En plein dessus') : 'Pas de réponse';
+    if (lineMs) tween(lineMs, t0, (u) => { dist.textContent = away(r.km * (1 - Math.pow(1 - u, 3))); });
     const place = $('rpPlace');
     place.textContent = r.loc[5] === 'l' ? 'C\'était : ' : r.loc[5] === 'c' ? 'Tu étais à ' : 'Tu étais près de ';
     const strong = document.createElement('strong'); strong.textContent = r.loc[3];
     place.append(strong, `, ${countryName(r.loc[4])}.`);
     const st = $('rpStamp');
     st.hidden = !r.stamp;
-    if (r.stamp) st.textContent = `Nouveau tampon ${r.stamp[2].toLowerCase()} dans ton passeport : ${countryName(r.loc[4])}`;
-    $('rpNote').hidden = !r.hint || !r.guess;
-    if (r.hint) $('rpNote').textContent = `Indice utilisé : points × ${String(hintFactor(r)).replace('.', ',')}`;
+    st.className = 'note event stampline' + (r.stamp ? ' ' + r.stamp[1] : '');
+    if (r.stamp) {
+      st.dataset.tag = r.stamp[2];
+      const txt = document.createElement('span'), cn = document.createElement('strong');
+      cn.textContent = countryName(r.loc[4]);
+      txt.append(`Nouveau tampon ${r.stamp[2].toLowerCase()} dans ton passeport : `, cn);
+      st.textContent = ''; st.appendChild(txt);
+    }
+    const note = $('rpNote');
+    note.hidden = !r.hint || !r.guess;
+    if (r.hint) {
+      note.dataset.tag = HINTS[Z(S.zone).hints[r.hint - 1]].cost;
+      note.textContent = `Indice utilisé : points × ${String(hintFactor(r)).replace('.', ',')}`;
+    }
     $('rpLink').href = mapsUrl(r.loc);
     $('nextBtn').innerHTML = (last ? 'Voir le résultat' : 'Étape suivante') + ' <kbd>Espace</kbd>';
     $('rpBar').style.width = '0%';
-    countUp($('rpPts'), r.pts);
-    requestAnimationFrame(() => requestAnimationFrame(() => { $('rpBar').style.width = (r.pts / MAX * 100) + '%'; }));
+    $('rpPts').textContent = '0';
+    const tally = () => { countUp($('rpPts'), r.pts, 750); $('rpBar').style.width = (r.pts / MAX * 100) + '%'; };
+    if (anim) later(t1 + 60, tally); else tally();
 
-    const pts = drawRound(r, 0, rlayer);
-    renderRoundFriends();
-    fit(pts, $('roundPanel'));
+    roundPts = drawRound(r, 0, rlayer, anim ? { wait: t0, ms: lineMs } : null);
+    renderRoundFriends(true);
   }
 
   function next() {
@@ -917,6 +1100,20 @@
     [0, 'Complètement à l\'ouest'],
   ];
   let perRound = [];
+  // Expérience gagnée : le gain en chiffres et, s'il y en a un, le passage de niveau mis en avant.
+  function dressXp(el, x) {
+    const up = x.after.lv > x.before.lv, g = el.querySelector('.lvl-gain');
+    el.classList.toggle('lvl-up', up);
+    if (!g) return;
+    g.hidden = !x.gained;
+    const b = document.createElement('b'); b.textContent = `+${fmtInt(x.gained)} exp.`;
+    g.textContent = ''; g.appendChild(b);
+    if (up) {
+      const sep = document.createElement('i'), n = document.createElement('span');
+      sep.textContent = ' · '; n.textContent = `Niveau ${x.after.lv} atteint : ${x.after.title}`;
+      g.append(sep, n);
+    }
+  }
 
   function showFinal(fresh) {
     const max = ROUNDS * MAX;
@@ -925,12 +1122,23 @@
     $('roundPanel').hidden = true; $('finalPanel').hidden = false;
     inputLock = Date.now() + 700;
     S.done = true;
+    revealId++;
+    setFold(false);
+    $('finalPanel').classList.remove('still');
 
     const label = S.kind === 'daily' ? 'Défi du jour' : `${Z(S.zone).label} · ${MODES[S.mode].label}`;
     $('fpKicker').textContent = `Trajet terminé · ${label}`;
     $('fpMax').textContent = `/ ${fmtInt(max)}`;
     countUp($('fpTotal'), S.score, 1200);
     $('fpGrade').textContent = GRADES.find((g) => S.score / max >= g[0])[1];
+    const segs = $('fpSegs');
+    segs.textContent = '';
+    S.rounds.forEach((r, i) => {
+      const seg = document.createElement('i'), f = document.createElement('b');
+      seg.className = 't-' + gradeOf(r);
+      seg.style.setProperty('--w', (r.pts / MAX * 100) + '%'); seg.style.setProperty('--k', i);
+      seg.appendChild(f); segs.appendChild(seg);
+    });
 
     let record = false;
     if (S.kind === 'daily') {
@@ -943,13 +1151,14 @@
       if (S.score > best) { store.set(key, S.score); record = best > 0; $('fpBest').textContent = best ? `Nouveau record. L'ancien était à ${fmtInt(best)}.` : 'Premier total enregistré dans ce mode.'; }
       else $('fpBest').textContent = `Ton record : ${fmtInt(best)}`;
     }
+    $('fpBest').classList.toggle('rec', record);
     if (fresh) { if (record || S.score / max >= 0.75) { Snd.good(); confetti(); } else Snd.mid(); }
-    if (fresh) renderXp($('fpXp'), addXp(S.score / 100)); else $('fpXp').hidden = true;
+    if (fresh) { const x = addXp(S.score / 100); renderXp($('fpXp'), x); dressXp($('fpXp'), x); } else $('fpXp').hidden = true;
 
     const multi = S.kind === 'room';
     $('fpList').hidden = multi; $('fpBoardWrap').hidden = !multi;
     $('againBtn').hidden = S.kind === 'daily';
-    $('againBtn').innerHTML = (multi ? 'Revanche' : 'Repartir') + ' <kbd>Espace</kbd>';
+    $('againBtn').innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-r-replay"/></svg>' + (multi ? 'Revanche' : 'Repartir') + ' <kbd>Espace</kbd>';
 
     showMine();
     if (multi) renderBoard();
@@ -959,10 +1168,19 @@
       S.rounds.forEach((r, i) => {
         const li = document.createElement('li'), b = document.createElement('button');
         b.type = 'button'; b.title = 'Voir cette étape sur la carte';
+        b.setAttribute('aria-pressed', 'false');
+        li.className = 't-' + gradeOf(r); li.style.setProperty('--i', i);
         [['n', i + 1], ['w', placeText(r.loc)], ['d', r.guess ? fmtDist(r.km) : 'sans réponse'], ['p', fmtInt(r.pts)]].forEach(([c, t]) => {
           const s = document.createElement('span'); s.className = c; s.textContent = t; b.appendChild(s);
         });
-        b.addEventListener('click', () => fit(perRound[i], $('finalPanel')));
+        // Un clic cadre l'étape ; un second clic sur la même ligne revient aux cinq étapes.
+        b.addEventListener('click', () => {
+          const on = !b.classList.contains('on');
+          list.querySelectorAll('button').forEach((o) => { o.classList.remove('on'); o.setAttribute('aria-pressed', 'false'); });
+          b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+          if ($('fpFold').offsetParent) setFold(on);   // téléphone : la fiche se replie sur l'étape choisie, la carte prend la place
+          fit(on ? perRound[i] : [].concat(...perRound), $('finalPanel'));
+        });
         li.appendChild(b); list.appendChild(li);
       });
     }
@@ -1000,18 +1218,21 @@
     rows.forEach((x, i) => {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.title = 'Voir ses réponses sur la carte';
-      if (x.me) li.className = 'me';
+      // Mon rang en jaune ; « live » = encore en route, « idle » = pas encore parti.
+      li.className = (x.me ? 'me ' : '') + (i === 0 && x.total > 0 ? 'first ' : '') + (x.n >= ROUNDS ? '' : x.n ? 'live' : 'idle');
       if (S.shown === x.id) b.className = 'on';
-      [['n', i + 1], ['dot', '', colorOf(x.id)], ['w', x.name], ['d', x.n >= ROUNDS ? 'a fini' : x.n ? `${x.n}/${ROUNDS} étapes` : 'pas commencé'], ['p', fmtInt(x.total)]].forEach(([c, t, color]) => {
+      b.setAttribute('aria-pressed', String(S.shown === x.id));
+      [['n', i + 1], ['dot', '', colorOf(x.id)], ['w', x.name], ['d', x.n >= ROUNDS ? 'a fini' : x.n ? `${x.n}/${ROUNDS} étapes` : 'pas encore parti'], ['p', fmtInt(x.total)]].forEach(([c, t, color]) => {
         const s = document.createElement('span'); s.className = c;
-        if (color) s.style.background = color; else s.textContent = t;
+        if (color) { s.style.background = color; s.textContent = (x.name || '?').slice(0, 1); } else s.textContent = t;
         b.appendChild(s);
       });
       b.addEventListener('click', () => { if (x.me) showMine(); else showPlayer(x.p); renderBoard(); });
       li.appendChild(b); ol.appendChild(li);
     });
+    $('fpBoardWrap').classList.toggle('online', Room.online);
     $('fpBoardNote').textContent = rows.length === 1
-      ? 'Personne d\'autre n\'est encore passé. Le classement se mettra à jour ici tout seul.'
+      ? 'Personne d\'autre n\'est encore parti. Le classement se mettra à jour ici tout seul.'
       : (Room.online ? '' : 'Connexion au classement en cours…');
   }
   function renderInvite() {
@@ -1042,7 +1263,9 @@
     $('hintBtn').hidden = true; $('hintChip').hidden = true; $('flash').hidden = true;
     $('resetBtn').hidden = false; $('swapBtn').hidden = false;
     $('svBlock').hidden = true;
-    $('play').classList.remove('sheet');
+    $('play').classList.remove('sheet', 'is-dark');
+    setTools(false);
+    $('hudPips').hidden = true; $('roundCue').hidden = true;
     $('hudLab1').textContent = 'Série'; $('hudLab2').textContent = 'Record';
     $('hudTimeCell').hidden = !limit;
     disarmQuit();
@@ -1064,20 +1287,35 @@
     const opts = shuffle([loc[4]].concat(near.concat(far).slice(0, 3)));
     const grid = $('quizGrid');
     grid.innerHTML = '';
-    opts.forEach((cc) => {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'btn'; b.dataset.cc = cc; b.textContent = countryName(cc);
+    opts.forEach((cc, i) => {
+      const b = document.createElement('button'), k = document.createElement('kbd');
+      b.type = 'button'; b.className = 'btn'; b.dataset.cc = cc;
+      k.textContent = String(i + 1);
+      b.append(k, countryName(cc));
       b.addEventListener('click', () => answer(cc));
       grid.appendChild(b);
     });
     $('quiz').hidden = false; $('quizOver').hidden = true;
     $('resetBtn').hidden = false; $('swapBtn').hidden = false;
+    renderStreak(false);
     sizeQuiz();
     $('hudRound').textContent = String(Q.streak);
     $('hudScore').textContent = String(Math.max(Q.best, Q.streak));
     $('hudTimeCell').classList.remove('low');
+    $('hudTimeCell').style.setProperty('--left', 1);
     if (Q.limit) $('hudTime').textContent = fmtTime(Q.limit);
-    loadStreetView(loc, Math.floor(Math.random() * 360), () => startTimer(Q.limit, () => answer(null)));
+    $('loadKicker').textContent = Q.streak ? `Série : ${Q.streak}` : 'Série de pays'; $('loadKicker').hidden = false;
+    loadStreetView(loc, Math.floor(Math.random() * 360), () => { roundCue(Q, 'Série de pays', 'Quel pays ?'); startTimer(Q.limit, () => answer(null)); });
+  }
+  // Série en cours, rappelée au-dessus des réponses
+  function renderStreak(bump) {
+    const el = $('quizStreak');
+    el.textContent = ''; el.hidden = Q.streak < 2;
+    if (Q.streak < 2) return;
+    const n = document.createElement('span'), beaten = Q.best > 0 && Q.streak > Q.best;
+    n.className = 'plate' + (beaten ? ' green' : '') + (bump ? ' bump' : '');
+    n.textContent = String(Q.streak);
+    el.append(n, beaten ? 'de suite, record battu' : 'de suite');
   }
   function answer(cc) {
     if (!Q || Q.answered) return;
@@ -1096,6 +1334,7 @@
       Snd.mid();
       $('hudRound').textContent = String(Q.streak);
       $('hudScore').textContent = String(Math.max(Q.best, Q.streak));
+      renderStreak(true); sizeQuiz();
       quizT = setTimeout(nextQuestion, 1100);
       return;
     }
@@ -1112,8 +1351,11 @@
       place.textContent = (cc ? 'Raté : c\'était ' : 'Temps écoulé : c\'était ');
       const strong = document.createElement('strong'); strong.textContent = countryName(Q.loc[4]);
       place.append(strong, Q.loc[5] === 'l' ? ` (${Q.loc[3]}).` : Q.loc[5] === 'c' ? `, à ${Q.loc[3]}.` : `, près de ${Q.loc[3]}.`);
-      renderXp($('qoXp'), addXp(Q.streak * 15));
+      const x = addXp(Q.streak * 15);
+      renderXp($('qoXp'), x); dressXp($('qoXp'), x);
       $('qoBest').textContent = record ? (Q.best ? `Nouveau record. L'ancien était à ${Q.best}.` : 'Premier record enregistré.') : `Ton record : ${Q.best}`;
+      $('qoBest').classList.toggle('rec', record);
+      $('quizOver').classList.toggle('rec', record);
       $('qoLink').href = mapsUrl(Q.loc);
       $('resetBtn').hidden = true; $('swapBtn').hidden = true;
       $('quizOver').hidden = false;
@@ -1218,13 +1460,19 @@
 
   /* ---------- Quitter (deux clics) ---------- */
   let quitT;
-  function disarmQuit() { clearTimeout(quitT); const q = $('quitBtn'); q.classList.remove('arm'); q.textContent = 'Quitter'; }
+  function disarmQuit() { clearTimeout(quitT); const q = $('quitBtn'); q.classList.remove('arm'); setT(q, 'Quitter'); }
+  function armQuit(ms) { const q = $('quitBtn'); q.classList.add('arm'); setT(q, 'Quitter le trajet ?'); clearTimeout(quitT); quitT = setTimeout(disarmQuit, ms); }
   $('quitBtn').addEventListener('click', () => {
     const q = $('quitBtn');
-    if (q.classList.contains('arm')) { disarmQuit(); goHome(); return; }
-    q.classList.add('arm'); q.textContent = 'Quitter le trajet ?';
-    quitT = setTimeout(disarmQuit, 3000);
+    if (q.classList.contains('arm')) { disarmQuit(); setTools(false); goHome(); return; }
+    armQuit(3000);
   });
+  // Sur le résultat d'une étape, « Quitter » actionne ce même bouton (même confirmation en deux clics, mêmes effets) et recopie son état.
+  $('rpQuit').addEventListener('click', () => $('quitBtn').click());
+  new MutationObserver(() => {
+    const q = $('quitBtn'), r = $('rpQuit');
+    r.classList.toggle('arm', q.classList.contains('arm')); r.textContent = q.textContent;
+  }).observe($('quitBtn'), { attributes: true, attributeFilter: ['class'], childList: true, characterData: true, subtree: true });
 
   /* ---------- Branchements ---------- */
   function again() {
@@ -1232,7 +1480,12 @@
     if (S.kind === 'room' && Room.cfg) { if (!joinNext()) rematch(); }
     else if (S.kind !== 'daily') startSolo(S.zone, S.mode, S.limit);
   }
-  const setSoundLabel = () => { $('soundBtn').textContent = Snd.on ? 'Son : oui' : 'Son : non'; };
+  const setSoundLabel = () => {
+    const b = $('soundBtn');
+    setT(b, Snd.on ? 'Son : oui' : 'Son : non');
+    b.setAttribute('aria-pressed', Snd.on);
+    b.querySelector('use').setAttribute('href', Snd.on ? '#i-p-son' : '#i-p-muet');
+  };
 
   $('startBtn').addEventListener('click', startFromHome);
   $('dailyBtn').addEventListener('click', startDaily);
@@ -1248,6 +1501,7 @@
   $('hintBtn').addEventListener('click', () => { const r = cur(); if (r.hint < Z(S.zone).hints.length) { r.hint++; Snd.pin(); renderHint(); } });
   $('soundBtn').addEventListener('click', () => { Snd.on = !Snd.on; store.set('snd', Snd.on); setSoundLabel(); Snd.pin(); });
   $('mapToggle').addEventListener('click', () => setSheet(!$('guess').classList.contains('open')));
+  $('sheetClose').addEventListener('click', () => setSheet(false));
   $('qoAgain').addEventListener('click', () => startSerie(Q.zone, Q.limit));
   $('qoHome').addEventListener('click', goHome);
   $('passBtn').addEventListener('click', openPassport);
@@ -1273,7 +1527,13 @@
   $('lbBack').addEventListener('click', goHome);
   window.addEventListener('hashchange', route);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && Room.cfg && (!Room.es || Room.es.readyState === 2)) Room.connect(); });
-  document.querySelector('.tools').addEventListener('click', () => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+  document.querySelector('.tools').addEventListener('click', (e) => {
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    if (e.target.closest('#hintBtn, #resetBtn, #swapBtn, #toolsClose')) setTools(false);   // Son et Quitter laissent le menu ouvert : on y lit leur état
+  });
+  $('toolsBtn').addEventListener('click', (e) => { setTools(!$('play').classList.contains('tools-open')); e.currentTarget.blur(); });
+  $('toolsScrim').addEventListener('click', () => setTools(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('play').classList.contains('tools-open')) setTools(false); });
   // iPhone : empêche le zoom de toute la page par pincement en dehors de la vue de rue et des cartes.
   document.addEventListener('gesturestart', (e) => { if (!(e.target.closest && e.target.closest('.leaflet-container'))) e.preventDefault(); });
 
