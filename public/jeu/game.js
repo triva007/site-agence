@@ -433,16 +433,21 @@
     store.set('xp', after);
     return { gained: after - before, before: levelOf(before), after: levelOf(after) };
   }
+  // Badge du joueur : une petite borne (niveau), le titre, la jauge d'expérience.
   function levelBar(el, L) {
     el.textContent = '';
+    const badge = document.createElement('span'); badge.className = 'lvl-badge';
+    const bs = document.createElement('small'); bs.textContent = 'Niv.';
+    const bn = document.createElement('b'); bn.textContent = L.lv;
+    badge.append(bs, ' ', bn);
     const t = document.createElement('span'); t.className = 'lvl-txt';
-    const b = document.createElement('b'); b.textContent = `Niveau ${L.lv}`;
-    t.append(b, ` · ${L.title}`);
+    const b = document.createElement('b'); b.textContent = L.title;
+    t.append(b);
     const bar = document.createElement('span'); bar.className = 'lvl-bar';
     const fill = document.createElement('i'); fill.style.width = clamp(L.into / L.span * 100, 0, 100) + '%';
     bar.appendChild(fill);
     const n = document.createElement('span'); n.className = 'lvl-num'; n.textContent = `${fmtInt(L.into)} / ${fmtInt(L.span)} XP`;
-    el.append(t, bar, n);
+    el.append(badge, t, n, bar);
   }
   const renderLevel = (el) => levelBar(el, levelOf(getXp()));
   function renderXp(el, x) {
@@ -476,25 +481,40 @@
     show('passport');
     const p = getPass(), ps = passStats();
     renderLevel($('ppLevel'));
-    $('ppIntro').textContent = `${ps.done} pays tamponnés sur ${ps.total}. Un tampon se gagne en marquant au moins 2 500 points sur une manche dans le pays (4 000 pour l'argent, 4 800 pour l'or). Touche un pays pour y jouer 5 manches.`;
+    $('ppCount').textContent = ps.done;
+    $('ppTotal').textContent = `/ ${ps.total} pays`;
+    $('ppIntro').textContent = `Marque au moins ${fmtInt(TIERS[TIERS.length - 1][0])} points sur une manche dans un pays pour gagner son tampon. Touche un pays pour y jouer 5 manches.`;
+    // Légende des paliers, du bronze à l'or
+    const tiers = $('ppTiers');
+    tiers.textContent = '';
+    TIERS.slice().reverse().forEach((t) => {
+      const li = document.createElement('li'); li.className = t[1];
+      const nm = document.createElement('b'); nm.textContent = t[2];
+      const th = document.createElement('span'); th.textContent = `dès ${fmtInt(t[0])}`;
+      li.append(nm, th);
+      tiers.appendChild(li);
+    });
     const list = $('ppList');
     list.textContent = '';
+    let nGot = 0;   // rang du tampon gagné : ils sont « frappés » l'un après l'autre à l'ouverture
     ['EU', 'NA', 'SA', 'AS', 'AF', 'OC'].forEach((ck) => {
       const ccs = Object.keys(countryCounts).filter((cc) => CC2CONT[cc] === ck).sort((a, b) => countryName(a).localeCompare(countryName(b), 'fr'));
       if (!ccs.length) return;
       const sec = document.createElement('section');
       const h = document.createElement('h3');
       h.textContent = CONT[ck];
-      const small = document.createElement('small'); small.textContent = ` ${ccs.filter((cc) => tierOf(+p[cc] || 0)).length}/${ccs.length}`;
-      h.appendChild(small);
+      const small = document.createElement('small'); small.textContent = `${ccs.filter((cc) => tierOf(+p[cc] || 0)).length}/${ccs.length}`;
+      h.append(' ', small);
       const grid = document.createElement('div'); grid.className = 'stamps';
       ccs.forEach((cc) => {
         const t = tierOf(+p[cc] || 0), playable = countryCounts[cc] >= COUNTRY_MIN;
         const b = document.createElement(playable ? 'button' : 'div');
         if (playable) { b.type = 'button'; b.title = `Jouer 5 manches : ${countryName(cc)}`; b.addEventListener('click', () => startSolo('pays:' + cc, 'classique', 0)); }
-        b.className = 'stamp' + (t ? ' ' + t[1] : '') + (playable ? '' : ' fixed');
+        b.className = 'stamp' + (t ? ' got ' + t[1] : '') + (playable ? '' : ' fixed');
+        // Chaque tampon est posé un peu de travers, toujours pareil pour un même pays.
+        if (t) { b.style.setProperty('--rot', ((hashStr(cc) % 9) - 4) * 0.7 + 'deg'); b.style.setProperty('--k', Math.min(nGot++, 14)); }
         const n = document.createElement('span'); n.className = 'st-name'; n.textContent = countryName(cc);
-        const d = document.createElement('span'); d.className = 'st-tier'; d.textContent = t ? `${t[2]} · ${fmtInt(+p[cc])}` : (playable ? 'À découvrir' : 'À croiser en partie');
+        const d = document.createElement('span'); d.className = 'st-tier'; d.textContent = t ? `${t[2]} ${fmtInt(+p[cc])}` : (playable ? 'À découvrir' : 'À croiser en partie');
         b.append(n, d);
         grid.appendChild(b);
       });
@@ -540,11 +560,14 @@
     if (mode === 'serie') { const b = store.get('serie.' + zk, 0); $('bestLine').textContent = b ? `Ta meilleure série : ${b}` : ''; }
     else { const b = bestOf(zk, mode); $('bestLine').textContent = b ? `Ton record : ${fmtInt(b)} / ${fmtInt(ROUNDS * MAX)}` : ''; }
     $('startBtn').disabled = pool.length < ROUNDS;
-    const d = store.get('daily', null);
-    $('dailyBtn').textContent = d && d.d === today() ? `Défi du jour : ${fmtInt(d.score)} pts` : 'Défi du jour';
+    const d = store.get('daily', null), played = !!(d && d.d === today()), now = new Date();
+    $('dailyDay').textContent = now.getDate();
+    $('dailyMonth').textContent = now.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '');
+    $('dailySub').textContent = played ? `${fmtInt(d.score)} pts` : 'À jouer';
+    $('dailyBtn').classList.toggle('done', played);
     renderLevel($('homeLevel'));
     const ps = passStats();
-    $('passBtn').textContent = `Passeport : ${ps.done}/${ps.total} pays`;
+    $('passSub').textContent = `${ps.done} / ${ps.total} pays`;
   }
   function goHome() {
     stopAll();
@@ -1097,6 +1120,7 @@
     stopAll();
     S = null; Q = null;
     Room.open(cfg);
+    lobbySeen = new Set();
     show('lobby');
     $('lbTitle').textContent = `${Z(cfg.zone).label}, mode ${MODES[cfg.mode].label.toLowerCase()}`;
     $('lbLink').value = roomUrl(cfg);
@@ -1109,6 +1133,7 @@
     setJoined(joined);
     renderLobby();
   }
+  let lobbySeen = new Set();   // joueurs déjà affichés dans ce salon (pour n'animer que les arrivées)
   function setJoined(j) { $('lbNameForm').hidden = j; $('lbIn').hidden = !j; if (!j && !compact.matches) setTimeout(() => $('lbName').focus(), 50); }
   function renderLobby() {
     if (!Room.cfg) return;
@@ -1117,13 +1142,17 @@
     const ps = [...Room.players.values()].sort((a, b) => (b.id === myId) - (a.id === myId));
     ps.forEach((p) => {
       const st = p.g.length >= ROUNDS ? `a fini : ${fmtInt(Room.total(p))}` : p.g.length ? `${p.g.length}/${ROUNDS} manches` : 'prêt';
-      const li = row([['dot', '', colorOf(p.id)], ['w', p.name + (p.id === myId ? ' (toi)' : '')], ['st', st]]);
-      li.querySelector('.dot').style.borderColor = '#fff';
+      const li = row([['dot', '', colorOf(p.id)], ['w', p.name + (p.id === myId ? ' (toi)' : '')], ['st', st]], p.id === myId ? 'me' : '');
+      const dot = li.querySelector('.dot');
+      dot.style.borderColor = '#fff';
+      dot.textContent = (p.name || '?').slice(0, 1);
+      if (!lobbySeen.has(p.id)) { lobbySeen.add(p.id); li.classList.add('new'); }
       ul.appendChild(li);
     });
     const mine = Room.players.get(myId), n = mine ? mine.g.length : 0;
     $('lbStart').textContent = n >= ROUNDS ? 'Voir le classement' : n ? 'Reprendre ma partie' : 'Commencer';
     $('lbStatus').textContent = `5 manches, ${fmtLimit(cfg.limit)}. ` + (Room.online ? 'Classement en direct connecté.' : 'Connexion au classement…');
+    $('lbStatus').classList.toggle('on', Room.online);
   }
   function startRoomGame() {
     const cfg = Room.cfg;

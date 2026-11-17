@@ -6,6 +6,8 @@
   <title>Point de chute</title>
   <meta name="description" content="On te dépose quelque part sur Terre. Balade-toi, observe, et retrouve où tu es sur la carte. Seul ou entre amis.">
   <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#051d42">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M7 30V14a9 9 0 0 1 18 0v16z' fill='%23fff' stroke='%230e1b2c' stroke-width='2.5' stroke-linejoin='round'/%3E%3Cpath d='M7 17v-3a9 9 0 0 1 18 0v3z' fill='%23d5202a' stroke='%230e1b2c' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800;900&family=Overpass+Mono:wght@600&display=swap">
@@ -15,99 +17,209 @@
 </head>
 <body>
 
+  <!-- Pictogrammes (trait = couleur du texte, accent = --ico-ac). Usage : <svg class="ico"><use href="#i-nom"/></svg> -->
+  <svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0">
+    <defs>
+      <symbol id="i-classique" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 3.5v3M16 14v2.5M16 24v4.5M11 28.5h10"/>
+        <path style="fill:var(--ico-ac,#ffd60a)" d="M7.5 6.5H21l4.5 3.75L21 14H7.5z"/>
+        <path d="M24.5 16.5H11l-4.5 3.75L11 24h13.5z"/>
+      </symbol>
+      <symbol id="i-postale" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <g transform="rotate(-7 16 16)">
+          <rect x="3.5" y="7" width="25" height="18.5" rx="2.5"/>
+          <circle style="fill:var(--ico-ac,#ffd60a)" cx="10.5" cy="13" r="2.4"/>
+          <path d="M4.5 22.5l6-6 4.5 4 4.5-5 8 7"/>
+        </g>
+      </symbol>
+      <symbol id="i-eclair" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path style="fill:var(--ico-ac,#ffd60a)" d="M19 2.5 6 18.5h8l-2.5 11L25.5 13H17z"/>
+      </symbol>
+      <symbol id="i-serie" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 29V4"/>
+        <path style="fill:var(--ico-ac,#ffd60a)" d="M7 5c5-2.5 8 2.5 13 0 2.5-1.3 4.5-1 5.5-.5v12c-1-.5-3-.8-5.5.5-5 2.5-8-2.5-13 0z"/>
+        <path d="M13.5 26h.01M19 26h.01M24.5 26h.01" stroke-width="3.2"/>
+      </symbol>
+      <symbol id="i-chrono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="14" r="7.5"/><path d="M12 14V9.5M9.5 2.5h5M12 2.5v4M18.5 6.5l1.5 1.5"/>
+      </symbol>
+      <symbol id="i-amis" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path style="fill:var(--ico-ac,#ffd60a)" d="M8.5 4a4.5 4.5 0 0 1 4.5 4.5c0 3.2-4.5 7.5-4.5 7.5S4 11.7 4 8.5A4.5 4.5 0 0 1 8.5 4z"/>
+        <path d="M16.5 9.5A3.5 3.5 0 0 1 20 13c0 2.5-3.5 6-3.5 6s-1.3-1.3-2.3-2.9"/>
+        <path d="M4.5 20.5h15" stroke-dasharray="1.5 3.5"/>
+      </symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12h15M13 5.5l6.5 6.5-6.5 6.5"/>
+      </symbol>
+      <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 12H5M11 5.5 4.5 12l6.5 6.5"/>
+      </symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c-3 2.5-4.3 5.3-4.3 8.5s1.3 6 4.3 8.5c3-2.5 4.3-5.3 4.3-8.5S15 6 12 3.5zM5 7.5h14M5 16.5h14"/>
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12.5l4.5 4.5L19 7.5"/>
+      </symbol>
+      <symbol id="i-star" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/>
+      </symbol>
+    </defs>
+  </svg>
+
   <!-- Accueil -->
   <div id="home" class="screen">
+    <div class="home-wrap">
+
+      <header class="hero">
+        <div class="hero-title">
+          <p class="plate">Jeu de géographie</p>
+          <h1 aria-label="Point de chute"><span aria-hidden="true">Po<span class="i-pt">ı</span>nt <span class="l2">de chute</span></span></h1>
+        </div>
+        <!-- La borne kilométrique parachutée : l'emblème du jeu -->
+        <svg class="chute" viewBox="0 0 120 162" aria-hidden="true" focusable="false">
+          <g class="chute-body" stroke="#0e1b2c" stroke-linejoin="round" stroke-linecap="round">
+            <g stroke-width="1.6" fill="none">
+              <path d="M8 58 50 114M28.8 58 53 110M49.6 58 57 106M70.4 58 63 106M91.2 58 67 110M112 58 70 114"/>
+            </g>
+            <g stroke-width="3">
+              <path fill="#ffd60a" d="M60 8C32 8 8 26 8 58q10.4-7 20.8 0C28.8 30 40.7 10 60 8z"/>
+              <path fill="#fff" d="M60 8C40.7 10 28.8 30 28.8 58q10.4-7 20.8 0C49.6 30 53.6 10 60 8z"/>
+              <path fill="#ffd60a" d="M60 8c-6.4 2-10.4 22-10.4 50q10.4-7 20.8 0C70.4 30 66.4 10 60 8z"/>
+              <path fill="#fff" d="M60 8c6.4 2 10.4 22 10.4 50q10.4-7 20.8 0C91.2 30 79.3 10 60 8z"/>
+              <path fill="#ffd60a" d="M60 8c19.3 2 31.2 22 31.2 50q10.4-7 20.8 0C112 26 88 8 60 8z"/>
+              <path fill="#fff" d="M45 152v-31a15 15 0 0 1 30 0v31z"/>
+              <path fill="#d5202a" d="M45 127v-6a15 15 0 0 1 30 0v6z"/>
+            </g>
+            <path d="M56.5 135.5a3.6 3.6 0 1 1 5.3 3.2c-1.2.7-1.8 1.3-1.8 2.8M60 146.2v.1" fill="none" stroke-width="2.6"/>
+          </g>
+        </svg>
+        <p class="lede">On te dépose quelque part sur Terre, au bord d'une route. Observe, puis retrouve où tu es.</p>
+        <div class="lvl lvl-card" id="homeLevel"></div>
+        <div class="quick">
+          <button id="dailyBtn" class="tile" type="button" title="5 lieux, les mêmes pour tout le monde. Un nouveau défi chaque jour.">
+            <span class="cal" aria-hidden="true"><i id="dailyMonth"></i><b id="dailyDay"></b></span>
+            <span class="tile-txt"><b>Défi du jour</b><small id="dailySub">À jouer</small></span>
+          </button>
+          <button id="passBtn" class="tile" type="button" title="Un tampon par pays visité">
+            <span class="booklet" aria-hidden="true"><svg class="ico"><use href="#i-globe"/></svg></span>
+            <span class="tile-txt"><b>Passeport</b><small id="passSub"></small></span>
+          </button>
+        </div>
+      </header>
+
+      <main class="board sign">
+        <fieldset class="choice">
+          <legend>Mode</legend>
+          <div class="modes">
+            <label class="mode"><input type="radio" name="mode" value="classique" checked><span class="mode-card"><svg class="ico"><use href="#i-classique"/></svg><b>Classique</b><small>Balade libre</small></span></label>
+            <label class="mode"><input type="radio" name="mode" value="postale"><span class="mode-card"><svg class="ico"><use href="#i-postale"/></svg><b>Carte postale</b><small>Image fixe</small></span></label>
+            <label class="mode"><input type="radio" name="mode" value="eclair"><span class="mode-card"><svg class="ico"><use href="#i-eclair"/></svg><b>Éclair</b><small>Vue express</small></span></label>
+            <label class="mode"><input type="radio" name="mode" value="serie"><span class="mode-card"><svg class="ico"><use href="#i-serie"/></svg><b>Série de pays</b><small>Quel pays ?</small></span></label>
+          </div>
+          <p class="hint-line" id="modeDesc"></p>
+        </fieldset>
+
+        <fieldset class="choice">
+          <legend>Destination</legend>
+          <div class="seg seg-grid">
+            <label><input type="radio" name="zone" value="monde" checked><span>Monde</span></label>
+            <label><input type="radio" name="zone" value="europe"><span>Europe</span></label>
+            <label><input type="radio" name="zone" value="france"><span>France</span></label>
+            <label><input type="radio" name="zone" value="ameriques"><span>Amériques</span></label>
+            <label><input type="radio" name="zone" value="asie"><span>Asie et Océanie</span></label>
+            <label><input type="radio" name="zone" value="afrique"><span>Afrique</span></label>
+            <label class="theme"><input type="radio" name="zone" value="capitales"><span>Capitales</span></label>
+            <label class="theme"><input type="radio" name="zone" value="celebres"><span>Lieux célèbres</span></label>
+          </div>
+          <p class="hint-line meta"><span id="poolLine"></span><span id="bestLine"></span></p>
+        </fieldset>
+
+        <fieldset class="choice choice-inline">
+          <legend><svg class="ico"><use href="#i-chrono"/></svg>Chrono</legend>
+          <div class="seg seg-join">
+            <label><input type="radio" name="time" value="0" checked><span>Libre</span></label>
+            <label><input type="radio" name="time" value="180"><span>3 min</span></label>
+            <label><input type="radio" name="time" value="90"><span>1 min 30</span></label>
+            <label><input type="radio" name="time" value="30"><span>30 s</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Barre d'action : reste collée en bas de l'écran sur téléphone -->
+        <div class="go-bar">
+          <button id="startBtn" class="btn btn-go btn-big" type="button">Partir <svg class="ico"><use href="#i-arrow"/></svg><kbd>Espace</kbd></button>
+          <button id="friendsBtn" class="btn btn-alt btn-big" type="button"><svg class="ico"><use href="#i-amis"/></svg>Entre amis</button>
+        </div>
+      </main>
+    </div>
+    <!-- Carte d'ambiance, derrière tout le reste (placée après le contenu pour ne pas passer en premier au clavier) -->
     <div id="homeMap" aria-hidden="true"></div>
-    <main class="sign home-sign">
-      <p class="kicker">Jeu de géographie</p>
-      <h1>Point de chute</h1>
-      <p class="lede">On te dépose quelque part sur Terre, au bord d'une route. Observe, puis retrouve où tu es.</p>
-
-      <fieldset class="choice">
-        <legend>Mode</legend>
-        <div class="seg">
-          <label><input type="radio" name="mode" value="classique" checked><span>Classique</span></label>
-          <label><input type="radio" name="mode" value="postale"><span>Carte postale</span></label>
-          <label><input type="radio" name="mode" value="eclair"><span>Éclair</span></label>
-          <label><input type="radio" name="mode" value="serie"><span>Série de pays</span></label>
-        </div>
-        <p class="hint-line" id="modeDesc"></p>
-      </fieldset>
-
-      <fieldset class="choice">
-        <legend>Zone</legend>
-        <div class="seg">
-          <label><input type="radio" name="zone" value="monde" checked><span>Monde</span></label>
-          <label><input type="radio" name="zone" value="europe"><span>Europe</span></label>
-          <label><input type="radio" name="zone" value="france"><span>France</span></label>
-          <label><input type="radio" name="zone" value="ameriques"><span>Amériques</span></label>
-          <label><input type="radio" name="zone" value="asie"><span>Asie et Océanie</span></label>
-          <label><input type="radio" name="zone" value="afrique"><span>Afrique</span></label>
-          <label><input type="radio" name="zone" value="capitales"><span>Capitales</span></label>
-          <label><input type="radio" name="zone" value="celebres"><span>Lieux célèbres</span></label>
-        </div>
-      </fieldset>
-
-      <fieldset class="choice">
-        <legend>Temps par manche</legend>
-        <div class="seg">
-          <label><input type="radio" name="time" value="0" checked><span>Libre</span></label>
-          <label><input type="radio" name="time" value="180"><span>3 min</span></label>
-          <label><input type="radio" name="time" value="90"><span>1 min 30</span></label>
-          <label><input type="radio" name="time" value="30"><span>30 s</span></label>
-        </div>
-      </fieldset>
-
-      <button id="startBtn" class="btn btn-go btn-big" type="button">Partir <kbd>Espace</kbd></button>
-      <div class="alt-row">
-        <button id="friendsBtn" class="btn btn-alt" type="button">Jouer avec des amis</button>
-        <button id="dailyBtn" class="btn btn-alt" type="button">Défi du jour</button>
-        <button id="passBtn" class="btn btn-alt" type="button">Passeport</button>
-      </div>
-      <div class="lvl" id="homeLevel"></div>
-      <p class="meta"><span id="poolLine"></span><span id="bestLine"></span></p>
-    </main>
   </div>
 
   <!-- Salon d'une partie entre amis -->
-  <div id="lobby" class="screen" hidden>
-    <main class="sign home-sign">
-      <p class="kicker">Partie entre amis</p>
-      <h2 id="lbTitle">Monde</h2>
-      <p class="lede">Envoie ce lien à tes amis. Tout le monde joue les 5 mêmes lieux, chacun sur son écran, quand il veut. Le classement se met à jour en direct. Si vous jouez en même temps : dès qu'un joueur valide une manche, les autres n'ont plus que 20 secondes.</p>
+  <div id="lobby" class="screen backdrop" hidden>
+    <main class="sign lobby-sign">
+      <header class="lobby-head">
+        <button id="lbBack" class="btn-quiet back" type="button"><svg class="ico"><use href="#i-back"/></svg>Accueil</button>
+        <p class="plate">Partie entre amis</p>
+        <h2 id="lbTitle">Monde</h2>
+        <p class="status" id="lbStatus"></p>
+      </header>
 
-      <div class="linkrow">
-        <input id="lbLink" type="text" readonly aria-label="Lien de la partie">
-        <button id="lbCopy" class="btn btn-alt" type="button">Copier le lien</button>
-      </div>
-
-      <form id="lbNameForm" class="nameform">
-        <label for="lbName">Ton pseudo</label>
-        <div class="linkrow">
-          <input id="lbName" type="text" maxlength="16" autocomplete="nickname" placeholder="Ex. Aaron" required>
-          <button class="btn btn-go" type="submit">Entrer dans la partie</button>
+      <div class="ticket lobby-ticket">
+        <div class="ticket-main">
+          <label class="label" for="lbLink">Lien de la partie</label>
+          <input id="lbLink" type="text" readonly>
         </div>
-      </form>
-
-      <div id="lbIn" hidden>
-        <p class="legend">Dans la partie</p>
-        <ul id="lbPlayers" class="players"></ul>
-        <button id="lbStart" class="btn btn-go btn-big" type="button">Commencer</button>
+        <div class="ticket-stub">
+          <button id="lbCopy" class="btn btn-ghost btn-sm" type="button">Copier le lien</button>
+        </div>
       </div>
 
-      <p class="meta"><span id="lbStatus"></span><button id="lbBack" class="linkbtn" type="button">Retour à l'accueil</button></p>
+      <section class="lobby-room well">
+        <form id="lbNameForm" class="nameform">
+          <label class="label" for="lbName">Ton pseudo</label>
+          <div class="linkrow">
+            <input id="lbName" class="field" type="text" maxlength="16" autocomplete="nickname" placeholder="Ex. Aaron" required>
+            <button class="btn btn-go" type="submit">Entrer dans la partie</button>
+          </div>
+          <p class="hint-line">C'est le nom que tes amis verront au classement.</p>
+        </form>
+        <div id="lbIn" hidden>
+          <p class="label">Dans la partie</p>
+          <ul id="lbPlayers" class="players"></ul>
+          <p class="slot">Tes amis apparaîtront ici dès qu'ils ouvrent le lien.</p>
+          <button id="lbStart" class="btn btn-go btn-big" type="button">Commencer</button>
+        </div>
+      </section>
+
+      <ol class="steps">
+        <li>Envoie ce lien à tes amis.</li>
+        <li>Tout le monde joue les 5 mêmes lieux, chacun sur son écran, quand il veut. Le classement se met à jour en direct.</li>
+        <li>Vous jouez en même temps ? Dès qu'un joueur valide une manche, les autres n'ont plus que 20 secondes.</li>
+      </ol>
     </main>
   </div>
 
   <!-- Passeport -->
-  <div id="passport" class="screen" hidden>
-    <main class="sign home-sign pass-sign">
-      <p class="kicker">Ta progression</p>
-      <h2>Passeport</h2>
-      <div class="lvl" id="ppLevel"></div>
-      <p class="lede" id="ppIntro"></p>
-      <div id="ppList"></div>
-      <p class="meta"><button id="ppBack" class="linkbtn" type="button">Retour à l'accueil</button></p>
+  <div id="passport" class="screen backdrop" hidden>
+    <main class="passbook">
+      <header class="pass-cover">
+        <button id="ppBack" class="btn-quiet back" type="button"><svg class="ico"><use href="#i-back"/></svg>Accueil</button>
+        <div class="pass-title">
+          <svg class="ico pass-emblem" aria-hidden="true"><use href="#i-globe"/></svg>
+          <div>
+            <p class="pass-kicker">Ta progression</p>
+            <h2>Passeport</h2>
+          </div>
+          <p class="pass-count"><b id="ppCount">0</b><span id="ppTotal"></span></p>
+        </div>
+        <div class="lvl" id="ppLevel"></div>
+      </header>
+      <div class="pass-page">
+        <p class="lede" id="ppIntro"></p>
+        <ul class="tiers" id="ppTiers"></ul>
+        <div id="ppList"></div>
+      </div>
     </main>
   </div>
 
