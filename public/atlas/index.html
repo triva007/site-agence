@@ -232,7 +232,7 @@
       <header class="lobby-head">
         <button id="frBack" class="btn-quiet back" type="button"><svg class="ico"><use href="#i-back"/></svg>Accueil</button>
         <p class="plate">Entre amis</p>
-        <h2>Un code, et tout le monde part</h2>
+        <h2 id="frTitle">Un code, et tout le monde part</h2>
       </header>
       <form id="frJoinForm" class="gate-card well" novalidate>
         <label class="label" for="frCode">Tu as reçu un code ?</label>
@@ -242,13 +242,50 @@
         </div>
         <p class="hint-line gate-err" id="frErr" role="status"></p>
       </form>
-      <p class="gate-or" aria-hidden="true"><span>ou</span></p>
-      <div class="gate-card well">
-        <p class="label">C'est toi qui invites ?</p>
-        <p class="gate-sum" id="frSummary"></p>
-        <button id="frCreate" class="btn btn-alt btn-big" type="button">Créer un code</button>
-        <p class="hint-line" id="frNote"></p>
-      </div>
+      <p class="gate-or" id="frOr" aria-hidden="true"><span>ou</span></p>
+      <!-- Les réglages du trajet à plusieurs : ils sont portés par le code -->
+      <form id="frSetup" class="gate-card well">
+        <p class="label" id="frSetupLab">C'est toi qui invites ? Choisis le trajet</p>
+        <fieldset class="choice">
+          <legend>Mode</legend>
+          <div class="seg seg-join">
+            <label><input type="radio" name="fmode" value="classique" checked><span>Classique</span></label>
+            <label><input type="radio" name="fmode" value="postale"><span>Carte postale</span></label>
+            <label><input type="radio" name="fmode" value="eclair"><span>Éclair</span></label>
+          </div>
+          <p class="hint-line" id="frModeDesc"></p>
+        </fieldset>
+        <fieldset class="choice">
+          <legend>Destination</legend>
+          <div class="seg seg-grid">
+            <label><input type="radio" name="fzone" value="monde" checked><span>Monde</span></label>
+            <label><input type="radio" name="fzone" value="europe"><span>Europe</span></label>
+            <label><input type="radio" name="fzone" value="france"><span>France</span></label>
+            <label><input type="radio" name="fzone" value="ameriques"><span>Amériques</span></label>
+            <label><input type="radio" name="fzone" value="asie"><span>Asie et Océanie</span></label>
+            <label><input type="radio" name="fzone" value="afrique"><span>Afrique</span></label>
+            <label class="theme"><input type="radio" name="fzone" value="capitales"><span>Capitales</span></label>
+            <label class="theme"><input type="radio" name="fzone" value="celebres"><span>Lieux célèbres</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="choice">
+          <legend>Temps par étape</legend>
+          <div class="seg seg-join">
+            <label><input type="radio" name="ftime" value="0" checked><span>Libre</span></label>
+            <label><input type="radio" name="ftime" value="180"><span>3 min</span></label>
+            <label><input type="radio" name="ftime" value="90"><span>1 min 30</span></label>
+            <label><input type="radio" name="ftime" value="30"><span>30 s</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="choice">
+          <legend>Quand un ami a répondu</legend>
+          <div class="seg seg-join">
+            <label><input type="radio" name="frush" value="1" checked><span>20 s pour les autres</span></label>
+            <label><input type="radio" name="frush" value="0"><span>Chacun son rythme</span></label>
+          </div>
+        </fieldset>
+        <button id="frCreate" class="btn btn-alt btn-big" type="submit">Créer un code</button>
+      </form>
     </main>
   </div>
 
@@ -260,6 +297,8 @@
         <p class="plate">Trajet entre amis</p>
         <h2 id="lbTitle">Monde</h2>
         <p class="status" id="lbStatus"></p>
+        <button id="lbEdit" class="btn-quiet" type="button">Changer les réglages</button>
+        <p class="lb-note" id="lbNote" role="status" hidden></p>
       </header>
 
       <div class="ticket lobby-ticket">
@@ -286,6 +325,7 @@
           <div class="lb-top"><p class="label">À bord</p><button id="lbRename" class="btn-quiet" type="button">Changer de pseudo</button></div>
           <ul id="lbPlayers" class="players"></ul>
           <p class="slot">Tes amis apparaîtront ici dès qu'ils auront tapé le code.</p>
+          <p id="lbNext" class="invite" hidden><span id="lbNextTxt"></span> <button id="lbNextBtn" class="btn btn-go btn-sm" type="button">Suivre</button></p>
           <p class="hint-line" id="lbHint"></p>
           <button id="lbStart" class="btn btn-go btn-big" type="button">Commencer</button>
         </div>
@@ -294,7 +334,7 @@
       <ol class="steps">
         <li>Donne ce code à tes amis. Ils touchent « Entre amis » à l'accueil et le tapent.</li>
         <li>Tout le monde reçoit les 5 mêmes lieux, chacun sur son écran. Le classement se met à jour en direct.</li>
-        <li>Dès que quelqu'un valide une étape, les autres n'ont plus que 20 secondes. Un retardataire peut toujours entrer avec le code et faire le trajet de son côté.</li>
+        <li id="lbRule"></li>
       </ol>
     </main>
     <!-- Compte à rebours commun avant le départ -->

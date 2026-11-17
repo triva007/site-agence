@@ -190,13 +190,51 @@
   }
 
   /* ---------- Tirage des lieux ---------- */
+  /* Mémoire des lieux déjà vus.
+     Deux panoramas à moins de 4 km l'un de l'autre, dans le même pays, comptent pour le même « coin » :
+     retomber dans la rue d'à côté donne la même impression de déjà-vu que retomber au même point.
+     La clé d'un coin est l'identifiant d'un de ses panoramas. */
+  const SPOT = (() => {
+    const parent = LOCS.map((_, i) => i);
+    const find = (i) => { while (parent[i] !== i) { parent[i] = parent[parent[i]]; i = parent[i]; } return i; };
+    const order = LOCS.map((_, i) => i).sort((a, b) => LOCS[a][0] - LOCS[b][0]);
+    for (let a = 0; a < order.length; a++) {
+      const p = LOCS[order[a]];
+      for (let b = a + 1; b < order.length && LOCS[order[b]][0] - p[0] < 0.04; b++) {   // 0,04° de latitude ≈ 4,4 km
+        const q = LOCS[order[b]];
+        if (p[4] === q[4] && haversine(p, q) < 4) parent[find(order[a])] = find(order[b]);
+      }
+    }
+    const byLoc = new Map(), byPano = new Map();
+    LOCS.forEach((l, i) => { const k = LOCS[find(i)][2]; byLoc.set(l, k); if (!byPano.has(l[2])) byPano.set(l[2], k); });
+    return { of: (l) => byLoc.get(l) || l[2], pano: (p) => byPano.get(p) || p };
+  })();
+  // Liste des coins vus sur cet appareil, du plus ancien au plus récent (elle reprend l'ancienne liste de panoramas).
+  function getSeen() {
+    let r = store.get('seen', null);
+    if (!Array.isArray(r)) { r = store.get('recent', []); r = Array.isArray(r) ? r.filter((x) => typeof x === 'string').map(SPOT.pano) : []; }
+    return r.filter((x) => typeof x === 'string');
+  }
+  function markSeen(loc) {
+    const k = SPOT.of(loc), r = getSeen().filter((x) => x !== k);
+    r.push(k);
+    store.set('seen', r.slice(-4000));
+  }
   function pickOne(zoneKey, usedPanos, usedCountries, rng, avoidRecent) {
     const z = Z(zoneKey);
-    let pool = LOCS.filter((l) => z.has(l) && !usedPanos.has(l[2]));
+    const usedSpots = new Set([...usedPanos].map(SPOT.pano));
+    let pool = LOCS.filter((l) => z.has(l) && !usedPanos.has(l[2]) && !usedSpots.has(SPOT.of(l)));
+    if (!pool.length) pool = LOCS.filter((l) => z.has(l) && !usedPanos.has(l[2]));   // toute petite zone : on accepte un coin voisin
+    if (!pool.length) return undefined;
     if (avoidRecent) {
-      const recent = new Set(getRecent());
-      const fresh = pool.filter((l) => !recent.has(l[2]));
-      if (fresh.length >= 30) pool = fresh;
+      const rank = new Map(getSeen().map((k, i) => [k, i]));
+      const fresh = pool.filter((l) => !rank.has(SPOT.of(l)));
+      if (fresh.length) pool = fresh;   // tant qu'il reste du neuf, on ne ressert jamais un coin déjà vu
+      else {
+        // Tout a été vu dans cette zone : on reprend parmi les coins vus il y a le plus longtemps.
+        const old = pool.slice().sort((a, b) => rank.get(SPOT.of(a)) - rank.get(SPOT.of(b)));
+        pool = old.slice(0, Math.max(5, Math.ceil(old.length / 3)));
+      }
     }
     if (zoneKey !== 'france') {
       // On tire d'abord un pays (pondéré, sans laisser les gros pays tout écraser), puis un lieu dedans.
@@ -218,12 +256,6 @@
       usedP.add(loc[2]); usedC.add(loc[4]); locs.push(loc);
     }
     return { locs, usedP, usedC };
-  }
-  function getRecent() { const r = store.get('recent', []); return Array.isArray(r) ? r.filter((x) => typeof x === 'string') : []; }
-  function markRecent(pano) {
-    const r = getRecent().filter((p) => p !== pano);
-    r.push(pano);
-    store.set('recent', r.slice(-600));
   }
   const svUrl = (loc, heading) =>
     `https://www.google.com/maps/embed?pb=!6m8!1m7!1s${loc[2]}!2m2!1d${loc[0]}!2d${loc[1]}!3f${heading}!4f0!5f0.78`;
@@ -389,15 +421,24 @@
     const c = cleanCode(s);
     if (!/^[A-HJ-NP-Z2-9]{6}$/.test(c)) return null;
     const k = (((CODE_ABC.indexOf(c[4]) << 5) | CODE_ABC.indexOf(c[5])) - codeKey(c.slice(0, 4)) + 1024) % 1024;
-    if (k >= CODE_ZONES.length * 12) return null;
-    return { id: c.toLowerCase(), code: c, zone: CODE_ZONES[Math.floor(k / 12)], mode: CODE_MODES[(k % 12) >> 2], limit: CODE_LIMITS[k % 4] };
+    if (k >= CODE_ZONES.length * 12 * 2) return null;
+    // rush : dès qu'un ami a répondu, les autres n'ont plus que 20 secondes (réglage par défaut)
+    return { id: c.toLowerCase(), code: c, zone: CODE_ZONES[Math.floor(k / 12) % 8], mode: CODE_MODES[(k % 12) >> 2], limit: CODE_LIMITS[k % 4], rush: k < 96 };
   }
-  function newRoom(zone, mode, limit) {
-    const a = new Uint8Array(4); (window.crypto || window.msCrypto).getRandomValues(a);
-    const head = Array.from(a, (b) => CODE_ABC[b % 32]).join('');
+  function newRoom(zone, mode, limit, rush) {
     const z = Math.max(0, CODE_ZONES.indexOf(zone)), m = Math.max(0, CODE_MODES.indexOf(mode)), l = Math.max(0, CODE_LIMITS.indexOf(limit));
-    const k = (z * 12 + m * 4 + l + codeKey(head)) % 1024;
-    return parseCode(head + CODE_ABC[k >> 5] + CODE_ABC[k & 31]);
+    const seen = new Set(getSeen());
+    // Les lieux découlent du code : on essaie plusieurs codes et on garde celui dont les 5 lieux sont neufs pour celui qui invite.
+    let best = null, bestN = Infinity;
+    for (let t = 0; t < 40 && bestN > 0; t++) {
+      const a = new Uint8Array(4); (window.crypto || window.msCrypto).getRandomValues(a);
+      const head = Array.from(a, (b) => CODE_ABC[b % 32]).join('');
+      const k = ((rush === false ? 96 : 0) + z * 12 + m * 4 + l + codeKey(head)) % 1024;
+      const cfg = parseCode(head + CODE_ABC[k >> 5] + CODE_ABC[k & 31]);
+      const n = pickGame(cfg.zone, mulberry32(hashStr(cfg.id)), false).locs.filter((x) => seen.has(SPOT.of(x))).length;
+      if (n < bestN) { best = cfg; bestN = n; }
+    }
+    return best;
   }
   const parseLink = parseCode;
   const linkOf = (c) => c.code;
@@ -631,7 +672,7 @@
   // Entre amis : dès qu'un voyageur valide l'étape sur laquelle tu es, il te reste 20 secondes.
   const PRESS = 20;
   function pressure(name) {
-    if (!S || S.kind !== 'room' || Q || $('play').hidden) return;
+    if (!S || S.kind !== 'room' || Q || $('play').hidden || (Room.cfg && Room.cfg.rush === false)) return;
     const r = cur();
     if (r.pressed) return;
     r.pressed = true;
@@ -647,6 +688,8 @@
     if (!m || typeof m.id !== 'string' || m.id === myId) return;
     if (m.t === 'g' && Array.isArray(m.g) && S && S.kind === 'room' && m.g.length === S.idx + 1) pressure(cleanName(m.n) || 'Un voyageur');
     // Un ami donne le départ : ceux qui attendent dans le salon partent avec lui.
+    // Un ami change les réglages pendant qu'on attend dans le salon : on le suit sur son nouveau code.
+    if (m.t === 'x' && Room.next && !myRoomSteps() && (!$('lobby').hidden || frEdit) && !countT) { joinNext(`${cleanName(m.n) || 'Un ami'} a changé les réglages.`); return; }
     if (m.t === 's' && !$('lobby').hidden && !$('lbIn').hidden && !myRoomSteps()) launch(cleanName(m.n) || 'Un ami');
     // Un ami repart après la même étape : on le suit au bout de quelques secondes, pour rester ensemble.
     if (m.t === 'n' && m.i === (S && S.idx) && S.kind === 'room' && !$('result').hidden && !$('roundPanel').hidden) autoNext(cleanName(m.n) || 'Un ami');
@@ -835,6 +878,7 @@
   }
 
   function loadStreetView(loc, heading, onReady) {
+    markSeen(loc);   // vu dès qu'il s'affiche, même si on quitte ou qu'on change de lieu avant de répondre
     const wrap = $('svWrap'), loading = $('svLoading');
     const token = ++loadToken;
     view = { loc, heading, onReady };
@@ -941,7 +985,6 @@
     } else { r.guess = null; r.km = null; r.pts = 0; }
     S.score += r.pts;
     r.stamp = r.guess ? stamp(r.loc[4], r.pts) : null;
-    markRecent(r.loc[2]);
     $('svWrap').innerHTML = '';
     if (S.kind === 'room' && Room.cfg) {
       const g = myResults();
@@ -1444,7 +1487,6 @@
       if (b.dataset.cc === Q.loc[4]) b.classList.add('good');
       else if (b.dataset.cc === cc) b.classList.add('bad');
     });
-    markRecent(Q.loc[2]);
     if (ok) {
       Q.streak++;
       Snd.mid();
@@ -1489,6 +1531,9 @@
     show('lobby');
     $('lbTitle').textContent = `${Z(cfg.zone).label}, mode ${MODES[cfg.mode].label.toLowerCase()}`;
     $('lbCode').textContent = fmtCode(cfg.code);
+    $('lbRule').textContent = (cfg.rush === false ? 'Chacun répond à son rythme : pas de compte à rebours quand un ami valide.' : 'Dès que quelqu\'un valide une étape, les autres n\'ont plus que 20 secondes.') + ' Un retardataire peut toujours entrer avec le code et faire le trajet de son côté.';
+    $('lbNote').textContent = lobbyNote; $('lbNote').hidden = !lobbyNote; lobbyNote = '';
+    frEdit = false; $('friends').hidden = true;
     $('lbLink').value = roomUrl(cfg);
     const name = getName();
     $('lbName').value = name;
@@ -1499,6 +1544,7 @@
     setJoined(joined);
     renderLobby();
   }
+  let lobbyNote = '';          // message affiché une fois à l'arrivée dans un salon (réglages changés par un ami)
   let lobbySeen = new Set();   // voyageurs déjà affichés dans ce salon (pour n'animer que les arrivées)
   function setJoined(j) { $('lbNameForm').hidden = j; $('lbIn').hidden = !j; if (!j && !compact.matches) setTimeout(() => $('lbName').focus(), 50); }
   function renderLobby() {
@@ -1518,6 +1564,11 @@
     const mine = Room.players.get(myId), n = mine ? mine.g.length : 0;
     const os = ps.filter((p) => p.id !== myId), going = os.filter((p) => p.g.length);
     $('lbStart').textContent = n >= ROUNDS ? 'Voir le classement' : n ? 'Reprendre mon trajet' : going.length ? 'Rejoindre le trajet' : os.length ? 'Donner le départ' : 'Commencer';
+    $('lbEdit').hidden = n > 0;
+    // Un ami est parti sur un autre code (réglages changés, revanche) : on propose de le suivre.
+    const moved = !n && !!Room.next;
+    $('lbNext').hidden = !moved;
+    if (moved) $('lbNextTxt').textContent = `${Room.next.name} est passé sur un nouveau code.`;
     $('lbHint').textContent = n ? '' : going.length ? `${going[0].name} est déjà en route.` : os.length ? 'Le départ est donné à tous ceux qui sont là.' : 'Pars tout de suite, ou attends tes amis ici.';
     $('lbStatus').textContent = `5 étapes, ${fmtLimit(cfg.limit)}. ` + (Room.online ? 'Classement en direct connecté.' : 'Connexion au classement…');
     $('lbStatus').classList.toggle('on', Room.online);
@@ -1562,37 +1613,52 @@
     Room.send({ t: 's' });
     if (others().length) launch(''); else startRoomGame();
   }
-  function createRoom(zone, mode, limit, autoJoin) {
-    const cfg = newRoom(zone, mode === 'serie' ? 'classique' : mode, limit);
+  function createRoom(zone, mode, limit, autoJoin, rush) {
+    const cfg = newRoom(zone, mode === 'serie' ? 'classique' : mode, limit, rush);
     history.replaceState(null, '', '#p=' + linkOf(cfg));
     openLobby(cfg, autoJoin);
   }
-  // Entre amis : on entre un code reçu, ou on en crée un avec les réglages de l'accueil.
-  function openFriends() {
-    savePrefs();
-    const mode = selected('mode') === 'serie' ? 'classique' : selected('mode');
-    $('frSummary').textContent = `${Z(selected('zone')).label}, mode ${MODES[mode].label.toLowerCase()}, ${fmtLimit(+selected('time'))}`;
-    $('frNote').textContent = selected('mode') === 'serie' ? 'La série de pays se fait en solo : à plusieurs, ce sera le mode classique.' : 'Ce sont les réglages choisis à l\'accueil.';
+  // Entre amis : on entre un code reçu, ou on règle son trajet et on crée un code.
+  // Depuis le salon (edit), le même écran sert à changer les réglages : un nouveau code, et les amis déjà là suivent.
+  let frEdit = false;
+  const pick = (name, value) => { const i = document.querySelector(`input[name="${name}"][value="${value}"]`); if (i) i.checked = true; };
+  function openFriends(edit) {
+    frEdit = edit === true && !!Room.cfg;
+    const c = frEdit ? Room.cfg : { zone: selected('zone'), mode: selected('mode') === 'serie' ? 'classique' : selected('mode'), limit: +selected('time'), rush: true };
+    if (!frEdit) savePrefs();
+    pick('fzone', CODE_ZONES.includes(c.zone) ? c.zone : 'monde'); pick('fmode', c.mode); pick('ftime', c.limit); pick('frush', c.rush === false ? 0 : 1);
+    $('frModeDesc').textContent = MODES[selected('fmode')].desc;
+    $('frJoinForm').hidden = frEdit; $('frOr').hidden = frEdit;
+    $('friends').querySelector('.gate-sign').classList.toggle('edit', frEdit);
+    $('frTitle').textContent = frEdit ? 'Changer les réglages' : 'Un code, et tout le monde part';
+    $('frSetupLab').textContent = frEdit ? 'Nouveau trajet, nouveau code' : 'C\'est toi qui invites ? Choisis le trajet';
+    $('frCreate').textContent = frEdit ? 'Valider' : 'Créer un code';
+    $('frBack').lastChild.textContent = frEdit ? 'Retour au salon' : 'Accueil';
     $('frCode').value = ''; $('frErr').textContent = '';
-    show('friends');
-    if (!compact.matches) setTimeout(() => $('frCode').focus(), 50);
+    if (frEdit) { $('lobby').hidden = true; $('friends').hidden = false; }   // le salon reste ouvert derrière : on ne coupe pas la liaison
+    else show('friends');
+    if (!frEdit && !compact.matches) setTimeout(() => $('frCode').focus(), 50);
+  }
+  function closeFriends() {
+    if (frEdit && Room.cfg) { frEdit = false; $('friends').hidden = true; $('lobby').hidden = false; renderLobby(); } else goHome();
   }
   let rematching = false;
-  async function rematch() {
+  async function rematch(to) {
     const old = Room.cfg;
     if (rematching || !old) return;
     rematching = true;
     try {
-      const cfg = newRoom(old.zone, old.mode, old.limit);
+      const cfg = to || newRoom(old.zone, old.mode, old.limit, old.rush);
       await Promise.race([Room.send({ t: 'x', link: linkOf(cfg) }), sleep(1500)]);
       if (Room.cfg !== old) return;   // le voyageur est parti entre-temps (accueil, autre trajet)
       history.replaceState(null, '', '#p=' + linkOf(cfg));
       openLobby(cfg, true);
     } finally { rematching = false; }
   }
-  function joinNext() {
+  function joinNext(note) {
     const cfg = Room.next && parseLink(Room.next.link);
     if (!cfg) return false;
+    lobbyNote = note || '';
     history.replaceState(null, '', '#p=' + linkOf(cfg));
     openLobby(cfg, true);
     return true;
@@ -1643,9 +1709,20 @@
 
   $('startBtn').addEventListener('click', startFromHome);
   $('dailyBtn').addEventListener('click', startDaily);
-  $('friendsBtn').addEventListener('click', openFriends);
-  $('frBack').addEventListener('click', goHome);
-  $('frCreate').addEventListener('click', () => createRoom(selected('zone'), selected('mode'), +selected('time'), true));
+  $('friendsBtn').addEventListener('click', () => openFriends(false));
+  $('frBack').addEventListener('click', closeFriends);
+  $('lbEdit').addEventListener('click', () => openFriends(true));
+  $('lbNextBtn').addEventListener('click', () => joinNext());
+  document.querySelectorAll('input[name="fmode"]').forEach((i) => i.addEventListener('change', () => { $('frModeDesc').textContent = MODES[selected('fmode')].desc; }));
+  $('frSetup').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const zone = selected('fzone'), mode = selected('fmode'), limit = +selected('ftime'), rush = selected('frush') === '1';
+    if (frEdit && Room.cfg) {
+      const c = Room.cfg;
+      if (c.zone === zone && c.mode === mode && c.limit === limit && (c.rush !== false) === rush) { closeFriends(); return; }   // rien n'a changé
+      rematch(newRoom(zone, mode, limit, rush));
+    } else createRoom(zone, mode, limit, true, rush);
+  });
   $('frCode').addEventListener('input', (e) => { e.target.value = fmtCode(cleanCode(e.target.value)); $('frErr').textContent = ''; });
   $('frJoinForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -1659,7 +1736,7 @@
   $('againBtn').addEventListener('click', again);
   $('homeBtn').addEventListener('click', goHome);
   $('shareBtn').addEventListener('click', () => copyText(shareText(), $('shareBtn'), 'Résultat copié'));
-  $('fpNextBtn').addEventListener('click', joinNext);
+  $('fpNextBtn').addEventListener('click', () => joinNext());
   $('resetBtn').addEventListener('click', () => { if (view) loadStreetView(view.loc, view.heading, view.onReady); });
   $('swapBtn').addEventListener('click', swapLocation);
   $('hintBtn').addEventListener('click', () => { const r = cur(); if (r.hint < Z(S.zone).hints.length) { r.hint++; Snd.pin(); renderHint(); } });
