@@ -523,7 +523,7 @@
           ? [clamp(v[0], -90, 90), clamp(v[1], -180, 180), Math.max(0, v[2]), clamp(Math.round(v[3]), 0, MAX), clamp(Math.round(v[4] || 0), 0, 50)] : 0));
         if (g.length >= p.g.length) p.g = g;
       }
-      if (m.t === 'x' && m.id !== myId && parseLink(m.link)) this.next = { name: p.name, link: m.link };
+      if (m.t === 'x' && (m.id !== myId || !local)) { const to = parseLink(m.link); if (to && this.cfg && to.id !== this.cfg.id) this.next = { name: p.name, link: m.link, me: m.id === myId }; }
       if (!silent) this.emit();
     },
     async send(m) {
@@ -1408,7 +1408,8 @@
   function renderInvite() {
     const show = !!(S && S.kind === 'room' && Room.next);
     $('fpNext').hidden = !show;
-    if (show) $('fpNextTxt').textContent = `${Room.next.name} lance une revanche.`;
+    if (show && !followT) $('fpNextTxt').textContent = `${Room.next.name} lance une revanche.`;
+    if (show) autoFollow();
   }
 
   function shareText() {
@@ -1577,7 +1578,7 @@
     $('lbStart').textContent = n >= ROUNDS ? 'Voir le classement' : n ? 'Reprendre mon trajet' : going.length ? 'Rejoindre le trajet' : os.length ? 'Donner le départ' : 'Commencer';
     $('lbEdit').hidden = n > 0;
     // Un ami est parti sur un autre code (réglages changés, revanche) : on propose de le suivre.
-    const moved = !n && !!Room.next;
+    const moved = !!Room.next;
     $('lbNext').hidden = !moved;
     if (moved) $('lbNextTxt').textContent = `${Room.next.name} est passé sur un nouveau code.`;
     $('lbHint').textContent = n ? '' : going.length ? `${going[0].name} est déjà en route.` : os.length ? 'Le départ est donné à tous ceux qui sont là.' : 'Pars tout de suite, ou attends tes amis ici.';
@@ -1642,7 +1643,7 @@
     $('frJoinForm').hidden = frEdit; $('frOr').hidden = frEdit;
     $('friends').querySelector('.gate-sign').classList.toggle('edit', frEdit);
     $('frTitle').textContent = frEdit ? 'Changer les réglages' : 'Un code, et tout le monde part';
-    $('frSetupLab').textContent = frEdit ? 'Nouveau trajet, nouveau code' : 'C\'est toi qui invites ? Choisis le trajet';
+    $('frSetupLab').textContent = frEdit ? 'Nouveau trajet : tes amis suivent tout seuls' : 'C\'est toi qui invites ? Choisis le trajet';
     $('frCreate').textContent = frEdit ? 'Valider' : 'Créer un code';
     $('frBack').lastChild.textContent = frEdit ? 'Retour au salon' : 'Accueil';
     $('frCode').value = ''; $('frErr').textContent = '';
@@ -1666,7 +1667,32 @@
       openLobby(cfg, true);
     } finally { rematching = false; }
   }
+  // Rester ensemble sans retaper de code : dès qu'un ami (ou moi, sur un autre appareil) est passé sur un nouveau code
+  // (réglages changés, revanche), on le suit tout seul. Dans le salon : tout de suite. Sur le classement final : après
+  // quelques secondes, le temps de le lire. En plein trajet : jamais, on suit à l'arrivée. L'ancien code mène donc toujours
+  // au trajet en cours du groupe.
+  let followT = null, hops = [];
+  const atFinal = () => !!(S && S.kind === 'room' && !$('result').hidden && !$('finalPanel').hidden);
+  function autoFollow() {
+    if (!Room.cfg || !Room.next || countT || rematching) return;
+    const to = parseLink(Room.next.link);
+    if (!to || to.id === Room.cfg.id) return;
+    const go = () => {
+      followT = null;
+      if (!Room.cfg || !Room.next) return;
+      const now = Date.now(); hops = hops.filter((t) => now - t < 15000);
+      if (hops.length >= 6) return;   // garde-fou : jamais de ronde sans fin entre codes
+      hops.push(now);
+      joinNext(Room.next.me ? 'Tu avais lancé un nouveau trajet : te revoilà dedans.' : `${Room.next.name} est passé sur un nouveau trajet : tu as suivi, sans retaper de code.`);
+    };
+    if (!$('lobby').hidden || frEdit) { clearTimeout(followT); go(); }
+    else if (atFinal() && !followT) {
+      $('fpNextTxt').textContent = `${Room.next.name} lance un nouveau trajet : tu le suis dans quelques secondes.`;
+      followT = setTimeout(() => { if (atFinal()) go(); else followT = null; }, 7000);
+    }
+  }
   function joinNext(note) {
+    clearTimeout(followT); followT = null;
     const cfg = Room.next && parseLink(Room.next.link);
     if (!cfg) return false;
     lobbyNote = note || '';
@@ -1687,6 +1713,7 @@
       if (!$('roundPanel').hidden) renderRoundFriends();
       else { renderBoard(); renderInvite(); }
     }
+    autoFollow();
   };
 
   /* ---------- Quitter (deux clics) ---------- */
